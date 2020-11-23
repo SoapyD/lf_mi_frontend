@@ -1,0 +1,84 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+	
+	<h1 style="text-align:center;">
+		Create a New Subscription
+	</h1>
+
+	<div class="row">
+		
+		<div style="width:30%; margin:30px auto; ">			
+			<form action="/reports/<%= report.id %>/subscriptions" method="POST">
+				<div class="form-group">
+					<p>Subscription Name:</p>
+					<input class="form-control" type="text" name="name" placeholder="name" required>
+				</div>
+				<div class="form-group">	
+					<p>Frequency:</p>				
+					<select id="frequency-select" class="form-control" name="frequency" required>
+						<option value="">--Frequency--</option>
+						<% frequencies.forEach(function (frequency){ %>
+							<option value="<%= frequency.id %>"><%= frequency.name %></option>
+						<% }) %>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<p>Start Date:</p>
+					<input class="form-control" type="date" name="start_date" required>
+				</div>				
+
+				<div class="form-group">
+					<p>Time:</p>
+					<input class="form-control" type="time" name="time" required>
+				</div>	
+
+
+				<!-- SETUP PARAMETERS -->				
+				<% let parameters = parameter_set[0]; %>	
+				<% let parameter_values = parameter_set[1]; %>
+								
+
+				<% parameter_values.forEach(function (parameter_value, index){ %>
+					<% let parameter = parameters[index]; %>
+
+					<div class="form-group">	
+						
+						<p><%= parameter.name %>:</p>
+
+						<% if(parameter_value.recordset){ %>
+							<select id="<%= parameter.name %>-select" class="form-control" name="parameters[]" required>
+		
+								<option value="">--<%= parameter.name %>--</option>
+
+								<% parameter_value.recordset.forEach(function (record){ %>
+									<% let value = '"'+parameter.name+'" : '+'"'+record.value+'"'; %>
+									<option value="<%= value %>"><%= record.value %></option>
+								<% }) %>
+
+							</select>
+						<% }else{ %>
+							<input value="<%= parameter.name %>" id="<%= parameter.name %>-hidden" class="form-control" type="hidden" name="input_parameter_names[]">
+							<input id="<%= parameter.name %>-select" class="form-control" type="text" name="input_parameters[]" placeholder="" required>
+						<% } %>
+					</div>
+				<% }) %>
+
+
+				<div class="form-group">					
+					<button class="btn btn-lg btn-primary btn-block">
+						Submit
+					</button>						
+				</div>				
+
+			</form>
+			<a href="/reports/<%= report.id %>/subscriptions">Go Back</a>
+		</div>
+		
+	</div>
+	
+</div>
+
+
+<%- include("../partials/footer") %>

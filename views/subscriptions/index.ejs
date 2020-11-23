@@ -1,0 +1,104 @@
+
+<%- include("../partials/header") %>
+
+<div class="container">
+
+
+	<header class="jumbotron">
+		<div class="container">
+			
+			<h1>
+				<%= report.name %>
+			</h1>
+
+			<!-- <p>
+				List of Subscriptions
+			</p> -->
+
+			<p>
+				<a class="btn btn-primary btn-large" href="/reports/<%= report.id %>/subscriptions/new">
+					Add New Subscription
+				</a>
+			</p>
+
+		</div>
+	</header>
+
+</div>
+
+
+<div class="container top-padding">	
+
+	<form action="/reports/<%= report.id %>/subscriptions/?_method=PUT" method="POST">
+		<!-- <div class="row"> -->
+			<button class="btn btn-primary left" name="action" value="enable" type="submit">
+				Enable
+			</button>
+			<button class="btn btn-primary left left-margin-5" name="action" value="disable" type="submit">
+				Disable
+			</button>
+			<button class="btn btn-primary left left-margin-5" name="action" value="run" type="submit">
+				Run Now
+			</button>		
+			<button class="btn btn-primary left left-margin-5" name="action" value="delete" type="submit">
+				Delete
+			</button>							
+		<!-- </div> -->
+		
+		<div class="row">
+			
+			<div class="col-md-12 top-padding">
+				
+				<table id="sort">
+					
+					<colgroup>
+						<col span="1" style="width: 5%;">
+						<col span="1" style="width: 5%;">
+						<col span="1" style="width: 55%;">
+						<col span="1" style="width: 10%;">
+						<col span="1" style="width: 10%;">
+						<col span="1" style="width: 10%;">						
+						<col span="1" style="width: 5%;">
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<th><span class="text"></span></th>
+							<th class="center-text"><span class="text">Edit</span></th>
+							<th><span class="text">Name</span></th>
+							<th class="center-text"><span class="text">Frequency</span></th>
+							<th class="center-text"><span class="text">Start Date</span></th>	
+							<th class="center-text"><span class="text">Time</span></th>									
+						</tr>
+					</thead>
+
+					<tbody>	
+						<% subscriptions.forEach(function (subscription){ %>
+							
+							<tr>
+								<td>
+									<input type="checkbox" name="subscriptions[]" value="<%= subscription.id %>" class="center-click">
+								</td>
+								
+								<td><a class="btn btn-primary" href="/reports/<%= report.id %>/subscriptions/<%= subscription.id %>/edit">Edit</a></td>
+								
+								<td><%= subscription.name %></td>	
+								<td class="center-text"><%= subscription.NODE_frequency.name %></td>	
+								<td class="center-text"><%= subscription.start_date %></td>	
+								<td class="center-text"><%= subscription.time %></td>												                                		
+							</tr>
+							
+						<% }) %>					
+					</tbody>
+				</table>
+			</div>
+		</div>
+			
+	</form>		
+	
+	<a href="/reports">Go Back</a>
+
+</div>
+
+
+<%- include("../partials/footer") %>

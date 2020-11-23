@@ -1,0 +1,173 @@
+
+/* * { border: 1px solid red; } */
+
+table {
+	width: 100%;
+}
+
+#table-wrapper {
+	height: 200px;
+	overflow: auto;
+	width: 100px;
+}
+
+
+th,
+td {
+    border: 1px solid #333;
+	padding: 5px;
+}
+
+.tr-grab {
+	cursor: grab;
+}
+
+.td-no-border {
+    border: none
+}
+
+.row {
+	margin: auto
+}
+
+.max-width{
+	width: 100%;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+	background-color: #FA4616;
+	border-color: #FA4616;
+	box-shadow: 2px 2px 2px #C0C0C0;
+}
+
+.btn-primary:active:hover {
+	background-color: #ab2603;
+	border-color: #ab2603;
+	box-shadow: none;
+}
+
+
+h1 {
+	font-family: 'Lato', sans-serif;	
+	font-weight: 700;
+}
+
+body {
+	font-family: 'Lato', sans-serif;	
+	font-weight: 400;
+}
+
+.navbar-custom { 
+	background-color: #FA4616; 
+	/* background: linear-gradient(#FA4616, #ab2603); */
+} 
+
+.navbar-custom li a,
+.navbar-brand {
+	color: white;
+	
+}
+
+a { 
+	color: black;
+	font-weight: 700; 
+	font-size: 1.5em;
+} 
+
+a:focus, a:hover {
+	color: black; 
+}
+
+.text-block-limit {
+	min-height: 30px;
+	max-height: 30px;
+}
+
+.thumbnail {
+	box-shadow: 2px 2px 2px #C0C0C0;
+}
+
+.word-wrap {
+	word-wrap: break-word;
+  }
+
+.nav>li>a:focus, .nav>li>a:hover {
+    background-color: #ab2603;
+}
+
+.branding{
+	height: 150%;
+}
+
+.jumbotron{
+	background-color: #ebebeb;
+	/* background-image: url('../../img/banner.jpg'); */
+	background-image: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.9) 100%), url('../../img/banner.jpg');
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+}
+.container{
+	padding: 0;	
+}
+
+
+.no-padding {
+	padding: 0;
+}
+
+.icon-padding {
+	padding: 20px 15px;
+}
+
+.left-margin-5 {
+	margin-left: 5px;
+}
+
+.top-padding {
+	padding: 10px 0;
+}
+
+.top-margin-5 {
+	margin: 5px 0;
+}
+
+.left-button {
+	display: inline
+}
+
+.left {
+	float: left;
+}
+
+.right-button,
+.inline-button {
+	display: inline;
+}
+
+.right-button {
+	float: right;
+}
+
+.add-row{
+	margin: auto;
+}
+
+.center-button{
+	display: block;
+	margin: auto;
+}
+
+.center-click{
+    float: left;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.center-text {
+	text-align: center; /* center checkbox horizontally */
+	vertical-align: middle; /* center checkbox vertically */
+  }
+
+  .full-width{
+	  width: 100%;
+  }

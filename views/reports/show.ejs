@@ -1,0 +1,199 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+	<div class="row">
+		
+		<div class="col-md-12 no-padding">
+			<div class="thumbnail">	
+
+				<div class="caption-full">
+
+					<h4>
+						<a href="/reports/<%= report.id %>/edit"><%= report.name %></a>
+					</h4>				
+
+					<p>
+						<%= report.description %>
+					</p>	
+						
+					
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 no-padding">
+
+			<% //if (user && product.author.id.equals(user._id) ) { 
+				%>
+
+				<a class="btn btn-primary left" href="/reports/<%= report.id %>/edit" role="button">Edit</a>
+				<form action="/reports/<%= report.id %>/copy?_method=PUT" method="POST" class="left">
+					<button class="btn btn-primary left-margin-5">
+						Copy
+					</button>
+				</form>
+
+				<!-- <form action="/reports/<%= report.id %>/status?_method=PUT" method="POST" class="inline-button"> -->
+				<!-- </form>					 -->
+
+				<!-- <form action="/reports/<%= report.id %>/run?_method=PUT" method="POST" class="left-button">
+					<button class="btn btn-primary">
+						Run
+					</button>
+				</form>		 -->
+
+
+				<% //if(product.active === false) { %>
+					<form action="/reports/<%= report.id %>?_method=DELETE" method="POST" class="left">
+						<button class="btn btn-primary left-margin-5">
+							Delete
+						</button>
+					</form>
+				<% //} %>	
+
+			<% //} %>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="row">
+		
+		<div class="col-md-12 top-padding">
+
+			<form action="/reports/<%= report.id %>/fusions" method="POST">
+			
+				<table id="sort">
+
+					<colgroup>
+						<col span="1" style="width: 5%;">
+						<col span="1" style="width: 50%;">
+						<col span="1" style="width: 40%;">
+						<col span="1" style="width: 5%;">
+					</colgroup>
+
+					<thead>
+						<tr>
+							<th class="center-text"><span class="text">Order</span></th>
+							<th><span class="text">Section</span></th>
+							<th><span class="text">Print Name</span></th>
+							<th>
+								<button class="btn btn-primary add-row center-button" type="button">
+									+
+								</button>	
+							</th>									
+						</tr>
+					</thead>
+					<tbody>
+			
+						<% fusions.forEach(function (fusion){ %>
+			
+							<tr class="tr-grab">
+								<td class="index center-text"><%= fusion.order %></td>
+								<% 
+								//get section data associated with fusion
+								var section = sections.find(o => o.id === fusion.join_from_id);
+								%>
+								<td>
+									<select name="sections[]" type="number" class="full-width">
+										<% sections.forEach(function (section_e){ %>
+											<option value = <%= section_e.id %>
+												<% if (section.id === section_e.id ) { %>
+													selected="selected"
+												<% } %>														
+												>
+												<%= section_e.name %></option>
+										<% }) %>
+									</select>											
+								</td>
+								<td>
+									<input class="form-control" type="text" name="renames[]" placeholder="name" value="<%= section.string_value %>">								
+								</td>				
+								
+								<td>
+									<button class="btn btn-primary add-row center-button" type="button">
+										+
+									</button>	
+								</td>
+							
+							</tr>
+			
+						<% }) %>					
+					</tbody>
+				</table>
+			
+				<div class="top-padding">
+
+					<button class="btn btn-primary">
+						Save
+					</button>					
+				</div>
+			</form>
+			</div>
+
+		</div>
+	</div>
+
+	<a href="/reports">Go Back</a>
+
+</div>
+
+
+
+
+
+<script src="/js/main.js"></script>
+
+<script>
+	// $('#sort tr:last').after('<tr>...</tr><tr>...</tr>');
+
+	function add_function(){
+
+		var markup = "";
+		markup += "<tr>";
+		markup += '<td class="index center-text">-</td>'; //ROW NUMBER
+		// markup += '<td>-</td>'; //ROW NUMBER
+
+		markup += '<td>'
+		markup += '<select name="sections[]" type="number" class="full-width">'
+		markup += '<% sections.forEach(function (section_e){ %>'
+		markup += '<option value = <%= section_e.id %>>'													
+		markup += '<%= section_e.name %></option>'
+		markup += '<% }) %>'
+		markup += '</select>'											
+		markup += '</td>'
+
+		markup += '<td><input class="form-control" type="text" name="renames[]" placeholder="name" value=""></td>'; //NAME
+		markup += '<td><button class="btn btn-primary add-row center-button" type="button">+</button></td>'	//ADD BUTTON
+
+		markup += "</tr>";    
+
+		//get the closest row details
+		let closest_row = $(this).parents().closest('tr');
+
+		//CHECK IF THE ROW IS NOT A HEADER
+		if(closest_row.has('td').length > 0)
+		{
+			// insert row after current row
+			closest_row.after(markup);
+			//add click functionality to inserted row
+			let id = Number(closest_row.children(".index").text()) + 1;
+			$(".add-row:eq("+id.toString()+")").click(add_function)
+			// console.log(2)
+		}
+		else{
+			$("#sort tbody").prepend(markup)
+			$(".add-row:eq(1)").click(add_function)
+		}
+
+		$('#sort tbody').trigger('sortupdate'); // logs update called.
+	}
+
+	$(".add-row").click(add_function);	
+</script>
+
+
+<%- include("../partials/footer") %>
