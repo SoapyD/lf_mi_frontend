@@ -34,27 +34,27 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 folder_path: folder_path,
                 files_needed: fusions.length
             }
-            /*
-        
+            
             exports.files.push(file_data);
-        
+            
             let filepath = '';
             let filename = '';
             let outputname = '';
-        
+            
             let contents_page = '';
             //make a contents page
             fusions.forEach(function (fusion){
                 //get section data associated with fusion
                 var section = sections.find(o => o.id === fusion.join_from_id);
-        
+                
                 if (section.name !== "front"){
                     contents_page += section.name + "\n"
                 }
             })
-    
+            
             //CONVERT PARAMETER STRING INTO AN OBJECT
             let parameter_object = JSON.parse(subscription.parameters);
+            /*
     
             fusions.forEach((fusion) => { //LOOP THROUGH SECTION/REPORT FUSIONS
                 let section = sections.find(o => o.id === fusion.join_from_id); //GET SECTION DATA FROM FUSION
