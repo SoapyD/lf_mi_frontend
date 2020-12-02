@@ -97,10 +97,10 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 
                 outputname = "000000000" + fusion.order;
                 outputname = outputname.substr(outputname.length-size);
-                /*
-        
+                
                 exports.runReport(filepath, filename, section_param_object, folder_path+'/'+outputname)
-    
+                
+                /*
                 */
             })
         })
@@ -114,27 +114,28 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
 exports.runReport = async(filepath, filename, parameters, outputname) => {
     try {
         console.log("running: "+filename)
-
+        
         const reportPath = filepath + filename;
         // Define parameters
         const fileType = 'WORD';
         const file_extension = 'docx';
-
+        
         let report;
         
         exports.ssrs.setServerUrl(serverUrl);
-
+        
         var auth = {
             userName: username,
             password: password,
             workstation: null, // optional
             domain: null // optional
           };
-        report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
+          report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
 
+        /*
         // Writing to local file / or send the reponse to API 
         await fs.writeFileSync(outputname+'.'+file_extension, report, "base64");
-
+        */
     } catch (err) {
         console.log("ERROR RUNNING REPORT")
         console.error(err);
