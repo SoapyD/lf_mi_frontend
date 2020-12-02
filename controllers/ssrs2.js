@@ -54,8 +54,7 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
             
             //CONVERT PARAMETER STRING INTO AN OBJECT
             let parameter_object = JSON.parse(subscription.parameters);
-            /*
-    
+            
             fusions.forEach((fusion) => { //LOOP THROUGH SECTION/REPORT FUSIONS
                 let section = sections.find(o => o.id === fusion.join_from_id); //GET SECTION DATA FROM FUSION
                 //GET PARAMETERS ASSOCIATED WITH SECTION
@@ -70,39 +69,40 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 }else{
                     p_fusions = p_fusions_t
                 }
-    
+                
                 let param_string = "{"
                 //LOOP P_FUSIONS IF IT'S DEFINED
                 if (p_fusions){
                     p_fusions.forEach((p_fusion, index) => {
                         let parameter = parameters.find(o => o.id === p_fusion.join_from_id);
                         let value = parameter_object[parameter.name];
-
+                        
                         if(index > 0){
                             param_string+= " , "
                         }
                         param_string += '"' + parameter.name + '" : "'+value+'"'
                     })
                 }
-    
+                
                 param_string += "}"
                 let section_param_object = JSON.parse(param_string)
-    
+                
                 if(section.name === "front"){
                     section_param_object['contents_page'] = contents_page;
                 }
-                    
+                
                 filepath = section.path;
                 filename = section.name;  
                 let size = 3
-        
+                
                 outputname = "000000000" + fusion.order;
                 outputname = outputname.substr(outputname.length-size);
+                /*
         
                 exports.runReport(filepath, filename, section_param_object, folder_path+'/'+outputname)
     
+                */
             })
-            */
         })
     }
     catch(err){
