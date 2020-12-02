@@ -200,7 +200,7 @@ exports.updateSubscriptions = (req,res) => { //, middleware.isCampGroundOwnershi
 				case "run":
 					databaseController.getFullReport(req.params.reportid, "report, fusions, sections, parameters")
 					.then((result) => {
-						// ssrsController.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
+						ssrsController.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
 						req.flash("success", 'Running Selected Reports');
 						res.redirect("/reports/" +req.params.reportid+"/subscriptions");
 					})					

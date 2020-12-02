@@ -97,8 +97,11 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 
                 outputname = "000000000" + fusion.order;
                 outputname = outputname.substr(outputname.length-size);
+
+                // let output_path = folder_path+'/'+outputname;
+                let output_path = path.join(folder_path,outputname);                
                 
-                exports.runReport(filepath, filename, section_param_object, folder_path+'/'+outputname)
+                exports.runReport(filepath, filename, section_param_object, output_path)
                 
                 /*
                 */
@@ -132,10 +135,10 @@ exports.runReport = async(filepath, filename, parameters, outputname) => {
           };
           report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
 
-        /*
+        
         // Writing to local file / or send the reponse to API 
         await fs.writeFileSync(outputname+'.'+file_extension, report, "base64");
-        */
+        /**/
     } catch (err) {
         console.log("ERROR RUNNING REPORT")
         console.error(err);
@@ -147,11 +150,11 @@ exports.checkFiles = async() => {
 
     exports.files.forEach( async(item, index) => {
         var file_list = fs.readdirSync(item.folder_path);
-        // console.log("number of files: "+file_list.length.toString())   
+        console.log("number of files: "+file_list.length.toString())   
         if(file_list.length >= item.files_needed){
             //create the merge document
             try{
-                await exports.mergeDocument(item.folder_path+'/', file_list, Date.now() )
+                await exports.mergeDocument(item.folder_path, file_list, Date.now() )
                 //remove from files array
                 exports.files.splice(index, 1);
             }
@@ -163,11 +166,11 @@ exports.checkFiles = async() => {
     setTimeout(exports.checkFiles, 10000);
 }
 
-exports.mergeDocument = async(path, file_list, filename) => {
+exports.mergeDocument = async(filepath, file_list, filename) => {
 
     let imported_files = [];
     file_list.forEach( async(item, index) => {
-        await imported_files.push(fs.readFileSync(path+'/'+item, 'binary'))
+        await imported_files.push(fs.readFileSync(path.join(filepath,item), 'binary'))
     })
     
 
