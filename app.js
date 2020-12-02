@@ -56,13 +56,11 @@ app.use(function(req, res, next){
 	next();
 })
 
-
 //setup routes
 app.use(IndexRoutes);
 app.use("/reports",ReportsRoutes);
 app.use("/reports/:reportid/fusions",FusionsRoutes);
 app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);
-
 
 database.sequelize
   .sync()
