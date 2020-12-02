@@ -25,23 +25,22 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
     try{
 
         subscriptions.forEach((subscription)=>{ //LOOP THROUGH EACH PERSCRIPTION
-    
+            
             const tmpobj = tmp.dirSync();
-    
+            
             let folder_path = tmpobj.name //'reports';//
-        
+            
             let file_data = {
                 folder_path: folder_path,
                 files_needed: fusions.length
             }
+            /*
         
             exports.files.push(file_data);
         
             let filepath = '';
             let filename = '';
             let outputname = '';
-            // var parameters = {
-            // };
         
             let contents_page = '';
             //make a contents page
@@ -53,9 +52,6 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                     contents_page += section.name + "\n"
                 }
             })
-            // console.log(contents_page);
-    
-    
     
             //CONVERT PARAMETER STRING INTO AN OBJECT
             let parameter_object = JSON.parse(subscription.parameters);
@@ -81,7 +77,7 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                     p_fusions.forEach((p_fusion, index) => {
                         let parameter = parameters.find(o => o.id === p_fusion.join_from_id);
                         let value = parameter_object[parameter.name];
-                        // let test;
+
                         if(index > 0){
                             param_string+= " , "
                         }
@@ -95,8 +91,7 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 if(section.name === "front"){
                     section_param_object['contents_page'] = contents_page;
                 }
-    
-                
+                    
                 filepath = section.path;
                 filename = section.name;  
                 let size = 3
@@ -107,12 +102,12 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 exports.runReport(filepath, filename, section_param_object, folder_path+'/'+outputname)
     
             })
+            */
         })
     }
     catch(err){
         console.log(err)
     }
-
 
 }
 
