@@ -1,4 +1,4 @@
-require('dotenv').config()
+// require('dotenv').config()
 
 const express = require("express");
 const app = express();
@@ -80,8 +80,8 @@ database.sequelize
 app.use(errorController.get404);
 
 
-app.listen(80, function(){
-// app.listen(process.env.PORT, process.env.IP, function(){	
+// app.listen(80, function(){
+app.listen(process.env.PORT, process.env.IP, function(){	
     console.log("Server has started!")
     
     //START THE COMPLETE DOCUMENT CHECKER
