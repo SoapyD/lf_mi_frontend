@@ -102,7 +102,7 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 // let output_path = folder_path+'/'+outputname;
                 let output_path = path.join(folder_path,outputname);                
                 
-                // exports.runReport(filepath, filename, section_param_object, output_path)
+                exports.runReport(filepath, filename, section_param_object, output_path)
                 
                 /*
                 */
@@ -134,11 +134,11 @@ exports.runReport = async(filepath, filename, parameters, outputname) => {
             workstation: null, // optional
             domain: null // optional
           };
-          report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
+        // report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
 
         
         // Writing to local file / or send the reponse to API 
-        await fs.writeFileSync(outputname+'.'+file_extension, report, "base64");
+        // await fs.writeFileSync(outputname+'.'+file_extension, report, "base64");
         /**/
     } catch (err) {
         console.log("ERROR RUNNING REPORT")
