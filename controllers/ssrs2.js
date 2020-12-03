@@ -2,7 +2,8 @@ const emailUtil = require('../util/email');
 
 var fs = require('fs');
 var path = require('path');
-const DocxMerger = require('docx-merger');
+// const DocxMerger = require('docx-merger');
+const DocxMerger = require('../util/docx-merger/index.js');
 const tmp = require('tmp');
 const Subscription = require('../models/subscription');
 const Parameter = require('../models/parameter');
