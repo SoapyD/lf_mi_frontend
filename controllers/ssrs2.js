@@ -102,7 +102,7 @@ exports.run = async(subscriptions, report, fusions, sections, parameter_fusions,
                 // let output_path = folder_path+'/'+outputname;
                 let output_path = path.join(folder_path,outputname);                
                 
-                exports.runReport(filepath, filename, section_param_object, output_path)
+                // exports.runReport(filepath, filename, section_param_object, output_path)
                 
                 /*
                 */
