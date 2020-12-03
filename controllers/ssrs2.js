@@ -135,7 +135,7 @@ exports.runReport = async(filepath, filename, parameters, outputname) => {
             domain: null // optional
           };
         // This part errors on the server
-        // report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
+        report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
 
         
         // Writing to local file / or send the reponse to API 
