@@ -11,25 +11,25 @@ async function populate(){
 
 
     //////////////////////////////////////////////////////////////////////FREQUENCIES
-	await Frequency.create ({
+	let fr_1 =  Frequency.create ({
 		name: 'Monthly'
         ,description: 'Report runs on the same date every month'
         ,order: 1.01
     })       
     
-	await Frequency.create ({
+	let fr_2 =  Frequency.create ({
 		name: 'Weekly'
         ,description: 'Report runs on the same date every week'
         ,order: 2.00        
     })       
 
-	await Frequency.create ({
+	let fr_3 =  Frequency.create ({
 		name: 'Daily'
         ,description: 'Report runs on the same date every day'
         ,order: 3.00        
     })    
 
-	await Frequency.create ({
+	let fr_4 =  Frequency.create ({
 		name: 'Bi-Weekly'
         ,description: 'Report runs on the same date every 2 weeks'
         ,order: 2.10        
@@ -37,17 +37,17 @@ async function populate(){
 
     //////////////////////////////////////////////////////////////////////PARAMETERS
 
-	await Parameter.create ({
+	let pr_1 =  Parameter.create ({
 		name: 'report_name'
 		,query: ''
 	})  
 
-    await Parameter.create ({
+    let pr_2 =  Parameter.create ({
 		name: 'company_filter'
 		,query: 'SELECT dim_orgunit_cleaned AS value FROM DIMENSION_orgunit ORDER BY dim_orgunit_cleaned'
 	})  
 
-	await Parameter.create ({
+	let pr_3 =  Parameter.create ({
 		name: 'source_table'
 		,query: ''
 	})  
@@ -59,31 +59,31 @@ async function populate(){
 	// })  
 
     //////////////////////////////////////////////////////////////////////SECTIONS
-	await Section.create ({
+	let se_1 =  Section.create ({
         path: ''
 		,name: ''
 		,description: ''
 	})  
 
-	await Section.create ({
+	let se_2 =  Section.create ({
         path: '/99 - Test Reports/Tom Dev/Service Report/'
 		,name: 'front'
 		,description: ''
 	})   
 
-	await Section.create ({
+	let se_3 =  Section.create ({
         path: '/99 - Test Reports/Tom Dev/Service Report/'
 		,name: 'Support Requests - 13month by Source'
 		,description: ''
 	})    
 
-	await Section.create ({
+	let se_4 =  Section.create ({
         path: '/99 - Test Reports/Tom Dev/Service Report/'
 		,name: 'Support Requests - Incidents Opened and Resolved Per Month'
 		,description: ''
 	})    
 
-	await Section.create ({
+	let se_5 =  Section.create ({
         path: '/99 - Test Reports/Tom Dev/Service Report/'
 		,name: 'Incidents - Open and Resolved per Month per Resolver Group'
 		,description: ''
@@ -91,14 +91,17 @@ async function populate(){
 
 
     //////////////////////////////////////////////////////////////////////REPORTS    
-	await Report.create ({
+	let re_1 =  Report.create ({
 		name: 'Service Report'
 		,description: 'The Standard 13 Month Service Report'
     })    
-    
 
-
-
+    return Promise.all([
+        fr_1, fr_2, fr_3, fr_4,
+        pr_3, pr_3, pr_3,
+        se_1, se_2, se_3, se_4, se_5,
+        re_1
+    ])
 }
 
 async function fuse() {
