@@ -67,6 +67,7 @@ database.sequelize
   .sync()
   .then(result => {
     // console.log(result)
+    console.log(process.env.DB_SERVER)
     seeds.seed()
 
   })
