@@ -289,20 +289,20 @@ async function fuse() {
 
 exports.seed = async() => {
 
-    databaseController.dropParameters();    
-    databaseController.dropSubscriptions();
-    databaseController.dropFrequencies();     
-    databaseController.dropFusions();
-    databaseController.dropSections();
-    databaseController.dropReports();  
+    // databaseController.dropParameters();    
+    // databaseController.dropSubscriptions();
+    // databaseController.dropFrequencies();     
+    // databaseController.dropFusions();
+    // databaseController.dropSections();
+    // databaseController.dropReports();  
 
-    // await database.sequelize.sync()
-    // .then(result => {
-    //     populate()
-    //     .then(result=>{
-    //         fuse();
-    //     })
-    // })    
+    await database.sequelize.sync()
+    .then(result => {
+        populate()
+        .then(result=>{
+            fuse();
+        })
+    })    
 
     
     
