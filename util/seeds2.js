@@ -296,13 +296,13 @@ exports.seed = async() => {
     databaseController.dropSections();
     databaseController.dropReports();  
 
-    await database.sequelize.sync()
-    .then(result => {
-        populate()
-        .then(result=>{
-            fuse();
-        })
-    })    
+    // await database.sequelize.sync()
+    // .then(result => {
+    //     populate()
+    //     .then(result=>{
+    //         fuse();
+    //     })
+    // })    
 
     
     

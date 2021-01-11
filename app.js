@@ -66,7 +66,7 @@ app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);
 database.sequelize
   .sync()
   .then(result => {
-    // seeds.seed()
+    seeds.seed()
 
   })
   .catch(err => {
