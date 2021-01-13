@@ -136,6 +136,9 @@ exports.runReport = async(filepath, filename, parameters, outputname) => {
           };
         // This part errors on the server
         console.log("getting report... "+reportPath)
+        console.log(serverUrl)
+        console.log(auth)
+        console.log(parameters)
         report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
 
         
