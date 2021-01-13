@@ -217,39 +217,39 @@ async function fuse() {
         }) 
 
         //ADD REPORT SECTION
-        databaseController.getSection(-1, name='Incidents - Open and Resolved per Month per Resolver Group')
-        .then((section) => {  
+        // databaseController.getSection(-1, name='Incidents - Open and Resolved per Month per Resolver Group')
+        // .then((section) => {  
 
-            databaseController.getParameter(-1, name='company_filter')
-            .then((parameter) => {
-                FusionSection.create({
-                    order: 1
-                    ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
-                    ,join_to_id: section.id
-                    ,join_to: 'section'                                                 
-                })                   
-            })          
+        //     databaseController.getParameter(-1, name='company_filter')
+        //     .then((parameter) => {
+        //         FusionSection.create({
+        //             order: 1
+        //             ,join_from_id: parameter.id
+        //             ,join_from: 'parameter'                                                   
+        //             ,join_to_id: section.id
+        //             ,join_to: 'section'                                                 
+        //         })                   
+        //     })          
 
-            databaseController.getParameter(-1, name='source_table')
-            .then((parameter) => {
-                FusionSection.create({
-                    order: 1
-                    ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
-                    ,join_to_id: section.id
-                    ,join_to: 'section'                                                 
-                })                   
-            })                      
+        //     databaseController.getParameter(-1, name='source_table')
+        //     .then((parameter) => {
+        //         FusionSection.create({
+        //             order: 1
+        //             ,join_from_id: parameter.id
+        //             ,join_from: 'parameter'                                                   
+        //             ,join_to_id: section.id
+        //             ,join_to: 'section'                                                 
+        //         })                   
+        //     })                      
             
-            FusionSection.create({
-                order: 4
-                ,join_from_id: section.id
-                ,join_from: 'section'                                                   
-                ,join_to_id: report_id
-                ,join_to: 'report'                                                 
-            })                      
-        }) 
+        //     FusionSection.create({
+        //         order: 4
+        //         ,join_from_id: section.id
+        //         ,join_from: 'section'                                                   
+        //         ,join_to_id: report_id
+        //         ,join_to: 'report'                                                 
+        //     })                      
+        // }) 
 
 
         //CREATE SUBSCRIPTIONS
@@ -289,12 +289,12 @@ async function fuse() {
 
 exports.seed = async() => {
 
-    // databaseController.dropParameters();    
-    // databaseController.dropSubscriptions();
-    // databaseController.dropFrequencies();     
-    // databaseController.dropFusions();
-    // databaseController.dropSections();
-    // databaseController.dropReports();  
+    await databaseController.dropParameters();    
+    await databaseController.dropSubscriptions();
+    await databaseController.dropFrequencies();     
+    await databaseController.dropFusions();
+    await databaseController.dropSections();
+    await databaseController.dropReports();  
 
     await database.sequelize.sync()
     .then(result => {

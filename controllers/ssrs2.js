@@ -196,6 +196,7 @@ exports.mergeDocument = async(filepath, file_list, filename) => {
 
 exports.saveBlob = async(content, filename) => {
      
+    console.log("SAVING BLOB")
     const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
     
     // Enter your storage account name and shared key
