@@ -13,12 +13,15 @@ updateIndex = function(e, ui) {
     });
 };
 
+// the help is the element that visible when being dragged
+// The stop function runs when the element is finished being dragged
 $("#sort tbody").sortable({
     helper: fixHelperModified,
     stop: updateIndex
 })
  .disableSelection()
 
+// triggered at the end of an "add row" call, this function updates the element index of each draggable element
 $("#sort tbody").on('sortupdate',() => {
 
     let indexes =  $('td.index');
