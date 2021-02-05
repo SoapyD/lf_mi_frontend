@@ -1,75 +1,165 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jQuery UI Sortable - Default functionality</title>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <style>
-  .sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-  .sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 10px; height: 100%; }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sortable Documents</title>
 
-  /* .sortable2 { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-  .sortable2 li { margin: 0 3px 3px 3px; padding: 0.4em; height: 100%; }
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">	    
 
-  #sortable3 { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-  #sortable3 li { margin: 0 3px 3px 3px; padding: 0.4em; height: 100%; } */
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
 
-  </style>
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    $( ".sortable" ).sortable();
-    $( ".sortable" ).disableSelection();
-    // $( ".sortable2" ).sortable();
-    // $( ".sortable2" ).disableSelection();  
-    // $( "#sortable3" ).sortable();
-    // $( "#sortable3" ).disableSelection();        
-  } );
-  </script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+ 
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>		
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript" async></script>
+
+
+	<link rel="stylesheet" href="/stylesheets/main.css">
+    <style>
+        .sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+        .sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 10px; height: 100%; }
+        /* .sortable2 { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+        .sortable2 li { margin: 0 3px 3px 3px; padding: 0.4em; height: 100%; }
+        #sortable3 { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+        #sortable3 li { margin: 0 3px 3px 3px; padding: 0.4em; height: 100%; } */
+    </style>
+ 
+    <script>
+        $( function() {
+            $( ".sortable" ).sortable();
+            $( ".sortable" ).disableSelection();
+            // $( ".sortable2" ).sortable();
+            // $( ".sortable2" ).disableSelection();  
+            // $( "#sortable3" ).sortable();
+            // $( "#sortable3" ).disableSelection();        
+        } );
+    </script>
+    
 </head>
 <body>
  
 
-<!-- <li class="ui-state-default">Item 1</li>   -->
 
-<ul class="sortable">
-    <li class="ui-state-default">
-        Title
-        <ul class="sortable">
-            <li class="ui-state-default">Item #</li>
-            <li class="ui-state-default">Item #</li>    
-        </ul>        
-    </li>
-    <li class="ui-state-default">Item #</li>    
-    <li class="ui-state-default">Item #</li>        
 
-    <li class="ui-state-default">
-        <ul class="sortable">
-            <li class="ui-state-default">Item #</li>
-            <li class="ui-state-default">Item #</li>    
-        </ul>        
-    </li>
+<div class="container">
 
-    <li class="ui-state-default">
-        <ul class="sortable">
-            <li class="ui-state-default">Item #</li>
-            <li class="ui-state-default">Item #</li>   
+    <button class="btn btn-primary add-section" type="button">
+        +
+    </button>	
+
+    <ul class="sortable sortable-sections"></ul>
+
+    </ul>    
+
+    <!-- 
+    <div class="row">
+        <div class="col-md-12 no-padding">
+
+            <form action="/reports/<%= report.id %>/fusions" method="POST">            
+                <table id="sort">
+                </table>
+            </form>
+        </div>
+    </div> 
+    -->
+
+</div>
+
+
+
+<script src="/js/main.js"></script>
+
+<script>
+
+	function add_section_function(){
+
+        //GENERATE A UNIQUE ID
+        let number = $(".section").length + 1
+
+        //CREATE MARKUP SCRIPT
+        let markup = `
+        <li class="ui-state-default section" id="section_`+number+`">
+            Section `+number+`
+        
+            <button class="btn btn-primary add-subsection" type="button">
+                +
+            </button>	        
+
+            <ul class="sortable sortable-subsections">
+
+            </ul>
+        </li>
+        `
+
+        // APPEND MARKUP TO SORTABLE UL TAG
+        $(".sortable-sections").append(markup)
+
+        //GET ADD BUTTON FOR SECTION AND ADD CLICK FUNCTION TO IT
+        let section_button = $("#section_"+number).children('.add-subsection')
+
+        section_button.click(add_subsection_function);
+	}
+    
+	function add_subsection_function(){
+
+        let number = $(".subsection").length + 1
+
+        let markup = `        
+        <li class="ui-state-default subsection" id="subsection_`+number+`">
+            Sub Section `+number+`
             
-            <li class="ui-state-default">
-                <ul class="sortable">
-                    <li class="ui-state-default">Item #</li>
-                    <li class="ui-state-default">Item #</li>    
-                </ul>        
-            </li>            
+            <button class="btn btn-primary add-paragraph" type="button">
+                +
+            </button>	          
+            
+            <ul class="sortable sortable-paragraphs">
+            
+            </ul>            
 
-        </ul>        
-    </li>
+        </li>                
+        `
+        
+        //GET PARENT OF BUTTON THEN FULE SORTABLE SECTION UL WITHIN CHILDREN AND APPEND MARKUP
+        $(this).parent().children('.sortable-subsections').append(markup)
+        let subsection_button = $("#subsection_"+number).children('.add-paragraph')
+        subsection_button.click(add_paragraph_function);
+
+        $( ".sortable" ).sortable();
+        $( ".sortable" ).disableSelection();        
+	}
 
 
-</ul>
+	function add_paragraph_function(){
+
+        let number = $(".paragraph").length + 1
+
+        let markup = `
+            <li class="ui-state-default paragraph">
+                Paragraph `+number+`                
+            </li>                
+        `
+
+        // console.log($(this).children('.sortable-paragraphs'))
+        // let item = $(this).children('.sortable-paragraphs').append(markup)
+        $(this).parent().children('.sortable-paragraphs').append(markup)
+
+        $( ".sortable" ).sortable();
+        $( ".sortable" ).disableSelection();        
+	}
+
+
+
+    $(".add-section").click(add_section_function);	
+    
+    
+
+</script>
+
 
 
  
