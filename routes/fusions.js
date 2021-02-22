@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router({mergeParams: true});
 const fusionsController = require('../controllers/fusions');
+const middleware = require("../middleware");
 
 // router.get("/", fusionsController.getAllFusions);
 
 //CREATE - create new product
-router.post("/", fusionsController.createFusion)
+router.post("/", middleware.isLoggedIn, fusionsController.createFusion)
 
 // //NEW - show form to create new product
 // router.get("/new", fusionsController.getFormCreateReport)

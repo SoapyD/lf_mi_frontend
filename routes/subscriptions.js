@@ -1,26 +1,27 @@
 const express = require("express");
 const router = express.Router({mergeParams: true});
 const subscriptionsController = require('../controllers/subscriptions');
+const middleware = require("../middleware");
 
-router.get("/", subscriptionsController.getSubscriptions);
+router.get("/", middleware.isLoggedIn, subscriptionsController.getSubscriptions);
 
 //CREATE - create new product
-router.post("/", subscriptionsController.createSubscription)
+router.post("/", middleware.isLoggedIn, subscriptionsController.createSubscription)
 
 // //NEW - show form to create new product
-router.get("/new", subscriptionsController.getFormCreateSubscription)
+router.get("/new", middleware.isLoggedIn, subscriptionsController.getFormCreateSubscription)
 
 // //SHOW - show product details
 // router.get("/:id", fusionsController.getReport)
 
 //EDIT REPORT
-router.get("/:subscriptionid/edit", subscriptionsController.getEditSubscription)
+router.get("/:subscriptionid/edit", middleware.isLoggedIn, subscriptionsController.getEditSubscription)
 
 //UPDATE REPORT
-router.put("/:subscriptionid", subscriptionsController.updateSubscription)
+router.put("/:subscriptionid", middleware.isLoggedIn, subscriptionsController.updateSubscription)
 
 //UPDATE REPORTS
-router.put("/", subscriptionsController.updateSubscriptions)
+router.put("/", middleware.isLoggedIn, subscriptionsController.updateSubscriptions)
 
 
 
