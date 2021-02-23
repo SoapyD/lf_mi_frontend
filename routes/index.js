@@ -14,7 +14,7 @@ router.post(
     bodyParser.urlencoded({ extended: false }),
     passport.authenticate("saml", { failureRedirect: "/", failureFlash: true }),
     function (req, res) {
-        let test = req.session.passport.user
+        // let test = req.session.passport.user
         res.redirect("/");
     }
 );

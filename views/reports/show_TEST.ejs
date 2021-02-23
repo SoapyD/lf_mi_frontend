@@ -23,20 +23,12 @@
     <style>
         .sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
         .sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 10px; height: 100%; }
-        /* .sortable2 { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-        .sortable2 li { margin: 0 3px 3px 3px; padding: 0.4em; height: 100%; }
-        #sortable3 { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-        #sortable3 li { margin: 0 3px 3px 3px; padding: 0.4em; height: 100%; } */
     </style>
  
     <script>
         $( function() {
-            $( ".sortable" ).sortable();
-            $( ".sortable" ).disableSelection();
-            // $( ".sortable2" ).sortable();
-            // $( ".sortable2" ).disableSelection();  
-            // $( "#sortable3" ).sortable();
-            // $( "#sortable3" ).disableSelection();        
+            $( ".sortable" ).sortable({stop: updateIndex});
+            $( ".sortable" ).disableSelection(); //make sortable text area unselectable    
         } );
     </script>
     
@@ -45,29 +37,28 @@
  
 
 
-
+<!-- CONTAINER TO CONTAINS THE VARIABLE, NESTED FORM -->
 <div class="container">
 
-    <button class="btn btn-primary add-section" type="button">
-        +
-    </button>	
+    <form action="/reports/<%= report.id %>/fusions" method="POST">
+        <button class="btn btn-primary add-section" type="button">
+            +
+        </button>	
 
-    <ul class="sortable sortable-sections"></ul>
+        <span>Add Section</span>
 
-    </ul>    
+        <ul class="sortable sortable-sections"></ul>
 
-    <!-- 
-    <div class="row">
-        <div class="col-md-12 no-padding">
+        </ul>    
 
-            <form action="/reports/<%= report.id %>/fusions" method="POST">            
-                <table id="sort">
-                </table>
-            </form>
+        <div class="top-padding">
+
+            <button class="btn btn-primary">
+                Save
+            </button>					
         </div>
-    </div> 
-    -->
 
+    </form>
 </div>
 
 
@@ -80,15 +71,19 @@
 
         //GENERATE A UNIQUE ID
         let number = $(".section").length + 1
+        let text_number = 'Section '+number 
 
         //CREATE MARKUP SCRIPT
         let markup = `
-        <li class="ui-state-default section" id="section_`+number+`">
-            Section `+number+`
+        <li class="ui-state-default section tr-grab" id="section_`+number+`">
         
             <button class="btn btn-primary add-subsection" type="button">
                 +
             </button>	        
+
+            <span>`+text_number+`</span>
+
+            <input class="form-control" type="text" name="`+text_number+`[name]" placeholder="name" >
 
             <ul class="sortable sortable-subsections">
 
@@ -103,20 +98,28 @@
         let section_button = $("#section_"+number).children('.add-subsection')
 
         section_button.click(add_subsection_function);
+
 	}
     
 	function add_subsection_function(){
 
+        let parent = $(this).parent();
+        let parent_span = $(parent[0]).find("span")[0].innerText
+        let text_number = 'Sub Section '+(parent.children().find('.subsection').length + 1)
         let number = $(".subsection").length + 1
 
+
         let markup = `        
-        <li class="ui-state-default subsection" id="subsection_`+number+`">
-            Sub Section `+number+`
+        <li class="ui-state-default subsection tr-grab" id="subsection_`+number+`">
             
             <button class="btn btn-primary add-paragraph" type="button">
                 +
             </button>	          
             
+            <span>`+text_number+`</span>
+
+            <input class="form-control" type="text" name="`+parent_span+`[`+text_number+`][name]" placeholder="name" >
+
             <ul class="sortable sortable-paragraphs">
             
             </ul>            
@@ -129,34 +132,73 @@
         let subsection_button = $("#subsection_"+number).children('.add-paragraph')
         subsection_button.click(add_paragraph_function);
 
-        $( ".sortable" ).sortable();
+        $( ".sortable" ).sortable({stop: updateIndex});
         $( ".sortable" ).disableSelection();        
 	}
 
 
 	function add_paragraph_function(){
 
+        let parent = $(this).parent();
+        let parent_span = $(parent[0]).find("span")[0].innerText
+        let grandparent = $(parent).parents().find('.section');
+        let grandparent_span = $(grandparent[0]).find("span")[0].innerText
+
+        let text_number = 'Paragraph '+(parent.children().find('.paragraph').length + 1)      
         let number = $(".paragraph").length + 1
 
         let markup = `
-            <li class="ui-state-default paragraph">
-                Paragraph `+number+`                
+            <li class="ui-state-default paragraph tr-grab" id="paragraph_`+number+`">
+                <span>`+text_number+`</span>      
+
+                <input class="form-control" type="text" name="`+grandparent_span+`[`+parent_span+`][`+text_number+`][name]" placeholder="name" >
             </li>                
         `
-
-        // console.log($(this).children('.sortable-paragraphs'))
-        // let item = $(this).children('.sortable-paragraphs').append(markup)
         $(this).parent().children('.sortable-paragraphs').append(markup)
 
-        $( ".sortable" ).sortable();
+        $( ".sortable" ).sortable({stop: updateIndex});
         $( ".sortable" ).disableSelection();        
 	}
 
 
-
+    // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
     $(".add-section").click(add_section_function);	
     
-    
+
+
+
+updateIndex = (e, ui) => {
+    let parent = ui.item.parent();
+    let children = parent.children();
+
+    let item = {
+        id: '',
+        text: ''
+    }
+    //CHECK WHAT TYPE OF SECTION IS BEING MOVED
+    if(parent.hasClass('sortable-sections')){
+        item.id = "section_"
+        item.text = "Section "
+    }
+    if(parent.hasClass('sortable-subsections')){
+        item.id = "subsection_"
+        item.text = "Sub Section "
+    }
+    if(parent.hasClass('sortable-paragraphs')){
+        item.id = "paragraph_"
+        item.text = "Paragraph "
+    }
+
+    //LOOP THROUGH THE CHILDREN AND UPDATE THE NAME OF THE SORTABLE AND THE FORM SUB ITEMS WITHIN IT
+    children.each(function (i) {
+        $(this).find('span')[0].innerText = item.text + (i + 1).toString()
+        // this.id = item.id + (i + 1).toString() //DON'T ADJUST ID NUMBER
+
+        //LOOP THROUGH INPUT FOR FOR THIS ITEM AND IT'S CHILDREN SO THEY USE THE UPDATED NAME
+        // console.log($(this).children().find('.sortable'))
+    })
+}    
+
 
 </script>
 

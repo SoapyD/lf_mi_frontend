@@ -148,6 +148,11 @@ a:focus, a:hover {
 	float: right;
 }
 
+.flex-right {
+	display: flex;
+	justify-content: flex-end;
+}
+
 .add-row{
 	margin: auto;
 }

@@ -24,14 +24,14 @@ const databaseController = require('./database');
 
 exports.createFusion = async(req,res) => { //, middleware.isLoggedIn
 
-    let fusions = await databaseController.destroyFusions(
-        Number(req.params.reportid), "section", "report")
+    // let fusions = await databaseController.destroyFusions(
+    //     Number(req.params.reportid), "section", "report")
 
-    let sections = req.body.sections;
-    let f_sections = sections.filter(element => element !== "1"); //REMOVE ALL INSTANCES OF THE BLANK SECTION
+    // let sections = req.body.sections;
+    // let f_sections = sections.filter(element => element !== "1"); //REMOVE ALL INSTANCES OF THE BLANK SECTION
 
 
-    let creations = await databaseController.recreateSectionFusions(req.params.reportid, f_sections)
+    // let creations = await databaseController.recreateSectionFusions(req.params.reportid, f_sections)
 
 
     // console.log(fusions)

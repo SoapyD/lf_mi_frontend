@@ -1,4 +1,4 @@
-// require('dotenv').config()
+require('dotenv').config()
 
 const express = require("express");
 const app = express();
@@ -91,6 +91,7 @@ passport.use(new SamlStrategy(
       callbackUrl: process.env.SAML_CALLBACK,
     },
     function (profile, done) {
+      // console.log(profile)
       return done(null,
         {
           id: profile.nameID,
