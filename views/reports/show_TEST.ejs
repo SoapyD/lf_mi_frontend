@@ -168,34 +168,37 @@
 
 
 updateIndex = (e, ui) => {
-    let parent = ui.item.parent();
-    let children = parent.children();
 
-    let item = {
-        id: '',
-        text: ''
-    }
-    //CHECK WHAT TYPE OF SECTION IS BEING MOVED
-    if(parent.hasClass('sortable-sections')){
-        item.id = "section_"
-        item.text = "Section "
-    }
-    if(parent.hasClass('sortable-subsections')){
-        item.id = "subsection_"
-        item.text = "Sub Section "
-    }
-    if(parent.hasClass('sortable-paragraphs')){
-        item.id = "paragraph_"
-        item.text = "Paragraph "
-    }
+    //LOOP THROUGH EACH SECTION, SUBSECTION AND PARAGRAPH AND RELABEL THEIR NAMES ACCORDINGLY 
+    let sections = $(".section");
+    // console.log(sections)
 
-    //LOOP THROUGH THE CHILDREN AND UPDATE THE NAME OF THE SORTABLE AND THE FORM SUB ITEMS WITHIN IT
-    children.each(function (i) {
-        $(this).find('span')[0].innerText = item.text + (i + 1).toString()
-        // this.id = item.id + (i + 1).toString() //DON'T ADJUST ID NUMBER
+    sections.each(function (i) {
 
-        //LOOP THROUGH INPUT FOR FOR THIS ITEM AND IT'S CHILDREN SO THEY USE THE UPDATED NAME
-        // console.log($(this).children().find('.sortable'))
+        //RELABEL SECTION
+        let section_name = 'Section ' + (i + 1)
+        $(this).find('span')[0].innerText = section_name
+        $(this).find('input')[0].name = section_name + '[name]'
+
+        let subsections = $(this).children().find('.subsection')
+
+        subsections.each(function (i) {
+            
+        //     //RELABEL SUBSECTION
+            let subsection_name = 'Sub Section ' + (i + 1)
+            $(this).find('span')[0].innerText = subsection_name
+            $(this).find('input')[0].name = section_name + '['+subsection_name+']'+'[name]'
+
+            let paragraphs = $(this).children().find('.paragraph')
+
+            paragraphs.each(function (i) {
+                //RELABEL SUBSECTION
+                let paragraph_name = 'Paragraph ' + (i + 1)
+                $(this).find('span')[0].innerText = paragraph_name
+                $(this).find('input')[0].name = section_name + '['+subsection_name+']' + '['+paragraph_name+']'+'[name]'               
+            })
+        })
+
     })
 }    
 

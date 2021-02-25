@@ -1,0 +1,277 @@
+<%- include("../partials/header") %>
+ 
+
+
+<div class="container">
+	<div class="row">
+		
+		<div class="col-md-12 no-padding">
+			<div class="thumbnail">	
+
+				<div class="caption-full">
+
+					<h4>
+						<a href="/reports/<%= report.id %>/edit"><%= report.name %></a>
+					</h4>				
+
+					<p>
+						<%= report.description %>
+					</p>	
+						
+					
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 no-padding">
+
+			<% //if (user && product.author.id.equals(user._id) ) { 
+				%>
+
+				<a class="btn btn-primary left" href="/reports/<%= report.id %>/edit" role="button">Edit</a>
+				<form action="/reports/<%= report.id %>/copy?_method=PUT" method="POST" class="left">
+					<button class="btn btn-primary left-margin-5">
+						Copy
+					</button>
+				</form>
+
+
+				<% //if(product.active === false) { %>
+					<form action="/reports/<%= report.id %>?_method=DELETE" method="POST" class="left">
+						<button class="btn btn-primary left-margin-5">
+							Delete
+						</button>
+					</form>
+				<% //} %>	
+
+			<% //} %>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+<!-- CONTAINER TO CONTAINS THE VARIABLE, NESTED FORM -->
+<div class="container report-builder">
+
+    <form action="/reports/<%= report.id %>/fusions" method="POST">
+        <button class="btn btn-primary add-section" type="button">
+            +
+        </button>	
+
+        <span>Add Section</span>
+
+        <ul class="sortable sortable-sections"></ul>
+
+        </ul>    
+
+        <div class="top-padding">
+
+            <button class="btn btn-primary">
+                Save
+            </button>					
+        </div>
+
+    </form>
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+    updateSortable = () => {
+        $( ".sortable" ).sortable({
+            stop: updateIndex,
+            opacity: 0.6,
+            placeholder: "ui-state-highlight",
+            forcePlaceholderSize: true
+        });
+        $( ".sortable" ).disableSelection(); //make sortable text area unselectable  
+    }
+
+    function add_section_function(){
+
+        //GENERATE A UNIQUE ID
+        let number = $(".section").length + 1
+        let text_number = 'Section '+number 
+
+        //CREATE MARKUP SCRIPT
+        let markup = `
+        <li class="ui-state-default section tr-grab" id="section_`+number+`">
+        
+            <button class="btn btn-primary add-subsection" type="button">
+                +
+            </button>	        
+
+            <span>`+text_number+`</span>
+
+            <input class="form-control" type="text" name="`+text_number+`[name]" placeholder="name" >
+
+            <ul class="sortable sortable-subsections">
+
+            </ul>
+        </li>
+        `
+
+        // APPEND MARKUP TO SORTABLE UL TAG
+        $(".sortable-sections").append(markup)
+
+        //GET ADD BUTTON FOR SECTION AND ADD CLICK FUNCTION TO IT
+        let section_button = $("#section_"+number).children('.add-subsection')
+
+        section_button.click(add_subsection_function);
+
+        updateSortable()
+	}
+    
+	function add_subsection_function(){
+
+        let parent = $(this).parent();
+        let parent_span = $(parent[0]).find("span")[0].innerText
+        let text_number = 'Sub Section '+(parent.children().find('.subsection').length + 1)
+        let number = $(".subsection").length + 1
+
+
+        let markup = `        
+        <li class="ui-state-default subsection tr-grab" id="subsection_`+number+`">
+            
+            <button class="btn btn-primary add-paragraph" type="button">
+                +
+            </button>	          
+            
+            <span>`+text_number+`</span>
+
+            <input class="form-control" type="text" name="`+parent_span+`[`+text_number+`][name]" placeholder="name" >
+
+            <select name="`+parent_span+`[`+text_number+`][section]" type="number" class="full-width">
+                <% sections.forEach(function (section_e){ %>
+				    <option value = <%= section_e.id %>
+														
+                    >
+					<%= section_e.name %></option>
+				<% }) %>
+            </select>
+
+            <ul class="sortable sortable-paragraphs">
+            
+            </ul>            
+
+        </li>                
+        `
+        
+        //GET PARENT OF BUTTON THEN FULE SORTABLE SECTION UL WITHIN CHILDREN AND APPEND MARKUP
+        $(this).parent().children('.sortable-subsections').append(markup)
+        let subsection_button = $("#subsection_"+number).children('.add-paragraph')
+        // subsection_button.click(add_paragraph_function);
+
+        // $( ".sortable" ).sortable({stop: updateIndex});
+        // $( ".sortable" ).disableSelection(); 
+        updateSortable()       
+	}
+
+    /*
+	function add_paragraph_function(){
+
+        let parent = $(this).parent();
+        let parent_span = $(parent[0]).find("span")[0].innerText
+        let grandparent = $(parent).parents().find('.section');
+        let grandparent_span = $(grandparent[0]).find("span")[0].innerText
+
+        let text_number = 'Paragraph '+(parent.children().find('.paragraph').length + 1)      
+        let number = $(".paragraph").length + 1
+
+        let markup = `
+            <li class="ui-state-default paragraph tr-grab" id="paragraph_`+number+`">
+                <span>`+text_number+`</span>      
+
+                <input class="form-control" type="text" name="`+grandparent_span+`[`+parent_span+`][`+text_number+`][name]" placeholder="name" >
+
+                <select name="`+grandparent_span+`[`+parent_span+`][`+text_number+`][section]" type="number" class="full-width">
+                    <% sections.forEach(function (section_e){ %>
+                        <option value = <%= section_e.id %>
+                                                            
+                        >
+                        <%= section_e.name %></option>
+                    <% }) %>
+                </select>
+
+            </li>                
+        `
+        $(this).parent().children('.sortable-paragraphs').append(markup)
+
+        $( ".sortable" ).sortable({stop: updateIndex});
+        $( ".sortable" ).disableSelection();        
+    }
+    */
+
+
+    // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
+    $(".add-section").click(add_section_function);	
+    
+
+
+
+    updateIndex = (e, ui) => {
+
+        //LOOP THROUGH EACH SECTION, SUBSECTION AND PARAGRAPH AND RELABEL THEIR NAMES ACCORDINGLY 
+        let sections = $(".section");
+        // console.log(sections)
+
+        sections.each(function (i) {
+
+            //RELABEL SECTION
+            let section_name = 'Section ' + (i + 1)
+            $(this).find('span')[0].innerText = section_name
+            $(this).find('input')[0].name = section_name + '[name]'
+
+            let subsections = $(this).children().find('.subsection')
+
+            subsections.each(function (i) {
+                
+                //RELABEL SUBSECTION
+                let subsection_name = 'Sub Section ' + (i + 1)
+                $(this).find('span')[0].innerText = subsection_name
+                $(this).find('input')[0].name = section_name + '['+subsection_name+']'+'[name]'
+
+                /*
+                let paragraphs = $(this).children().find('.paragraph')
+
+                paragraphs.each(function (i) {
+                    //RELABEL SUBSECTION
+                    let paragraph_name = 'Paragraph ' + (i + 1)
+                    $(this).find('span')[0].innerText = paragraph_name
+                    $(this).find('input')[0].name = section_name + '['+subsection_name+']' + '['+paragraph_name+']'+'[name]'               
+                })
+                */
+            })
+
+        })
+    }    
+
+
+
+    // LOOP THROUGH CONTEXT AND POPULATE SECTION DATA
+    <% fusions.forEach(function (fusion){
+        // console.log(fusion.join_from)
+        let section = sections.find(o => o.id === fusion.join_from_id);
+        // console.log(section.name)
+    })%>
+
+
+</script>
+
+
+
+<%- include("../partials/footer") %>

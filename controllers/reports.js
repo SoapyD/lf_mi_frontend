@@ -27,7 +27,7 @@ exports.getReport = (req, res) => { //middleware.isLoggedIn,
 	databaseController.getFullReport(req.params.reportid, "report, fusions, all sections")
 	.then((result) => {
 		// res.render("reports/show", {report:result[0], fusions:result[1], sections: result[2]});
-		res.render("reports/show_TEST", {report:result[0], fusions:result[1], sections: result[2]});
+		res.render("reports/show_TEST2", {report:result[0], fusions:result[1], sections: result[2]});
 	})
 	.catch(err => {
 		errorController.get404()
