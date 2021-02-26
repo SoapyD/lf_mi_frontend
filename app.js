@@ -25,6 +25,7 @@ const database = require('./util/database')
 const seeds = require('./util/seeds2')
 
 const IndexRoutes = require("./routes/index");
+const AdminRoutes = require("./routes/admin");
 const ReportsRoutes = require("./routes/reports");
 const FusionsRoutes = require("./routes/fusions");
 const SubscriptionsRoutes = require("./routes/subscriptions");
@@ -92,9 +93,13 @@ passport.use(new SamlStrategy(
     },
     function (profile, done) {
       // console.log(profile)
+      // console.log(profile["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
       return done(null,
         {
-          id: profile.nameID,
+          id: profile["http://schemas.microsoft.com/identity/claims/objectidentifier"],
+          id_name: profile.nameID,
+          role: profile["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+          name: profile["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]
         });
     })
   );
@@ -104,6 +109,7 @@ passport.use(new SamlStrategy(
 
 //setup routes
 app.use(IndexRoutes);
+app.use("/admin",AdminRoutes);
 app.use("/reports",ReportsRoutes);
 app.use("/reports/:reportid/fusions",FusionsRoutes);
 app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);

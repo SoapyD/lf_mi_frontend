@@ -174,6 +174,7 @@ async function fuse() {
 
             FusionSection.create({
                 order: 2
+                ,string_value: "Support Requests by Source"                
                 ,join_from_id: section.id
                 ,join_from: 'section'                                                   
                 ,join_to_id: report_id

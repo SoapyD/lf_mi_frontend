@@ -63,10 +63,8 @@
 
     <form action="/reports/<%= report.id %>/fusions" method="POST">
         <button class="btn btn-primary add-section" type="button">
-            +
+            Add Section
         </button>	
-
-        <span>Add Section</span>
 
         <ul class="sortable sortable-sections"></ul>
 
@@ -109,15 +107,17 @@
 
         //CREATE MARKUP SCRIPT
         let markup = `
-        <li class="ui-state-default section tr-grab" id="section_`+number+`">
-        
+        <li class="ui-state-default section tr-grab" id="section_`+number+`">      
+
+            <div class="box">
+                <span>`+text_number+`</span>
+
+                <input class="form-control" type="text" name="Report[`+text_number+`][name]" placeholder="name" >
+            </div>
+
             <button class="btn btn-primary add-subsection" type="button">
-                +
-            </button>	        
-
-            <span>`+text_number+`</span>
-
-            <input class="form-control" type="text" name="`+text_number+`[name]" placeholder="name" >
+                Add Subsection
+            </button>	  
 
             <ul class="sortable sortable-subsections">
 
@@ -130,39 +130,63 @@
 
         //GET ADD BUTTON FOR SECTION AND ADD CLICK FUNCTION TO IT
         let section_button = $("#section_"+number).children('.add-subsection')
+        
 
         section_button.click(add_subsection_function);
 
         updateSortable()
+
+        let return_data = $("#section_"+number)
+        return return_data
 	}
     
+    // ADD A SUBSECTION TO THE PARENT OF "THIS" OBJECT
 	function add_subsection_function(){
 
         let parent = $(this).parent();
+        // console.log(parent)
+        add_subsection(parent)
+    
+	}
+
+    function add_subsection(parent){
+
+        // console.log(section_data.id)
         let parent_span = $(parent[0]).find("span")[0].innerText
         let text_number = 'Sub Section '+(parent.children().find('.subsection').length + 1)
-        let number = $(".subsection").length + 1
+        let number = $(".subsection").length + 1        
 
 
         let markup = `        
         <li class="ui-state-default subsection tr-grab" id="subsection_`+number+`">
-            
-            <button class="btn btn-primary add-paragraph" type="button">
-                +
-            </button>	          
-            
-            <span>`+text_number+`</span>
+              
+            <div class="box">
+                <span>`+text_number+`</span>
 
-            <input class="form-control" type="text" name="`+parent_span+`[`+text_number+`][name]" placeholder="name" >
+                <select name="Report[`+parent_span+`][`+text_number+`][id]" type="number" class="full-width form-control subsection-options">
+                    <% sections.forEach(function (section_e){ %>
+                        <option value = <%= section_e.id %>                                                         
+                        >
+                        <%= section_e.name %></option>
+                    <% }) %>
+                </select>
+            </div>
 
-            <select name="`+parent_span+`[`+text_number+`][section]" type="number" class="full-width">
-                <% sections.forEach(function (section_e){ %>
-				    <option value = <%= section_e.id %>
-														
-                    >
-					<%= section_e.name %></option>
-				<% }) %>
-            </select>
+            <div class="box">
+                <span>Alternate Name</span>
+                <input class="form-control" type="text" name="Report[`+parent_span+`][`+text_number+`][name]" placeholder="name" >
+            </div>
+
+            <div class="box">
+                <span>Options</span>
+                <select name="Report[`+parent_span+`][`+text_number+`][options]" type="number" class="full-width form-control" multiple size="3">
+                    <option value="graph" selected>graph</option>
+                    <option value="table" selected>table</option>
+                    <option value="comments" selected>comments</option>
+                    <option value="test4">test4</option>
+                    <option value="test5">test5</option>
+                </select>
+            </div>
 
             <ul class="sortable sortable-paragraphs">
             
@@ -170,51 +194,19 @@
 
         </li>                
         `
-        
+
+
         //GET PARENT OF BUTTON THEN FULE SORTABLE SECTION UL WITHIN CHILDREN AND APPEND MARKUP
-        $(this).parent().children('.sortable-subsections').append(markup)
+        // $(this).parent().children('.sortable-subsections').append(markup)
+        parent.children('.sortable-subsections').append(markup)
         let subsection_button = $("#subsection_"+number).children('.add-paragraph')
-        // subsection_button.click(add_paragraph_function);
 
-        // $( ".sortable" ).sortable({stop: updateIndex});
-        // $( ".sortable" ).disableSelection(); 
         updateSortable()       
-	}
-
-    /*
-	function add_paragraph_function(){
-
-        let parent = $(this).parent();
-        let parent_span = $(parent[0]).find("span")[0].innerText
-        let grandparent = $(parent).parents().find('.section');
-        let grandparent_span = $(grandparent[0]).find("span")[0].innerText
-
-        let text_number = 'Paragraph '+(parent.children().find('.paragraph').length + 1)      
-        let number = $(".paragraph").length + 1
-
-        let markup = `
-            <li class="ui-state-default paragraph tr-grab" id="paragraph_`+number+`">
-                <span>`+text_number+`</span>      
-
-                <input class="form-control" type="text" name="`+grandparent_span+`[`+parent_span+`][`+text_number+`][name]" placeholder="name" >
-
-                <select name="`+grandparent_span+`[`+parent_span+`][`+text_number+`][section]" type="number" class="full-width">
-                    <% sections.forEach(function (section_e){ %>
-                        <option value = <%= section_e.id %>
-                                                            
-                        >
-                        <%= section_e.name %></option>
-                    <% }) %>
-                </select>
-
-            </li>                
-        `
-        $(this).parent().children('.sortable-paragraphs').append(markup)
-
-        $( ".sortable" ).sortable({stop: updateIndex});
-        $( ".sortable" ).disableSelection();        
+        
+        let return_data = $("#subsection_"+number)
+        return return_data
     }
-    */
+
 
 
     // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
@@ -227,7 +219,6 @@
 
         //LOOP THROUGH EACH SECTION, SUBSECTION AND PARAGRAPH AND RELABEL THEIR NAMES ACCORDINGLY 
         let sections = $(".section");
-        // console.log(sections)
 
         sections.each(function (i) {
 
@@ -244,17 +235,6 @@
                 let subsection_name = 'Sub Section ' + (i + 1)
                 $(this).find('span')[0].innerText = subsection_name
                 $(this).find('input')[0].name = section_name + '['+subsection_name+']'+'[name]'
-
-                /*
-                let paragraphs = $(this).children().find('.paragraph')
-
-                paragraphs.each(function (i) {
-                    //RELABEL SUBSECTION
-                    let paragraph_name = 'Paragraph ' + (i + 1)
-                    $(this).find('span')[0].innerText = paragraph_name
-                    $(this).find('input')[0].name = section_name + '['+subsection_name+']' + '['+paragraph_name+']'+'[name]'               
-                })
-                */
             })
 
         })
@@ -262,12 +242,37 @@
 
 
 
+    let section_button;
+    //THIS NEEDS TO EVENTUALLY BE REPLACED BY ANOTHER LOOP BUT THE CODE DOESN'T CURRENTLY SAVE SECTION DATA
+    section_button = add_section_function()
+ 
+    let subsection;
+    let subsection_element;
+
     // LOOP THROUGH CONTEXT AND POPULATE SECTION DATA
     <% fusions.forEach(function (fusion){
-        // console.log(fusion.join_from)
-        let section = sections.find(o => o.id === fusion.join_from_id);
-        // console.log(section.name)
-    })%>
+        let section_data = sections.find(o => o.id === fusion.join_from_id);
+
+    %>
+        //CREATE THE SUBSECTIONS
+        subsection = add_subsection(section_button)
+
+        //FIND THE SUBSECTION OPTION THAT MATCHES THE FUSED SECTION ID
+        subsection_element = subsection.find('.subsection-options > option[value="<%- section_data.id %>"]')
+        if (subsection_element.length > 0)
+        {
+            subsection_element.attr('selected','selected');
+        }  
+
+        //ADD IN THE ALTERNATE NAME TO THE SUBSECTION, IF AVAILABLE FROM THE FUSION
+        subsection_element = subsection.find('input')
+        // console.log(subsection_element)
+        if (subsection_element.length > 0)
+        {
+            subsection_element.val('<%- fusion.string_value %>');
+        }  
+
+    <%})%>
 
 
 </script>
