@@ -16,6 +16,7 @@
 					<p>Subscription Name:</p>
 					<input class="form-control" type="text" name="name" placeholder="name" value="<%= subscription.name %>">
 				</div>
+
 				<div class="form-group">	
 					<p>Frequency:</p>				
 					<select id="frequency-select" class="form-control" name="frequency">
@@ -31,6 +32,16 @@
 
 					</select>
 				</div>
+
+				<div class="form-group">
+					<p>Email To:</p>
+					<input class="form-control" type="text" name="email_to" placeholder="email to" value="<%= subscription.email_to %>">
+				</div>
+
+				<div class="form-group">
+					<p>Email Body:</p>
+					<input class="form-control" type="text" name="body" placeholder="email body" value="<%= subscription.body %>">
+				</div>				
 
 				<div class="form-group">
 					<p>Start Date:</p>

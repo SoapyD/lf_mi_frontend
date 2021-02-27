@@ -18,10 +18,10 @@ const docx = require("docx");
 var fs = require('fs');
 var path = require('path');
 
-const ssrsController = require('./controllers/ssrs2');
 const errorController = require('./controllers/error');
 
 const database = require('./util/database')
+const ssrsController = require('./util/ssrs2');
 const seeds = require('./util/seeds2')
 
 const IndexRoutes = require("./routes/index");
@@ -135,5 +135,5 @@ app.listen(process.env.PORT||80, process.env.IP, function(){
     console.log("Server has started!")
     
     //START THE COMPLETE DOCUMENT CHECKER
-    setTimeout(ssrsController.checkFiles, 10000);
+    // setTimeout(ssrsController.checkFiles, 10000);
 });

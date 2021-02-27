@@ -1,14 +1,14 @@
 const Report = require("../models/report");
 const Subscription = require("../models/subscription");
-const databaseController = require('../controllers/database');
-const ssrsController = require('../controllers/ssrs2');
+const databaseQueriesUtil = require('../util/database_queries');
 const errorController = require('../controllers/error');
+const ssrsUtil = require('../util/ssrs2');
 
 exports.getSubscriptions = (req,res) => { //, middleware.isLoggedIn
 
-	databaseController.getReport(req.params.reportid)
+	databaseQueriesUtil.getReport(req.params.reportid)
 	.then((report) => {
-		databaseController.getSubscriptions(req.params.reportid)
+		databaseQueriesUtil.getSubscriptions(req.params.reportid)
 		.then((subscriptions) => {
 
 			res.render("subscriptions/index", {report:report, subscriptions:subscriptions});
@@ -26,12 +26,12 @@ exports.getSubscriptions = (req,res) => { //, middleware.isLoggedIn
 exports.getFormCreateSubscription = (req,res) => { //middleware.isLoggedIn, 
 	// res.render("subscriptions/new");
 
-	databaseController.getReport(req.params.reportid)
+	databaseQueriesUtil.getReport(req.params.reportid)
 	.then((report) => {
 
-		databaseController.getAllFrequencies()
+		databaseQueriesUtil.getAllFrequencies()
 		.then((frequencies) => {		
-			databaseController.getSubscriptionParameters(req.params.reportid)
+			databaseQueriesUtil.getSubscriptionParameters(req.params.reportid)
 			.then((parameter_set) => {					
 				res.render("subscriptions/new", {report:report, frequencies:frequencies, parameter_set:parameter_set});
 			})
@@ -100,15 +100,15 @@ exports.createSubscription = (req,res) => { //, middleware.isLoggedIn
 
 exports.getEditSubscription = (req,res) => { //, middleware.isCampGroundOwnership
 
-	databaseController.getReport(req.params.reportid)
+	databaseQueriesUtil.getReport(req.params.reportid)
 	.then((report) => {
-		databaseController.getSubscription(req.params.subscriptionid)
+		databaseQueriesUtil.getSubscription(req.params.subscriptionid)
 		.then((subscription) => {
 
-			// let frequencies = databaseController.getAllFrequencies();
-			databaseController.getAllFrequencies()
+			// let frequencies = databaseQueriesUtil.getAllFrequencies();
+			databaseQueriesUtil.getAllFrequencies()
 			.then((frequencies) => {
-				databaseController.getSubscriptionParameters(req.params.reportid)
+				databaseQueriesUtil.getSubscriptionParameters(req.params.reportid)
 				.then((parameter_set) => {		
 					let parameter_obj = JSON.parse(subscription.parameters);	
 
@@ -136,7 +136,7 @@ exports.getEditSubscription = (req,res) => { //, middleware.isCampGroundOwnershi
 
 exports.updateSubscription = (req,res) => { //, middleware.isCampGroundOwnership
 	
-	databaseController.getSubscription(req.params.subscriptionid)
+	databaseQueriesUtil.getSubscription(req.params.subscriptionid)
 	.then((subscription) => {
 
 		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED
@@ -188,7 +188,7 @@ exports.updateSubscriptions = (req,res) => { //, middleware.isCampGroundOwnershi
 
 	if(subscriptions){
 
-		databaseController.getSubscriptions(req.params.reportid, subscriptions)
+		databaseQueriesUtil.getSubscriptions(req.params.reportid, subscriptions)
 		.then((subscriptions) => {
 
 			let subscription_ids = []
@@ -198,9 +198,9 @@ exports.updateSubscriptions = (req,res) => { //, middleware.isCampGroundOwnershi
 
 			switch(req.body.action) {
 				case "run":
-					databaseController.getFullReport(req.params.reportid, "report, fusions, sections, parameters")
+					databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")
 					.then((result) => {
-						ssrsController.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
+						ssrsUtil.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
 						req.flash("success", 'Running Selected Reports');
 						res.redirect("/reports/" +req.params.reportid+"/subscriptions");
 					})					
@@ -213,7 +213,7 @@ exports.updateSubscriptions = (req,res) => { //, middleware.isCampGroundOwnershi
 					break;
 				case "delete":
 
-					databaseController.destroySubscriptions(subscription_ids)
+					databaseQueriesUtil.destroySubscriptions(subscription_ids)
 					.then((result) => {
 						req.flash("success", 'Selected Subscriptions Deleted');
 						res.redirect("/reports/" +req.params.reportid+"/subscriptions");

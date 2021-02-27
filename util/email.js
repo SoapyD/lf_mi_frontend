@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
+const Subscription = require("../models/subscription");
 
-exports.email = async(filename, filepath) => {
+exports.email = async(subscription, filename, filepath) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.office365.com',
         service:'office365',
@@ -20,24 +21,29 @@ exports.email = async(filename, filepath) => {
         }
     });
 
-    let test = true
 
-    // console.log(transporter)
     // send mail with defined transport object
     try {
 
-        let info = await transporter.sendMail({
-            from: 'mi-team-mailbox@littlefish.co.uk', // sender address
-            to: "thomas.cassady@littlefish.co.uk", // list of receivers
-            subject: "Service Report", // Subject line
-            text: "Please find attached a copy of your Service Report", // plain text body,
-            attachments: [
-            {   // file on disk as an attachment
-                filename: filename,
-                path: filepath // stream this file
-            }
-            ]     
-        });
+        let email_data = {
+            from: process.env.EMAIL_SENTFROM, // sender address
+            to: subscription.email_to, // list of receivers
+            subject: subscription.subject, // Subject line
+            html: subscription.body, // plain text body,   
+        }
+
+        if (filename){
+            email_data['attachments'] = 
+            [
+                {   // file on disk as an attachment
+                    filename: filename,
+                    path: filepath // stream this file
+                }
+            ]             
+        }
+       
+
+        let info = await transporter.sendMail(email_data);
         console.log("email sent")
     }catch(err) {
         console.log(err)

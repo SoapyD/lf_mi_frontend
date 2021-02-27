@@ -1,10 +1,12 @@
 const Report = require("../models/report");
 const Fusion = require("../models/fusion");
-const Section = require("../models/section");
-const Subscription = require("../models/subscription");
+const SubSection = require("../models/subsection");
 const Frequency = require("../models/frequency");
 const Parameter = require("../models/parameter");
-const Database = require("../util/database");
+const Subscription = require("../models/subscription");
+const SubscriptionActivity = require("../models/subscription_activity");
+
+const Database = require("./database");
 // const report = require("mssql-ssrs");
 
 
@@ -42,8 +44,8 @@ exports.getReport = (report_id=-1, name="") => {
 exports.copyReport = async(report_id, result) => {
 
     let report = result[0];
-    let section_fusions = result[1];
-    let sections = result[2];
+    let subsection_fusions = result[1];
+    let subsections = result[2];
     let parameters = result[3];
 
     let new_report = await Report.create ({
@@ -52,13 +54,13 @@ exports.copyReport = async(report_id, result) => {
     })
 
     let fusion_ids = []
-    section_fusions.forEach((section, i) => {
-        fusion_ids.push(section.join_from_id);
+    subsection_fusions.forEach((subsection, i) => {
+        fusion_ids.push(subsection.join_from_id);
     })
 
-    let new_section_fusions = exports.recreateSectionFusions(new_report.id, fusion_ids)
+    let new_subsection_fusions = exports.recreateSubSectionFusions(new_report.id, fusion_ids)
 
-    return Promise.all([new_report, new_section_fusions])
+    return Promise.all([new_report, new_subsection_fusions])
     // })       
     // .catch((err) =>{
     //     return
@@ -90,8 +92,6 @@ exports.dropReports = () => {
 exports.createFusion = (i, join_from_id, join_from, join_to_id, join_to) => {
 
     return Fusion.create({
-        // NODEReportId: report_id
-        // ,NODESectionId: section_id
         order: i      
         ,join_from_id: join_from_id
         ,join_from: join_from                                                  
@@ -104,12 +104,12 @@ exports.createFusion = (i, join_from_id, join_from, join_to_id, join_to) => {
 }
 
 
-exports.recreateSectionFusions = (report_id, f_sections) => {
+exports.recreateSubSectionFusions = (report_id, f_subsections) => {
     let processes = []
     //CREATE FUSIONS BASED ON NEW FUSION LIST
-    f_sections.forEach((section_id, i) => {
+    f_subsections.forEach((subsection_id, i) => {
         processes.push(exports.createFusion(i+1, 
-            Number(section_id), 'section', //JOIN FROM
+            Number(subsection_id), 'subsection', //JOIN FROM
             Number(report_id), 'report' //JOIN TO
             ))
     })    
@@ -156,28 +156,27 @@ exports.dropFusions = () => {
     })        
 }
 
-///////////////////////////////////////////////////////////////////SECTIONS
+///////////////////////////////////////////////////////////////////SUB SECTIONS
 
-exports.getSections = (fusions=[], all_sections=true) => {
-    let section_ids = [];
+exports.getSubSections = (fusions=[], all_subsections=true) => {
+    let subsection_ids = [];
     fusions.forEach( 
         (fusion) => { 
-            section_ids.push(fusion.join_from_id);
+            subsection_ids.push(fusion.join_from_id);
             // console.log(fusion)
         }
     )
 
-    // let sections;
-    if (all_sections === true){
-        return sections = Section.findAll()
+    if (all_subsections === true){
+        return subsections = SubSection.findAll()
         .catch((err) =>{
             return
         })           
     }
     else{
-        return sections = Section.findAll({
+        return subsections = SubSection.findAll({
             where: {
-                id: section_ids
+                id: subsection_ids
             }
         })
         .catch((err) =>{
@@ -186,15 +185,15 @@ exports.getSections = (fusions=[], all_sections=true) => {
     }    
 }
 
-exports.getSection = (section_id=-1, name="") => {
+exports.getSubSection = (subsection_id=-1, name="") => {
 
-    if (section_id != -1){
-        return Section.findByPk(section_id)  
+    if (subsection_id != -1){
+        return SubSection.findByPk(subsection_id)  
         .catch((err) =>{
             return
         })           
     } else {
-        return Section.findOne({
+        return SubSection.findOne({
             where: {
                 name: name
             }
@@ -205,8 +204,8 @@ exports.getSection = (section_id=-1, name="") => {
     }
 }
 
-exports.dropSections = () => {
-    return Section.drop()
+exports.dropSubSections = () => {
+    return SubSection.drop()
     .catch((err) =>{
         return
     })          
@@ -245,16 +244,16 @@ exports.onlyUnique = (value, index, self) => {
 }
 
 
-exports.getSectionParameters = async(fusions=[], unique_params_only=true) => {
+exports.getSubSectionParameters = async(fusions=[], unique_params_only=true) => {
     let parameter_ids = [];
-    let section_ids = [];
+    let subsection_ids = [];
     fusions.forEach( 
         (fusion) => { 
-            section_ids.push(fusion.join_from_id);
+            subsection_ids.push(fusion.join_from_id);
         }
     )
 
-    let parameter_fusions = await exports.getFusions(section_ids, "parameter", "section")
+    let parameter_fusions = await exports.getFusions(subsection_ids, "parameter", "subsection")
 
     parameter_fusions.forEach( 
         (fusion) => { 
@@ -291,10 +290,10 @@ exports.getSectionParameters = async(fusions=[], unique_params_only=true) => {
 
 exports.getSubscriptionParameters = async(report_id) => {
 
-    let section_fusions = await exports.getFusions(report_id, "section", "report")
+    let subsection_fusions = await exports.getFusions(report_id, "subsection", "report")
 
     //GET A UNIQUE LIST OF PARAMETERS
-    let parameters = await exports.getSectionParameters(section_fusions);
+    let parameters = await exports.getSubSectionParameters(subsection_fusions);
 
 
     let dropdown_arrs = [];
@@ -324,40 +323,40 @@ exports.getSubscriptionParameters = async(report_id) => {
 
 ///////////////////////////////////////////////////////////////////FULL REPORT
 
-// used in report.show - produce a list of reports, fusions and all sections (for dropdowns)
+// used in report.show - produce a list of reports, fusions and all subsections (for dropdowns)
 // 
 exports.getFullReport = async(report_id, query_type) => {
 
     let report;
-    let section_fusions;
-    let sections;
+    let subsection_fusions;
+    let subsections;
     let parameters;
 
     switch(query_type) {
-        case "report, fusions, all sections":
+        case "report, fusions, all subsections":
 
             try {
                 report = Report.findByPk(report_id)
-                section_fusions = await exports.getFusions(report_id, "section", "report")
-                sections = exports.getSections(section_fusions, all_sections=true)
+                subsection_fusions = await exports.getFusions(report_id, "subsection", "report")
+                subsections = exports.getSubSections(subsection_fusions, all_subsections=true)
             
-                return Promise.all([report, section_fusions, sections])        
+                return Promise.all([report, subsection_fusions, subsections])        
             }
             catch(err){
                 return
             }
             break;
-        case "report, fusions, sections, parameters":
+        case "report, fusions, subsections, parameters":
 
             report = Report.findByPk(report_id)
-            section_fusions = await exports.getFusions(report_id, "section", "report")
-            sections = exports.getSections(section_fusions, all_sections=false)
+            subsection_fusions = await exports.getFusions(report_id, "subsection", "report")
+            subsections = exports.getSubSections(subsection_fusions, all_subsections=false)
 
-            parameters = await exports.getSectionParameters(section_fusions, false);
+            parameters = await exports.getSubSectionParameters(subsection_fusions, false);
 
             // return Promise.all([parameters])
 
-            return Promise.all([report, section_fusions, sections])
+            return Promise.all([report, subsection_fusions, subsections])
             .then((values) => {
                 return [values[0],values[1],values[2], parameters[0], parameters[1]]
             })        
@@ -477,4 +476,43 @@ exports.dropSubscriptions = () => {
     .catch((err) =>{
         return
     })        
+}
+
+
+///////////////////////////////////////////////////////////////////SUBSCRIPTION ACTIVITY
+
+
+
+exports.createSubscriptionActivity = (subscription, file_data) => {
+
+    return SubscriptionActivity.create({
+        path: file_data.folder_path  
+        ,files_expected: file_data.files_needed
+        ,subscription_id: subscription.id
+    })
+    .catch((err) =>{
+        console.log(err)
+        return
+    })   
+}
+
+
+exports.getSubscriptionActivity= (id=-1, path="") => {
+
+    if (id != -1){
+        return SubscriptionActivity.findByPk(id)  
+        .catch((err) =>{
+            return
+        })           
+    } else {
+        return SubscriptionActivity.findOne({
+            where: {
+                path: path
+            }
+        })          
+        .catch((err) =>{
+            console.log(err)
+            return
+        })           
+    }
 }

@@ -164,10 +164,10 @@
                 <span>`+text_number+`</span>
 
                 <select name="Report[`+parent_span+`][`+text_number+`][id]" type="number" class="full-width form-control subsection-options">
-                    <% sections.forEach(function (section_e){ %>
-                        <option value = <%= section_e.id %>                                                         
+                    <% subsections.forEach(function (subsection_e){ %>
+                        <option value = <%= subsection_e.id %>                                                         
                         >
-                        <%= section_e.name %></option>
+                        <%= subsection_e.name %></option>
                     <% }) %>
                 </select>
             </div>
@@ -251,14 +251,14 @@
 
     // LOOP THROUGH CONTEXT AND POPULATE SECTION DATA
     <% fusions.forEach(function (fusion){
-        let section_data = sections.find(o => o.id === fusion.join_from_id);
+        let subsection_data = subsections.find(o => o.id === fusion.join_from_id);
 
     %>
         //CREATE THE SUBSECTIONS
         subsection = add_subsection(section_button)
 
         //FIND THE SUBSECTION OPTION THAT MATCHES THE FUSED SECTION ID
-        subsection_element = subsection.find('.subsection-options > option[value="<%- section_data.id %>"]')
+        subsection_element = subsection.find('.subsection-options > option[value="<%- subsection_data.id %>"]')
         if (subsection_element.length > 0)
         {
             subsection_element.attr('selected','selected');

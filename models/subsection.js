@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const database = require('../util/database')
 // const Report = require("../models/report");
 
-const Section = database.sequelize.define('NODE_section', {
+const SubSection = database.sequelize.define('NODE_subsection', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,
@@ -14,6 +14,4 @@ const Section = database.sequelize.define('NODE_section', {
    description: Sequelize.STRING
 });
 
-// Section.belongsTo(Report); // Will add companyId to user
-
-module.exports = Section
+module.exports = SubSection

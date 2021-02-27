@@ -1,7 +1,7 @@
 const Report = require("../models/report");
 const Fusion = require("../models/fusion");
-const Section = require("../models/section");
-const databaseController = require('../controllers/database');
+const SubSection = require("../models/subsection");
+const databaseQueriesUtil = require('../util/database_queries');
 const errorController = require('../controllers/error');
 
 exports.getAllReports = (req,res) => { //middleware.isLoggedIn, 
@@ -11,7 +11,7 @@ exports.getAllReports = (req,res) => { //middleware.isLoggedIn,
     // }).then((reports) => {
 	// 	res.render("reports/index", {reports:reports});
 	// })
-	databaseController.getAllReports()
+	databaseQueriesUtil.getAllReports()
 	.then((reports) => {
 		res.render("reports/index", {reports:reports});
 	})
@@ -24,10 +24,9 @@ exports.getAllReports = (req,res) => { //middleware.isLoggedIn,
 
 exports.getReport = (req, res) => { //middleware.isLoggedIn, 
 
-	databaseController.getFullReport(req.params.reportid, "report, fusions, all sections")
+	databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, all subsections")
 	.then((result) => {
-		// res.render("reports/show", {report:result[0], fusions:result[1], sections: result[2]});
-		res.render("reports/show_TEST2", {report:result[0], fusions:result[1], sections: result[2]});
+		res.render("reports/show_TEST2", {report:result[0], fusions:result[1], subsections: result[2]});
 	})
 	.catch(err => {
 		errorController.get404()
@@ -101,10 +100,10 @@ exports.updateReport = (req,res) => { //, middleware.isCampGroundOwnership
 exports.updateCopyReport = (req,res) => { //, middleware.isCampGroundOwnership
 	
 
-	databaseController.getFullReport(req.params.reportid, "report, fusions, sections, parameters")
+	databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")
 	.then((old_report_data) => {
 
-		databaseController.copyReport(req.params.reportid, old_report_data)
+		databaseQueriesUtil.copyReport(req.params.reportid, old_report_data)
 		.then((new_report_data) => {
 			let old_report = old_report_data[0]
 			req.flash("success", 'Sucessfully copied report: '+old_report.name);		
@@ -119,7 +118,7 @@ exports.updateCopyReport = (req,res) => { //, middleware.isCampGroundOwnership
 
 exports.deleteReport = (req,res) => { //, middleware.isCampGroundOwnership
 	
-	databaseController.destroyReport(req.params.reportid)
+	databaseQueriesUtil.destroyReport(req.params.reportid)
 	.then((data) => {
 		req.flash("success", 'Sucessfully deleted report');
 		res.redirect("/reports/")

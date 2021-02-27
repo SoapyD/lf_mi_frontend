@@ -2,9 +2,6 @@ const Sequelize = require("sequelize");
 
 const database = require('../util/database')
 
-// const Report = require("./report");
-// const Section = require("./section");
-
 const Fusion = database.sequelize.define('NODE_fusion', {
    id: {
        type: Sequelize.INTEGER,
@@ -22,8 +19,5 @@ const Fusion = database.sequelize.define('NODE_fusion', {
    string_value: Sequelize.STRING,
    order: Sequelize.INTEGER   
 });
-
-// Fusion.belongsTo(Report);
-// Fusion.belongsTo(Section);
 
 module.exports = Fusion
