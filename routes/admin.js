@@ -5,22 +5,16 @@ const middleware = require("../middleware");
 
 router.get("/", middleware.isLoggedIn, middleware.isAdmin, adminController.getAllOptions);
 
-
 router.get("/:item", middleware.isLoggedIn, middleware.isAdmin, adminController.getItems);
+
+router.get("/:item/new", middleware.isLoggedIn, middleware.isAdmin, adminController.getFormCreateItem);
+
+router.post("/:item", middleware.isLoggedIn, middleware.isAdmin, adminController.createItem);
 
 router.get("/:item/:id/edit", middleware.isLoggedIn, middleware.isAdmin, adminController.getEditItems);
 
+router.put("/:item/:id", middleware.isLoggedIn, middleware.isAdmin, adminController.updateItem)
 
-// router.get("/subsections", middleware.isLoggedIn, middleware.isAdmin, adminController.getSubSections);
-
-// router.get("/parameters", middleware.isLoggedIn, middleware.isAdmin, adminController.getParameters);
-
-
-// router.get("/subsections/:id/edit", middleware.isLoggedIn, middleware.isAdmin, adminController.getEditSubSections);
-
-// router.get("/parameters/:id/edit", middleware.isLoggedIn, middleware.isAdmin, adminController.getEditParameters);
-
-
-
+router.delete("/:item/:id", middleware.isLoggedIn, middleware.isAdmin, adminController.deleteItem)
 
 module.exports = router;

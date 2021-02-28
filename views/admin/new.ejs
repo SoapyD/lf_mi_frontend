@@ -1,0 +1,46 @@
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+<header class="jumbotron">
+    <div class="container">
+        
+        <h1>
+            Create
+        </h1>
+
+    </div>
+</header>
+
+<form action="/admin/<%- type %>" method="POST">
+
+    <div class="panel panel-primary">
+
+        <div class="panel-heading">
+            <h4>New Item</h4> 
+        </div>
+
+        <% item_info.edit_fields.forEach(function (item){ %>
+
+            <div class="box s-padding">
+                <span>
+                    <%- item %> :
+                </span>
+                <input class="form-control" type="text" name="<%- item %>">
+
+            </div>
+            
+        <% }) %>
+
+    </div>
+
+
+    <button class="btn btn-lg btn-primary">Save</button>
+</form>
+
+
+
+</div>
+
+<%- include("../partials/footer") %>

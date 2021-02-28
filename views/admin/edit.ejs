@@ -13,47 +13,57 @@
     </div>
 </header>
 
+<form action="/admin/<%- type %>/<%= data.id %>?_method=PUT" method="POST">
 
-<div class="panel panel-primary">
-
-    <div class="panel-heading">
-        <h4>Item</h4> 
-    </div>
-
-    <% item_info.edit_fields.forEach(function (item){ %>
-
-        <div class="box s-padding">
-            <span>
-                <%- item %> :
-            </span>
-            <input class="form-control" type="text" name="name" value="<%- data.dataValues[item] %>">
-
-        </div>
-        
-    <% }) %>
-
-</div>
-
-<% if (fusions && fusions.length > 0) { %>
     <div class="panel panel-primary">
 
         <div class="panel-heading">
-            <h4>Fusions</h4> 
+            <h4><%- data.name %></h4> 
         </div>
 
-        <% fusions.forEach(function (fusion, i){ %>
+        <% item_info.edit_fields.forEach(function (item){ %>
 
-            <div>
-                <%- fusion.join_from %>: 
-                <%- linked_data[i].name %>
+            <div class="box s-padding">
+                <span>
+                    <%- item %> :
+                </span>
+                <input class="form-control" type="text" name="<%- item %>" value="<%- data.dataValues[item] %>">
+
             </div>
             
         <% }) %>
-        
 
     </div>
-<% } %>
 
+    <% if (fusions && fusions.length > 0) { %>
+        <div class="panel panel-primary">
+
+            <div class="panel-heading">
+                <h4>Fusions</h4> 
+            </div>
+
+            <% fusions.forEach(function (fusion, i){ %>
+
+                <div>
+                    <%- fusion.join_from %>: 
+                    <%- linked_data[i].name %>
+                </div>
+                
+            <% }) %>
+            
+
+        </div>
+    <% } %>
+
+    <button class="btn btn-lg btn-primary left">Save</button>
+</form>
+
+
+<form action="/admin/<%- type %>/<%= data.id %>?_method=DELETE" method="POST" class="right-button">
+    <button class="btn btn-lg btn-primary">
+        Delete
+    </button>
+</form>
 
 </div>
 

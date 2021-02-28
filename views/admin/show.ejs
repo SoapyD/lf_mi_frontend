@@ -14,33 +14,40 @@
 </header>
 
 
-<div class="panel panel-primary">
 
-    <div class="panel-heading">
-        <h4>Items</h4>
+<a class="btn btn-primary btn-large" href="/admin/<%- type %>/new">
+    Add <%- menu_name %>
+</a>
+
+<div class="top-padding">
+
+    <div class="panel panel-primary">
+
+        <div class="panel-heading">
+            <h4>Items</h4>
+        </div>
+
+        <% data.forEach(function (item) { %>
+
+            <%
+            
+            if (item.name !== undefined) {
+                %>
+                <div class="panel-body"> 
+                    <a href="/admin/<%- type %>/<%- item.id %>/edit">
+                        <%- item.name %>
+                    </a>
+                </div> 
+                <%
+            }
+            
+            %>
+            
+        <% }) %>
+
     </div>
 
-    <% data.forEach(function (item) { %>
-
-        <%
-        
-        if (item.name !== undefined) {
-            %>
-            <div class="panel-body"> 
-                <a href="/admin/<%- type %>/<%- item.id %>/edit">
-                    <%- item.name %>
-                </a>
-            </div> 
-            <%
-        }
-        
-        %>
-        
-    <% }) %>
-
 </div>
-
-
 
 </div>
 

@@ -172,6 +172,14 @@ exports.dropFusions = () => {
 
 ///////////////////////////////////////////////////////////////////SUB SECTIONS
 
+exports.createSubSection = (params) => {
+    return SubSection.create ({
+        path: params.path
+		,name: params.name
+		,description: params.description
+	})       
+}
+
 exports.getSubSections = (fusions=[], all_subsections=true) => {
     let subsection_ids = [];
     fusions.forEach( 
@@ -226,6 +234,13 @@ exports.dropSubSections = () => {
 }
 
 ///////////////////////////////////////////////////////////////////PARAMETERS
+
+exports.createParameter = (params) => {
+    return Parameter.create ({
+		name: params.name
+		,query: params.query
+	})       
+}
 
 exports.dropParameters = () => {
     return Parameter.drop()
