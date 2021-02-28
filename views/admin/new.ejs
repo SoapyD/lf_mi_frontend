@@ -35,12 +35,66 @@
 
     </div>
 
+    <button class="btn btn-primary add-fusion" type="button">
+        Add Fusion
+    </button>	
+
+    <% if (fusable_data && fusable_data.length > 0) { %>
+    <div class="top-padding">        
+        <div class="panel panel-primary">
+
+            <div class="panel-heading">
+                <h4>Fusions</h4> 
+            </div>
+
+            <div id="fusion-box">
+
+            </div>
+        </div>
+    </div>    
+    <% } %>
+
 
     <button class="btn btn-lg btn-primary">Save</button>
 </form>
 
-
-
 </div>
+
+
+<script>
+
+    function add_fusion() {
+        let fusion_box = $('#fusion-box')
+        let fusion_select = $('.fusion-select')
+
+        let markup = `
+
+        <div class="box s-padding">
+        <select name="fusions[`+fusion_select.length+`]" type="string" class="full-width form-control fusion-select">
+
+        <option value=""></option>
+
+        <% item_info.fusion_from.forEach(function (fusion_from, i){ %>
+
+            <% let fusable_list = fusable_data[i] %>
+
+            <% fusable_list.forEach(function (fusable_item){ %>                
+
+                    <option value="<%- fusion_from %>_<%- fusable_item.id %>"><%- fusion_from %>: <%- fusable_item.name %></option>
+            <% }) %>
+        <% }) %>
+
+        </select>
+        </div>
+        `
+        fusion_box.append(markup)
+        // console.log(fusion_box)
+    }
+
+
+    // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
+    $(".add-fusion").click(add_fusion);	
+
+</script>
 
 <%- include("../partials/footer") %>

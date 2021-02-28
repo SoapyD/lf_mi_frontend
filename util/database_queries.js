@@ -91,30 +91,58 @@ exports.dropReports = () => {
 
 exports.createFusion = (i, join_from_id, join_from, join_to_id, join_to) => {
 
-    return Fusion.create({
+    // return Fusion.create({
+    //     order: i      
+    //     ,join_from_id: join_from_id
+    //     ,join_from: join_from                                                  
+    //     ,join_to_id: join_to_id
+    //     ,join_to: join_to                                   
+    // })
+
+    return Fusion.findOrCreate({
+    where: {
         order: i      
         ,join_from_id: join_from_id
         ,join_from: join_from                                                  
         ,join_to_id: join_to_id
         ,join_to: join_to                                   
-    })
+    }})
     .catch((err) =>{
         return
     })   
 }
 
+exports.createFusionsFromBody = (fusion_to, item, fusions) => {
+    
+    let promises = []
+    
+    for(const fusion_key in fusions){ 
+        if (fusions[fusion_key] !== ''){
+            let fusion_from = fusions[fusion_key].split('_')
+            promises.push(exports.createFusion(1, 
+                Number(fusion_from[1]), fusion_from[0], //JOIN FROM
+                Number(item.id), fusion_to //JOIN TO
+                ))
+        }
+    }
+
+    return  Promise.all(promises)
+    .catch((err) =>{
+        return
+    })        
+}
 
 exports.recreateSubSectionFusions = (report_id, f_subsections) => {
-    let processes = []
+    let promises = []
     //CREATE FUSIONS BASED ON NEW FUSION LIST
     f_subsections.forEach((subsection_id, i) => {
-        processes.push(exports.createFusion(i+1, 
+        promises.push(exports.createFusion(i+1, 
             Number(subsection_id), 'SubSection', //JOIN FROM
             Number(report_id), 'Report' //JOIN TO
             ))
     })    
 
-    return  Promise.all(processes)
+    return  Promise.all(promises)
     .catch((err) =>{
         return
     })    
@@ -137,17 +165,46 @@ exports.getFusions = async(join_to_id, join_from, join_to) => {
 
 exports.getAllLinkedFusionData = (fusions) => {
 
-    let linked_data = [];
-    fusions.forEach((fusion) => {
-        let function_name = 'get' + fusion.join_from
-        linked_data.push(exports[function_name](fusion.join_from_id))
-    })
+    if(fusions && fusions.length > 0)
+    {    
+        let promises = [];
+        fusions.forEach((fusion) => {
+            let function_name = 'get' + fusion.join_from
+            promises.push(exports[function_name](fusion.join_from_id))
+        })
 
-    return Promise.all(linked_data)
-    .catch((err) =>{
+        return Promise.all(promises)
+        .catch((err) =>{
+            return
+        })      
+    }
+    else {
         return
-    })      
+    }
 }
+
+exports.getAllFusableData = (data_types) => {
+
+    if(data_types && data_types.length > 0)
+    {
+        let promises = [];
+        data_types.forEach((data_type) => {
+            let function_name = 'getAll' + data_type + 's'
+            promises.push(exports[function_name]())
+        })
+
+        return Promise.all(promises)
+        .catch((err) =>{
+            return
+        })  
+    }
+    else {
+        return
+    }
+
+
+}
+
 
 // exports.destroyFusions = (report_id) => {
 exports.destroyFusions = (join_to_id, join_from, join_to) => {    
@@ -298,6 +355,13 @@ exports.getParameters = (fusions=[], all_parameters=true) => {
             return
         })           
     }    
+}
+
+exports.getAllParameters = () => {
+    return parameters = Parameter.findAll()
+    .catch((err) =>{
+        return
+    })      
 }
 
 

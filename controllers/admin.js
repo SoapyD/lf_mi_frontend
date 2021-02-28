@@ -22,8 +22,8 @@ exports.getRouteInfo = () => {
             ,get_single_function: "getSubSection"
             ,create_function: "createSubSection"               
             ,edit_fields: ['name','path', 'description']
-            ,fusion_from: "parameter"
-            ,fusion_to: "subsection"
+            ,fusion_from: ["Parameter"]
+            ,fusion_to: "SubSection"
         }       
         
     } 
@@ -58,7 +58,11 @@ exports.getFormCreateItem = (req,res) => { //middleware.isLoggedIn,
     
     let item_info = route_info[type];
 
-	res.render("admin/new", {item_info: item_info, type: type});
+    //GET ALL FUSABLE DATA FOR FORM DROPDOWNS
+    databaseQueriesUtil.getAllFusableData(item_info.fusion_from)
+    .then((fusable_data) => {    
+        res.render("admin/new", {item_info: item_info, type: type, fusable_data:fusable_data});
+    })
 };
 
 exports.createItem = (req,res) => {
@@ -70,10 +74,22 @@ exports.createItem = (req,res) => {
 
     databaseQueriesUtil[item_info.create_function](req.body)
     .then((item)=> {
+        
+        let fusions = req.body.fusions
+        if (fusions){
+
+            databaseQueriesUtil.createFusionsFromBody(item_info.fusion_to, item, fusions)
+            .then((fusions) => {
+                res.redirect("/admin/"+type);        
+            })
+        }
+
         res.redirect("/admin/"+type);
     }) 
     	
 };
+
+
 
 exports.getEditItems = (req,res) => {
     
@@ -83,26 +99,38 @@ exports.getEditItems = (req,res) => {
     
     let item_info = route_info[type];
 
+    //GET THE ITEM BEING EDITTED
     databaseQueriesUtil[item_info.get_single_function](id)
     .then((item)=> {
 
-        databaseQueriesUtil.getFusions(id, item_info.fusion_from, item_info.fusion_to)
-        .then((fusions)=> {        
-            
-            //RETURN FUSIONS DATA IF THERE IS ANY
-            if (fusions && fusions.length > 0){
-                databaseQueriesUtil.getAllLinkedFusionData(fusions)
-                .then((linked_data) => {
-                    res.render("admin/edit", {item_info: item_info, type:type, data: item, fusions: fusions, linked_data: linked_data})
-                })
-            }
-            else{
-                res.render("admin/edit", {item_info: item_info, type:type, data: item, fusions: fusions})
-            }
+        //GET ALL FUSABLE DATA FOR FORM DROPDOWNS
+        if (item_info.fusion_from){
+            databaseQueriesUtil.getAllFusableData(item_info.fusion_from)
+            .then((fusable_data) => {
 
-            
-        })
-    }) 	
+                //GET ALL FUSIONS
+                databaseQueriesUtil.getFusions(id, item_info.fusion_from, item_info.fusion_to)
+                .then((fusions)=> { 
+                    //GET LINKED DATA
+                    if(fusions && fusions.length > 0){
+                        databaseQueriesUtil.getAllLinkedFusionData(fusions)
+                        .then((linked_data) => {
+                            res.render("admin/edit", {item_info: item_info, type:type, data: item, fusable_data: fusable_data, fusions: fusions, linked_data: linked_data})
+                        })     
+                    }
+                    else{
+                        res.render("admin/edit", {item_info: item_info, type:type, data: item, fusable_data: fusable_data, fusions:null, linked_data:null})
+                    }
+
+                })
+            })
+        }
+        else{ 
+            res.render("admin/edit", {item_info: item_info, type:type, data: item, fusable_data:null, fusions:null, linked_data:null})
+        }
+
+
+    }) 	  
 };
 
 

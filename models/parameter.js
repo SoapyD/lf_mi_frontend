@@ -11,6 +11,10 @@ const Parameter = database.sequelize.define('NODE_parameter', {
         allowNull: false,
         primaryKey: true
     },
+    table_type: {
+        type: Sequelize.STRING,
+        defaultValue: "Parameter" 
+    },
     name: Sequelize.STRING,
     query: Sequelize.STRING,    
 });

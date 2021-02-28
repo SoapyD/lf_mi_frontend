@@ -35,24 +35,23 @@
 
     </div>
 
-    <% if (fusions && fusions.length > 0) { %>
-        <div class="panel panel-primary">
+    <button class="btn btn-primary add-fusion" type="button">
+        Add Fusion
+    </button>	
 
-            <div class="panel-heading">
-                <h4>Fusions</h4> 
-            </div>
-
-            <% fusions.forEach(function (fusion, i){ %>
-
-                <div>
-                    <%- fusion.join_from %>: 
-                    <%- linked_data[i].name %>
+    <% if (fusable_data && fusable_data.length > 0) { %>
+        <div class="top-padding">        
+            <div class="panel panel-primary">
+    
+                <div class="panel-heading">
+                    <h4>Fusions</h4> 
                 </div>
-                
-            <% }) %>
-            
-
-        </div>
+    
+                <div id="fusion-box">
+    
+                </div>
+            </div>
+        </div>    
     <% } %>
 
     <button class="btn btn-lg btn-primary left">Save</button>
@@ -66,5 +65,59 @@
 </form>
 
 </div>
+
+<script>
+
+    function add_fusion() {
+        let fusion_box = $('#fusion-box')
+        let fusion_select = $('.fusion-select')
+
+        let markup = `
+
+        <div class="box s-padding">
+        <select id="fusion_`+fusion_select.length+`" name="fusions[`+fusion_select.length+`]" type="string" class="full-width form-control fusion-select">
+
+        <option value=""></option>
+
+        <% item_info.fusion_from.forEach(function (fusion_from, i){ %>
+
+            <% let fusable_list = fusable_data[i] %>
+
+            <% fusable_list.forEach(function (fusable_item){ %>                
+
+                    <option value="<%- fusion_from %>_<%- fusable_item.id %>"><%- fusion_from %>: <%- fusable_item.name %></option>
+            <% }) %>
+        <% }) %>
+
+        </select>
+        </div>
+        `
+        fusion_box.append(markup)
+        // console.log($("#fusion_"+fusion_select.length))
+
+        let return_data = $("#fusion_"+fusion_select.length)
+        return return_data
+    }
+
+
+    // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
+    $(".add-fusion").click(add_fusion);	
+
+
+    let fusion_picker;
+    <% linked_data.forEach(function (linked_item){ %>
+        fusion_picker = add_fusion()
+
+        // console.log(fusion_picker)
+
+        selected_option = fusion_picker.find('option[value="<%- linked_item.table_type %>_<%- linked_item.id %>"]')
+        if (selected_option.length > 0)
+        {
+            selected_option.attr('selected','selected');
+        }            
+
+    <% }) %>
+
+</script>
 
 <%- include("../partials/footer") %>
