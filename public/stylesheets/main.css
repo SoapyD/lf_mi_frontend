@@ -57,10 +57,16 @@ body {
 	font-weight: 400;
 }
 
-.navbar-custom { 
+.navbar-custom,
+.panel-primary>.panel-heading { 
 	background-color: #FA4616; 
+	border-color: #FA4616;
 	/* background: linear-gradient(#FA4616, #ab2603); */
 } 
+
+.panel-primary {
+	border-color: #FA4616;
+}
 
 .navbar-custom li a,
 .navbar-brand {
@@ -91,7 +97,8 @@ a:focus, a:hover {
 	word-wrap: break-word;
   }
 
-.nav>li>a:focus, .nav>li>a:hover {
+.nav>li>a:focus, 
+.nav>li>a:hover {
     background-color: #ab2603;
 }
 
@@ -177,6 +184,10 @@ a:focus, a:hover {
 	width: 100%;
 }
 
+.s-padding{
+	padding: 5px;
+}
+
 .sortable { 
 	list-style-type: none; 
 	margin: 0; 
@@ -210,9 +221,9 @@ span {
 	display: flex;
 	align-items: center;
 }
-/* input {
+input {
 	width: 90%;
-} */
+}
 
 .box {
 	display: flex;

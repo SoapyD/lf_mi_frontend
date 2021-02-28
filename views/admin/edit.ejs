@@ -1,0 +1,60 @@
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+<header class="jumbotron">
+    <div class="container">
+        
+        <h1>
+            <%- item_info.menu_name %> Editor
+        </h1>
+
+    </div>
+</header>
+
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+        <h4>Item</h4> 
+    </div>
+
+    <% item_info.edit_fields.forEach(function (item){ %>
+
+        <div class="box s-padding">
+            <span>
+                <%- item %> :
+            </span>
+            <input class="form-control" type="text" name="name" value="<%- data.dataValues[item] %>">
+
+        </div>
+        
+    <% }) %>
+
+</div>
+
+<% if (fusions && fusions.length > 0) { %>
+    <div class="panel panel-primary">
+
+        <div class="panel-heading">
+            <h4>Fusions</h4> 
+        </div>
+
+        <% fusions.forEach(function (fusion, i){ %>
+
+            <div>
+                <%- fusion.join_from %>: 
+                <%- linked_data[i].name %>
+            </div>
+            
+        <% }) %>
+        
+
+    </div>
+<% } %>
+
+
+</div>
+
+<%- include("../partials/footer") %>

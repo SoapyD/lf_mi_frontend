@@ -109,8 +109,8 @@ exports.recreateSubSectionFusions = (report_id, f_subsections) => {
     //CREATE FUSIONS BASED ON NEW FUSION LIST
     f_subsections.forEach((subsection_id, i) => {
         processes.push(exports.createFusion(i+1, 
-            Number(subsection_id), 'subsection', //JOIN FROM
-            Number(report_id), 'report' //JOIN TO
+            Number(subsection_id), 'SubSection', //JOIN FROM
+            Number(report_id), 'Report' //JOIN TO
             ))
     })    
 
@@ -133,6 +133,20 @@ exports.getFusions = async(join_to_id, join_from, join_to) => {
     .catch((err) =>{
         return
     })
+}
+
+exports.getAllLinkedFusionData = (fusions) => {
+
+    let linked_data = [];
+    fusions.forEach((fusion) => {
+        let function_name = 'get' + fusion.join_from
+        linked_data.push(exports[function_name](fusion.join_from_id))
+    })
+
+    return Promise.all(linked_data)
+    .catch((err) =>{
+        return
+    })      
 }
 
 // exports.destroyFusions = (report_id) => {
@@ -244,6 +258,34 @@ exports.onlyUnique = (value, index, self) => {
 }
 
 
+exports.getParameters = (fusions=[], all_parameters=true) => {
+    let parameter_ids = [];
+    fusions.forEach( 
+        (fusion) => { 
+            parameter_ids.push(fusion.join_from_id);
+            // console.log(fusion)
+        }
+    )
+
+    if (all_parameters === true){
+        return parameters = Parameter.findAll()
+        .catch((err) =>{
+            return
+        })           
+    }
+    else{
+        return parameters = Parameter.findAll({
+            where: {
+                id: parameter_ids
+            }
+        })
+        .catch((err) =>{
+            return
+        })           
+    }    
+}
+
+
 exports.getSubSectionParameters = async(fusions=[], unique_params_only=true) => {
     let parameter_ids = [];
     let subsection_ids = [];
@@ -253,7 +295,7 @@ exports.getSubSectionParameters = async(fusions=[], unique_params_only=true) => 
         }
     )
 
-    let parameter_fusions = await exports.getFusions(subsection_ids, "parameter", "subsection")
+    let parameter_fusions = await exports.getFusions(subsection_ids, "Parameter", "SubSection")
 
     parameter_fusions.forEach( 
         (fusion) => { 
@@ -290,7 +332,7 @@ exports.getSubSectionParameters = async(fusions=[], unique_params_only=true) => 
 
 exports.getSubscriptionParameters = async(report_id) => {
 
-    let subsection_fusions = await exports.getFusions(report_id, "subsection", "report")
+    let subsection_fusions = await exports.getFusions(report_id, "SubSection", "Report")
 
     //GET A UNIQUE LIST OF PARAMETERS
     let parameters = await exports.getSubSectionParameters(subsection_fusions);
@@ -337,7 +379,7 @@ exports.getFullReport = async(report_id, query_type) => {
 
             try {
                 report = Report.findByPk(report_id)
-                subsection_fusions = await exports.getFusions(report_id, "subsection", "report")
+                subsection_fusions = await exports.getFusions(report_id, "SubSection", "Report")
                 subsections = exports.getSubSections(subsection_fusions, all_subsections=true)
             
                 return Promise.all([report, subsection_fusions, subsections])        
@@ -349,7 +391,7 @@ exports.getFullReport = async(report_id, query_type) => {
         case "report, fusions, subsections, parameters":
 
             report = Report.findByPk(report_id)
-            subsection_fusions = await exports.getFusions(report_id, "subsection", "report")
+            subsection_fusions = await exports.getFusions(report_id, "SubSection", "Report")
             subsections = exports.getSubSections(subsection_fusions, all_subsections=false)
 
             parameters = await exports.getSubSectionParameters(subsection_fusions, false);

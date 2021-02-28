@@ -135,9 +135,9 @@ async function fuse() {
                 FusionSubSection.create({
                     order: 1
                     ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
+                    ,join_from: 'Parameter'                                                   
                     ,join_to_id: subsection.id
-                    ,join_to: 'subsection'                                                 
+                    ,join_to: 'SubSection'                                                 
                 })                   
             })   
 
@@ -146,18 +146,18 @@ async function fuse() {
                 FusionSubSection.create({
                     order: 1
                     ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
+                    ,join_from: 'Parameter'                                                   
                     ,join_to_id: subsection.id
-                    ,join_to: 'subsection'                                                 
+                    ,join_to: 'SubSection'                                                 
                 })                   
             })   
 
             FusionSubSection.create({
                 order: 1
                 ,join_from_id: subsection.id
-                ,join_from: 'subsection'                                                   
+                ,join_from: 'SubSection'                                                   
                 ,join_to_id: report_id
-                ,join_to: 'report'    
+                ,join_to: 'Report'    
             })            
         })        
 
@@ -170,9 +170,9 @@ async function fuse() {
                 FusionSubSection.create({
                     order: 1
                     ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
+                    ,join_from: 'Parameter'                                                   
                     ,join_to_id: subsection.id
-                    ,join_to: 'subsection'                                                 
+                    ,join_to: 'SubSection'                                                 
                 })                   
             })           
             
@@ -181,9 +181,9 @@ async function fuse() {
                 FusionSubSection.create({
                     order: 1
                     ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
+                    ,join_from: 'Parameter'                                                   
                     ,join_to_id: subsection.id
-                    ,join_to: 'subsection'                                                 
+                    ,join_to: 'SubSection'                                                 
                 })                   
             })                            
 
@@ -191,10 +191,20 @@ async function fuse() {
                 order: 2
                 ,string_value: "Support Requests by Source"                
                 ,join_from_id: subsection.id
-                ,join_from: 'subsection'                                                   
+                ,join_from: 'SubSection'                                                   
                 ,join_to_id: report_id
-                ,join_to: 'report'                                                 
-            })                      
+                ,join_to: 'Report'                                                 
+            })
+              
+            // FusionSubSection.create({
+            //     order: 2
+            //     ,string_value: "Support Requests by Source"                
+            //     ,join_from_id: subsection.id
+            //     ,join_from: 'SubSection'                                                   
+            //     ,join_to_id: subsection.id
+            //     ,join_to: 'SubSection'                                                 
+            // })            
+
         }) 
 /*
         //ADD REPORT SubSECTION
@@ -206,9 +216,9 @@ async function fuse() {
                 FusionSubSection.create({
                     order: 1
                     ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
+                    ,join_from: 'Parameter'                                                   
                     ,join_to_id: subsection.id
-                    ,join_to: 'subsection'                                                 
+                    ,join_to: 'SubSection'                                                 
                 })                   
             })          
 
@@ -217,18 +227,18 @@ async function fuse() {
                 FusionSubSection.create({
                     order: 1
                     ,join_from_id: parameter.id
-                    ,join_from: 'parameter'                                                   
+                    ,join_from: 'Parameter'                                                   
                     ,join_to_id: subsection.id
-                    ,join_to: 'subsection'                                                 
+                    ,join_to: 'SubSection'                                                 
                 })                   
             })                      
             
             FusionSubSection.create({
                 order: 3
                 ,join_from_id: subsection.id
-                ,join_from: 'subsection'                                                   
+                ,join_from: 'SubSection'                                                   
                 ,join_to_id: report_id
-                ,join_to: 'report'                                                 
+                ,join_to: 'Report'                                                 
             })                      
         }) 
         */

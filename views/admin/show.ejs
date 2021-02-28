@@ -1,0 +1,47 @@
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+<header class="jumbotron">
+    <div class="container">
+        
+        <h1>
+            <%- menu_name %>
+        </h1>
+
+    </div>
+</header>
+
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+        <h4>Items</h4>
+    </div>
+
+    <% data.forEach(function (item) { %>
+
+        <%
+        
+        if (item.name !== undefined) {
+            %>
+            <div class="panel-body"> 
+                <a href="/admin/<%- type %>/<%- item.id %>/edit">
+                    <%- item.name %>
+                </a>
+            </div> 
+            <%
+        }
+        
+        %>
+        
+    <% }) %>
+
+</div>
+
+
+
+</div>
+
+<%- include("../partials/footer") %>
