@@ -220,6 +220,18 @@ exports.destroyFusions = (join_to_id, join_from, join_to) => {
     })       
 }
 
+exports.destroyFusionsByID = (id_list) => {    
+    return fusions = Fusion.destroy({
+        where: {
+            id: id_list
+        }
+    })
+    .catch((err) =>{
+        return
+    })       
+}
+
+
 exports.dropFusions = () => {
     return Fusion.drop()
     .catch((err) =>{

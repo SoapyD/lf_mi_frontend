@@ -142,7 +142,62 @@ exports.updateItem = (req,res) => { //, middleware.isCampGroundOwnership
     
     let item_info = route_info[type];    
 
-    res.redirect("/admin/" + type)
+    // res.redirect("/admin/" + type)
+
+    //GET THE ITEM BEING EDITTED
+    databaseQueriesUtil[item_info.get_single_function](req.params.id)
+    .then((item)=> {
+        if(item){
+            for(const key in req.body){
+                // console.log(key)
+                if (key !== "fusions"){
+                    item[key] = req.body[key]
+                }
+            }
+            item.save()
+            .then((item) => {
+                
+                //GET ALL FUSIONS
+                databaseQueriesUtil.getFusions(req.params.id, item_info.fusion_from, item_info.fusion_to)
+                .then((current_fusions)=> {
+                    //CHECK TO SEE IF THERE'S ANY FUSIONS THAT NEED SAVING                 
+                    if(req.body.fusions){
+                        databaseQueriesUtil.createFusionsFromBody(item_info.fusion_to, item, req.body.fusions)
+                        .then((fusions) => {
+
+                            //RETURN WHICH CURRENT FUSIONS AND DELETE ANY THAT AREN'T IN BODY
+
+                            //LOOP THROUGH FUSIONS
+                            let id_list = []
+                            current_fusions.forEach((current_fusion) => {
+                                let found = fusions.find(element => element[0].join_from_id === current_fusion.join_from_id && element[0].join_from === current_fusion.join_from);                                
+                                if(found == null)
+                                {
+                                    id_list.push(current_fusion.id)
+                                }                            
+                            })
+
+                            if(id_list){
+                                databaseQueriesUtil.destroyFusionsByID(id_list)
+                                .then((result) => {
+                                    res.redirect("/admin/"+type);
+                                })
+                            }
+                            else{
+                                res.redirect("/admin/"+type);        
+                            }
+                        })                        
+                    }
+                    else{
+                        res.redirect("/admin/" + type)
+                    }
+                })
+            })
+        }
+        else {
+            res.redirect("/admin/" + type)
+        }
+    })    
 
 	// Report.findByPk(req.params.reportid)
 	// .then((report) => {

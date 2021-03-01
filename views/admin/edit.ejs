@@ -35,11 +35,12 @@
 
     </div>
 
-    <button class="btn btn-primary add-fusion" type="button">
-        Add Fusion
-    </button>	
 
     <% if (fusable_data && fusable_data.length > 0) { %>
+        <button class="btn btn-primary add-fusion" type="button">
+            Add Fusion
+        </button>	
+
         <div class="top-padding">        
             <div class="panel panel-primary">
     
@@ -79,6 +80,7 @@
 
         <option value=""></option>
 
+        <% if(item_info.fusion_from) { %>
         <% item_info.fusion_from.forEach(function (fusion_from, i){ %>
 
             <% let fusable_list = fusable_data[i] %>
@@ -88,6 +90,7 @@
                     <option value="<%- fusion_from %>_<%- fusable_item.id %>"><%- fusion_from %>: <%- fusable_item.name %></option>
             <% }) %>
         <% }) %>
+        <% } %>
 
         </select>
         </div>
@@ -105,6 +108,7 @@
 
 
     let fusion_picker;
+    <% if(linked_data){ %>
     <% linked_data.forEach(function (linked_item){ %>
         fusion_picker = add_fusion()
 
@@ -117,6 +121,7 @@
         }            
 
     <% }) %>
+    <% } %>
 
 </script>
 
