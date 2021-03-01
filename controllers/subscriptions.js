@@ -79,6 +79,9 @@ exports.createSubscription = (req,res) => { //, middleware.isLoggedIn
 
 	Subscription.create ({
 		name: req.body.name
+		,email_to: req.body.email_to
+		,subject: req.body.subject
+		,body: req.body.body			
 		,start_date: req.body.start_date
 		,time: req.body.time
 		,parameters: parameters 		
@@ -149,7 +152,7 @@ exports.updateSubscription = (req,res) => { //, middleware.isCampGroundOwnership
 		})
 
 		req.body.input_parameters.forEach((input_parameter, index)=> {
-			if (index > 0){
+			if (index > 0 || parameters !== ""){
 				parameters += ", "
 			}
 			parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
@@ -158,6 +161,11 @@ exports.updateSubscription = (req,res) => { //, middleware.isCampGroundOwnership
 		parameters += "}"
 
 		subscription.name = req.body.name
+
+		subscription.email_to = req.body.email_to
+		subscription.subject = req.body.subject
+		subscription.body = req.body.body						
+
 		subscription.start_date = req.body.start_date
 		subscription.time = req.body.time		
 		subscription.parameters = parameters;
@@ -198,22 +206,30 @@ exports.updateSubscriptions = (req,res) => { //, middleware.isCampGroundOwnershi
 
 			switch(req.body.action) {
 				case "run":
+
 					databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")
 					.then((result) => {
 						ssrsUtil.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
-						req.flash("success", 'Running Selected Reports');
+						req.flash("success", 'Running Selected Active Subscriptions');
 						res.redirect("/reports/" +req.params.reportid+"/subscriptions");
 					})					
 					break;
 				case "enable":
-					res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+					databaseQueriesUtil.bulkUpdateSubscriptions(subscriptions, {active: 1})
+					.then((subscriptions) => {
+						res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+					})
 					break;
 				case "disable":
-					res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+					databaseQueriesUtil.bulkUpdateSubscriptions(subscriptions, {active: 0})
+					.then((subscriptions) => {
+						res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+					})
+
 					break;
 				case "delete":
 
-					databaseQueriesUtil.destroySubscriptions(subscription_ids)
+					databaseQueriesUtil.destroySubscription(subscription_ids)
 					.then((result) => {
 						req.flash("success", 'Selected Subscriptions Deleted');
 						res.redirect("/reports/" +req.params.reportid+"/subscriptions");

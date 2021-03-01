@@ -230,3 +230,13 @@ input {
 	/* flex-wrap: wrap; */
 	flex-direction: row;	
 }
+
+.disable-form {
+
+	/* Make form elements appear disabled against grey background */
+	background-color: gray;
+	opacity:0.75; 
+ 
+	/* Prevent user interaction with form while disabled */
+	pointer-events:none;
+ }

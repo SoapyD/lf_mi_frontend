@@ -8,6 +8,7 @@ const Report = database.sequelize.define('NODE_report', {
        allowNull: false,
        primaryKey: true
    },
+   owner: Sequelize.STRING,
    name: Sequelize.STRING,
    description: Sequelize.STRING
 });

@@ -86,9 +86,13 @@
 								
 							</select>
 						<% }else{ %>
-							<input value="<%= parameter.name %>" id="<%= parameter.name %>-hidden" class="form-control" type="hidden" name="input_parameter_names[]">
+							<input id="<%= parameter.name %>-hidden" class="form-control" type="hidden" name="input_parameter_names[]" value="<%-parameter.name%>" >
 							<input id="<%= parameter.name %>-select" class="form-control" type="text" name="input_parameters[]" placeholder="" 
-							value="<% if(parameter_obj[parameter.name]){ %> <%= parameter_obj[parameter.name]%> <% } %>" required>
+							
+							<% if(parameter_obj[parameter.name]){ %> 
+							value="<%-parameter_obj[parameter.name]%>" required
+							<% } %>
+							>
 						<% } %>							
 					</div>
 				<% }) %>

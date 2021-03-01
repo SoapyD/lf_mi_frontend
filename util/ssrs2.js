@@ -23,85 +23,89 @@ exports.run = async(subscriptions, report, fusions, subsections, parameter_fusio
 
         subscriptions.forEach((subscription)=>{ //LOOP THROUGH EACH PERSCRIPTION
             
-            const tmpobj = tmp.dirSync();
-            
-            let folder_path = tmpobj.name //'reports';//
-            
-            let file_data = {
-                folder_path: folder_path,
-                files_needed: fusions.length
-            }
-            
-            databaseQueriesUtil.createSubscriptionActivity(subscription, file_data)
-            .then((subscription_activity) => {
-                // exports.files.push(file_data);
-                
-                let filepath = '';
-                let filename = '';
-                let outputname = '';
-                
-                let contents_page = '-';
-                //make a contents page
-                fusions.forEach(function (fusion){
-                    //get subsection data associated with fusion
-                    var subsection = subsections.find(o => o.id === fusion.join_from_id);
-                    
-                    if (subsection.name !== "front"){
-                        contents_page += subsection.name + "\n"
-                    }
-                })
-                
-                //CONVERT PARAMETER STRING INTO AN OBJECT
-                let parameter_object = JSON.parse(subscription.parameters);
-                
-                fusions.forEach((fusion) => { //LOOP THROUGH Sub SECTION/REPORT FUSIONS
-                    let subsection = subsections.find(o => o.id === fusion.join_from_id); //GET SUB SECTION DATA FROM FUSION
-                    //GET PARAMETERS ASSOCIATED WITH SUB SECTION
-                    let p_fusions_t = parameter_fusions.filter(o => o.join_to_id === fusion.join_from_id);
-                    let p_fusions;
-                    //IF P_FUSIONS_T ISN'T AN ARRAY, OR UNDEFINED, MAKE IT AN ARRAY
-                    if (Array.isArray(p_fusions_t) === false){
-                        if(p_fusions_t){
-                            p_fusions = [];
-                            p_fusions.push(p_fusions_t)
-                        }
-                    }else{
-                        p_fusions = p_fusions_t
-                    }
-                    
-                    let param_string = "{"
-                    //LOOP P_FUSIONS IF IT'S DEFINED
-                    if (p_fusions){
-                        p_fusions.forEach((p_fusion, index) => {
-                            let parameter = parameters.find(o => o.id === p_fusion.join_from_id);
-                            let value = parameter_object[parameter.name];
-                            
-                            if(index > 0){
-                                param_string+= " , "
-                            }
-                            param_string += '"' + parameter.name + '" : "'+value+'"'
-                        })
-                    }
-                    
-                    param_string += "}"
-                    let subsection_param_object = JSON.parse(param_string)
-                    
-                    if(subsection.name === "front"){
-                        subsection_param_object['contents_page'] = contents_page;
-                    }
-                    
-                    filepath = subsection.path;
-                    filename = subsection.name;  
-                    let size = 3
-                    
-                    outputname = "000000000" + fusion.order;
-                    outputname = outputname.substr(outputname.length-size);
+            if (subscription.active === true){
 
-                    let output_file = path.join(folder_path,outputname);                
+                const tmpobj = tmp.dirSync();
+            
+                let folder_path = tmpobj.name //'reports';//
+                
+                let file_data = {
+                    folder_path: folder_path,
+                    files_needed: fusions.length
+                }
+                
+                databaseQueriesUtil.createSubscriptionActivity(subscription, file_data)
+                .then((subscription_activity) => {
+                    // exports.files.push(file_data);
                     
-                    exports.runReport(filepath, filename, subsection_param_object, folder_path, output_file)
-                })
-            })
+                    let filepath = '';
+                    let filename = '';
+                    let outputname = '';
+                    
+                    let contents_page = '-';
+                    //make a contents page
+                    fusions.forEach(function (fusion){
+                        //get subsection data associated with fusion
+                        var subsection = subsections.find(o => o.id === fusion.join_from_id);
+                        
+                        if (subsection.name !== "front"){
+                            contents_page += subsection.name + "\n"
+                        }
+                    })
+                    
+                    //CONVERT PARAMETER STRING INTO AN OBJECT
+                    let parameter_object = JSON.parse(subscription.parameters);
+                    
+                    fusions.forEach((fusion) => { //LOOP THROUGH Sub SECTION/REPORT FUSIONS
+                        let subsection = subsections.find(o => o.id === fusion.join_from_id); //GET SUB SECTION DATA FROM FUSION
+                        //GET PARAMETERS ASSOCIATED WITH SUB SECTION
+                        let p_fusions_t = parameter_fusions.filter(o => o.join_to_id === fusion.join_from_id);
+                        let p_fusions;
+                        //IF P_FUSIONS_T ISN'T AN ARRAY, OR UNDEFINED, MAKE IT AN ARRAY
+                        if (Array.isArray(p_fusions_t) === false){
+                            if(p_fusions_t){
+                                p_fusions = [];
+                                p_fusions.push(p_fusions_t)
+                            }
+                        }else{
+                            p_fusions = p_fusions_t
+                        }
+                        
+                        let param_string = "{"
+                        //LOOP P_FUSIONS IF IT'S DEFINED
+                        if (p_fusions){
+                            p_fusions.forEach((p_fusion, index) => {
+                                let parameter = parameters.find(o => o.id === p_fusion.join_from_id);
+                                let value = parameter_object[parameter.name];
+                                
+                                if(index > 0){
+                                    param_string+= " , "
+                                }
+                                param_string += '"' + parameter.name + '" : "'+value+'"'
+                            })
+                        }
+                        
+                        param_string += "}"
+                        let subsection_param_object = JSON.parse(param_string)
+                        
+                        if(subsection.name === "front"){
+                            subsection_param_object['contents_page'] = contents_page;
+                        }
+                        
+                        filepath = subsection.path;
+                        filename = subsection.name;  
+                        let size = 3
+                        
+                        outputname = "000000000" + fusion.order;
+                        outputname = outputname.substr(outputname.length-size);
+    
+                        let output_file = path.join(folder_path,outputname);                
+                        
+                        exports.runReport(filepath, filename, subsection_param_object, folder_path, output_file)
+                    })
+                })    
+
+            }
 
         })
     }
@@ -204,27 +208,6 @@ exports.checkFiles = (output_path, err) => {
         })
     })
 }
-
-/*
-exports.checkFiles = async() => {
-
-    exports.files.forEach( async(item, index) => {
-        var file_list = fs.readdirSync(item.folder_path); 
-        if(file_list.length >= item.files_needed){
-            //create the merge document
-            try{
-                await exports.mergeDocument(item.folder_path, file_list, Date.now() )
-                //remove from files array
-                exports.files.splice(index, 1);
-            }
-            catch(err){
-                console.log(err)
-            }
-        }
-    })   
-    setTimeout(exports.checkFiles, 10000);
-}
-*/
 
 
 

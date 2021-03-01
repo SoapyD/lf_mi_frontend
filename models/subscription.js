@@ -40,6 +40,7 @@ const Subscription = database.sequelize.define('NODE_subscription', {
         }
    },
 
+    active: {type: Sequelize.BOOLEAN, defaultValue: 1},
     parameters: Sequelize.STRING,
     email_to: Sequelize.STRING,
     subject: Sequelize.STRING,

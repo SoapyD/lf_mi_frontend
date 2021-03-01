@@ -41,7 +41,7 @@ exports.getReport = (report_id=-1, name="") => {
     }
 }
 
-exports.copyReport = async(report_id, result) => {
+exports.copyReport = async(user_id, report_id, result) => {
 
     let report = result[0];
     let subsection_fusions = result[1];
@@ -51,6 +51,7 @@ exports.copyReport = async(report_id, result) => {
     let new_report = await Report.create ({
         name: report.name + ' - Copy'
         ,description: report.description
+        ,owner: user_id
     })
 
     let fusion_ids = []
@@ -132,6 +133,49 @@ exports.createFusionsFromBody = (fusion_to, item, fusions) => {
     })        
 }
 
+exports.createSectionFusionsFromBody = (report_id, report_body) => {
+
+    let promises = []
+    
+    // for(const fusion_key in fusions){ 
+    //     if (fusions[fusion_key] !== ''){
+    //         let fusion_from = fusions[fusion_key].split('_')
+    //         promises.push(exports.createFusion(1, 
+    //             Number(fusion_from[1]), fusion_from[0], //JOIN FROM
+    //             Number(item.id), fusion_to //JOIN TO
+    //             ))
+    //     }
+    // }
+
+    let sections = report_body
+
+    //LOOP THROUGH SECTION KEYS
+    for(const section_key in sections){ 
+        let subsection_order = 1
+        for(const subsection_key in sections[section_key]){ 
+	        let subsection = sections[section_key][subsection_key]
+
+            if (subsection_key.includes("Sub Section")){
+
+                if(subsection.id !== ""){
+                    promises.push(exports.createFusion(subsection_order, subsection.id, 'subsection', report_id, 'report'))
+
+                    subsection_order++
+                }
+            }
+        }
+    }
+
+
+    return  Promise.all(promises)
+    .catch((err) =>{
+        return
+    })    
+
+}
+
+
+
 exports.recreateSubSectionFusions = (report_id, f_subsections) => {
     let promises = []
     //CREATE FUSIONS BASED ON NEW FUSION LIST
@@ -162,6 +206,26 @@ exports.getFusions = async(join_to_id, join_from, join_to) => {
         return
     })
 }
+
+exports.getFusions2 = async(search_data) => {
+
+    //join_to_id, join_from, join_to
+    let data = {}
+    data['where'] = {}
+    for(const key in search_data){ 
+        data['where'][key] = search_data[key]
+    }
+    data['order'] = [ [ 'order', 'ASC' ]]
+
+    // console.log("test")
+
+    return fusions = Fusion.findAll(data)
+    .catch((err) =>{
+        console.log(err)
+        return
+    })
+}
+
 
 exports.getAllLinkedFusionData = (fusions) => {
 
@@ -293,6 +357,18 @@ exports.getSubSection = (subsection_id=-1, name="") => {
             return
         })           
     }
+}
+
+exports.deleteSubSection = (ids) => {
+    return SubSection.destroy ({
+        where : {
+            id: ids
+        }
+    })
+    .catch((err) =>{
+        console.log(err)
+        return
+    })        
 }
 
 exports.dropSubSections = () => {
@@ -454,6 +530,19 @@ exports.getSubscriptionParameters = async(report_id) => {
 
 }
 
+
+exports.deleteParameter = (ids) => {
+    return Parameter.destroy ({
+        where: {
+            id: ids
+        }
+    })
+    .catch((err) =>{
+        return
+    })        
+}
+
+
 ///////////////////////////////////////////////////////////////////FULL REPORT
 
 // used in report.show - produce a list of reports, fusions and all subsections (for dropdowns)
@@ -572,6 +661,44 @@ exports.getSubscriptions = async(report_id, subscription_ids=[]) => {
     }
 }
 
+exports.getActiveSubscriptions = async(report_id) => {
+
+    return subscriptions = Subscription.findAll({
+        where: {
+            NODEReportId: report_id,
+            active: 1
+        },
+        include: [
+            Frequency
+           ],        
+        order: [ [ 'name', 'ASC' ]]
+    })     
+    .catch((err) =>{
+        return
+    })   
+}
+
+
+exports.bulkUpdateSubscriptions = (subscriptions, values) => {
+
+    let promises = []
+    
+    subscriptions.forEach((subscription) => {
+        for(const key in values){ 
+            subscription[key] = values[key]
+        }
+
+        promises.push(subscription.save()) 
+    })
+
+    return  Promise.all(promises)
+    .catch((err) =>{
+        return
+    })   
+}
+
+
+
 exports.getSubscription = (subscription_id=-1, name="") => {
 
     if (subscription_id != -1){
@@ -592,7 +719,7 @@ exports.getSubscription = (subscription_id=-1, name="") => {
 }
 
 
-exports.destroySubscriptions = (subscription_ids) => {    
+exports.destroySubscription = (subscription_ids) => {    
     return subscriptions = Subscription.destroy({
         where: {
             id: subscription_ids

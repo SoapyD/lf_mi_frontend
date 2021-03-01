@@ -1,5 +1,6 @@
 // const errorController = require('../controllers/error');
 const databaseQueriesUtil = require('../util/database_queries');
+const functionsUtil = require('../util/functions');
 
 
 exports.getRouteInfo = () => {
@@ -12,18 +13,22 @@ exports.getRouteInfo = () => {
             ,menu_name: "Parameters"
             ,get_all_function: "getParameters"
             ,get_single_function: "getParameter"
-            ,create_function: "createParameter"            
+            ,create_function: "createParameter"
+            ,delete_function: "deleteParameter"            
             ,edit_fields: ['name','query']
+            ,type: "Parameter"
         }
         ,subsections: {
             route: "admin/subsections"
             ,menu_name: "Sub Sections"
             ,get_all_function: "getSubSections"
             ,get_single_function: "getSubSection"
-            ,create_function: "createSubSection"               
+            ,create_function: "createSubSection"
+            ,delete_function: "deleteSubSection"               
             ,edit_fields: ['name','path', 'description']
             ,fusion_from: ["Parameter"]
             ,fusion_to: "SubSection"
+            ,type: "SubSection"
         }       
         
     } 
@@ -47,6 +52,9 @@ exports.getItems = (req,res) => {
 
     databaseQueriesUtil[item_info.get_all_function]()
     .then((items)=> {
+
+        items.sort(functionsUtil.compare)
+
         res.render("admin/show", {menu_name: item_info.menu_name, type:type, data: items})
     }) 	
 };
@@ -198,24 +206,7 @@ exports.updateItem = (req,res) => { //, middleware.isCampGroundOwnership
             res.redirect("/admin/" + type)
         }
     })    
-
-	// Report.findByPk(req.params.reportid)
-	// .then((report) => {
-	// 	report.name = req.body.report.name;
-	// 	report.description = req.body.report.description;
-	
-	// 	report.save()
-	// 	.then((report) => {
-	// 		// console.log(report)
-	// 		res.redirect("/reports/" +req.params.reportid)
-	// 	})
-	// 	.catch(err => {
-	// 		errorController.get404()
-	// 	})		
-	// })	
-	// .catch(err => {
-	// 	errorController.get404()
-	// })			
+		
 };
 
 
@@ -226,15 +217,66 @@ exports.deleteItem = (req,res) => { //, middleware.isCampGroundOwnership
     
     let item_info = route_info[type];    
 
-    res.redirect("/admin/" + type)    
 
-	// databaseQueriesUtil.destroyReport(req.params.reportid)
-	// .then((data) => {
-	// 	req.flash("success", 'Sucessfully deleted report');
-	// 	res.redirect("/reports/")
-	// })
-	// .catch(err => {
-	// 	req.flash("error", 'Error, could not delete report');
-	// 	res.redirect("/reports/")
-	// })			
+    let search_data = {
+        join_from_id: req.params.id
+        ,join_from: item_info.type
+    }    
+    databaseQueriesUtil.getFusions2(search_data)
+    .then((reliant_fusions)=> {   
+
+        if(reliant_fusions && reliant_fusions.length > 0){
+            req.flash("error", "Can't Delete Item as there's fusions reliant on it");
+            res.redirect("/admin/" + type + "/" + req.params.id + '/edit');
+        }
+        else{
+            //GET THE ITEM BEING EDITTED
+            databaseQueriesUtil[item_info.get_single_function](req.params.id)
+            .then((item)=> {
+
+                databaseQueriesUtil[item_info.delete_function](Number(req.params.id))
+                .then((d_item) => {
+
+                    if (item_info.fusion_to && item_info.fusion_from)
+                    {
+                        search_data = {
+                            join_to_id: req.params.id
+                            ,join_to: item_info.fusion_to
+                            ,join_from: item_info.fusion_from
+                        }
+    
+                        //GET ALL FUSIONS
+                        // databaseQueriesUtil.getFusions(req.params.id, item_info.fusion_from, item_info.fusion_to)
+                        databaseQueriesUtil.getFusions2(search_data)
+                        .then((current_fusions)=> {
+    
+    
+                            if(current_fusions){
+                                let fusion_ids = []
+                                current_fusions.forEach((fusion) => {
+                                    fusion_ids.push(fusion.id)
+                                })
+                
+                                //DELETE ALL ASSOCIATED FUSIONS
+                                databaseQueriesUtil.destroyFusionsByID(fusion_ids)
+                                .then((current_fusions)=> {
+                                    res.redirect("/admin/" + type) 
+                                })
+                            }
+                            else{
+                                res.redirect("/admin/" + type) 
+                            }
+                        })                        
+                    }
+                    else{
+                        res.redirect("/admin/" + type) 
+                    }
+
+                })        
+
+            })
+        }
+
+    })
+		
 };
