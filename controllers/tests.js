@@ -1,25 +1,47 @@
 const { SectionSubSection } = require("../models");
 const models = require("../models");
 const database = require('../util/database')
-// const databaseQueriesUtil = require('../util/database_queries');
 
 
 exports.deleteTests = async(req, res) => {
 
     await exports.reset()
 
-    // res.send("deletion complete")
+    res.send("deletion complete")
+}
+
+exports.reset = async() => {
+    await models.SubSectionParameter.drop()
+    await models.Parameter.drop()    
+    await models.SectionSubSection.drop()
+    await models.SubSection.drop()
+    await models.Section.drop()
+    await models.Report.drop()        
 }
 
 
 exports.createTests = async(req,res) => { //, middleware.isLoggedIn
 
-    // 
-    await exports.deleteTests()
+    //RESET THE TABLES 
+    await exports.reset()
 
     await database.sequelize.sync()
 
     let creation_list = [];
+
+    creation_list = []
+    creation_list.push(
+    {
+        model: "Parameter",
+        params: [
+        {
+            name: "parameter 1",
+            query: "SELECT * FROM nothing"
+        },
+        ]
+    }) 
+
+    let parameters = await exports.createData(creation_list)
 
 
     creation_list = []
@@ -29,7 +51,7 @@ exports.createTests = async(req,res) => { //, middleware.isLoggedIn
         params: [
         {
             name: "sub section 1",
-            path: "/test/test"
+            path: "/test/test",
         },  
         {
             name: "sub section 2",
@@ -60,19 +82,19 @@ exports.createTests = async(req,res) => { //, middleware.isLoggedIn
 
     let reports = await exports.createData(creation_list)
 
-
     creation_list = []
     creation_list.push(
-    {
-        model: "Section",
-        params: [
         {
-            name: "section 1",
-            NODEREPORTReportId: reports[0].id
-        },            
-        ]
-    },    
-    )
+            model: "Section",
+            params: [
+                {
+                    name: "section 1",
+                    reportId: reports[0].id
+                },            
+            ]
+        },    
+        )
+    
 
     let sections = await exports.createData(creation_list)
 
@@ -84,18 +106,18 @@ exports.createTests = async(req,res) => { //, middleware.isLoggedIn
         params: [
         {
             order: 1,
-            NODEREPORTsectionId: sections[0].id,
-            NODEREPORTsubsectionId: subsections[0].id
+            sectionId: sections[0].id,
+            subsectionId: subsections[0].id
         },   
         {
             order: 2,
-            NODEREPORTsectionId: sections[0].id,
-            NODEREPORTsubsectionId: subsections[1].id
+            sectionId: sections[0].id,
+            subsectionId: subsections[1].id
         },   
         {
             order: 3,
-            NODEREPORTsectionId: sections[0].id,
-            NODEREPORTsubsectionId: subsections[2].id
+            sectionId: sections[0].id,
+            subsectionId: subsections[2].id
         },                            
         ]
     },    
@@ -103,19 +125,53 @@ exports.createTests = async(req,res) => { //, middleware.isLoggedIn
 
     let sectionsubsections = await exports.createData(creation_list)
 
-    let full_report = await exports.findData()
 
-    res.send("creation complete")
+    creation_list = []
+    creation_list.push(
+    {
+        model: "SubSectionParameter",
+        params: [
+        {
+            parameterId: sections[0].id,
+            subsectionId: subsections[0].id
+        },   
+        {
+            parameterId: sections[0].id,
+            subsectionId: subsections[1].id
+        },   
+        {
+            parameterId: sections[0].id,
+            subsectionId: subsections[2].id
+        },                            
+        ]
+    },    
+    )
+
+    let subsectionparameters = await exports.createData(creation_list)
+
+
+    let findlist = []
+
+    findlist.push({
+        model: "Report",
+        search_type: "findOne",
+        params: [
+            {
+                where: {
+                    id: 1
+                },
+                include: exports.searchType['Full Report'].include
+            }
+        ]
+    })
+
+
+    let full_report = await exports.findData(findlist)
+    
+    res.send("creation complete")    
 };
 
-exports.reset = async() => {
-    await models.SectionSubSection.drop()
-    await models.SubSection.drop()
-    await models.Section.drop()
-    await models.Report.drop()    
 
-    
-}
 
 
 exports.createData = async(creation_list) => {
@@ -131,58 +187,49 @@ exports.createData = async(creation_list) => {
     return Promise.all(promises)
 }
 
-exports.findData = async() => {
+exports.searchType = {
 
-    return models.Report.findOne({
-        where: {
-            name: 'report 1'
-        }
-        ,include: [
-        {
-            model: models.Section, 
-            as: "sections",
-            include: [
-                {
-                    model: models.SubSection, 
-                    as: "subsections",
-                    through: {
-                        model: SectionSubSection,
-                        as: "sectionsubsections"
+    "Full Report": {
+        include: [
+            {
+                model: models.Section, 
+                as: "sections",
+                include: [
+                    {
+                        model: models.SubSection, 
+                        as: "subsections",
+                        through: {
+                            model: models.SectionSubSection,
+                            as: "sectionsubsections"
+                        },
+                        include: [
+                            {
+                                model: models.Parameter, 
+                                as: "parameters",
+                                through: {
+                                    model: models.SubSectionParameter,
+                                    as: "subsectionparameters"
+                                }
+                            }
+                        ]
                     }
-                }
-            ]
-        }      
-        ]
-    })    
+                ]
+            }      
+        ]        
+    }
 }
 
 
+exports.findData = async(find_list) => {
 
-exports.oldTest = () => {
-	models.Report.create ({
-		name: 'Test Report'
-        ,description: 'A test report'
-        ,owner: "93e16e04-771c-4137-b169-748d2dc103c3"
-    })   
-    .then((report) => {
-        models.Section.create({
-            name: "test section"
-            ,order: 1
-            ,NODEREPORTReportId: report.id
+    let promises = [];
+
+    find_list.forEach((list) => {
+        list.params.forEach((item) => {
+            promises.push(models[list.model][list.search_type](item))
         })
-        .then((section) => {
-            
-            models.Report.findOne({
-                where: {
-                    name: 'Test Report'
-                }
-                ,include: [{
-                    model: models.Section, as: "sections"
-                }]
-            })
-            .then((report) => {
-                res.send("test")
-            })
-        })
-    })    
+    })
+
+    return Promise.all(promises) 
+ 
 }

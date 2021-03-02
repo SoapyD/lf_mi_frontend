@@ -9,10 +9,10 @@ const SubSection = database.sequelize.define('NODE_REPORT_subsection', {
        allowNull: false,
        primaryKey: true
    },
-   table_type: {
-        type: Sequelize.STRING,
-        defaultValue: "SubSection" 
-    },   
+//    table_type: {
+//         type: Sequelize.STRING,
+//         defaultValue: "SubSection" 
+//     },   
    path: Sequelize.STRING,
    name: Sequelize.STRING,
    description: Sequelize.STRING
