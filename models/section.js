@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const database = require('../util/database')
 
 
-const Section = database.sequelize.define('NODE_section', {
+const Section = database.sequelize.define('NODE_REPORT_section', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,
@@ -16,5 +16,6 @@ const Section = database.sequelize.define('NODE_section', {
     ,order: Sequelize.INTEGER 
     ,name: Sequelize.STRING
 });
+
 
 module.exports = Section

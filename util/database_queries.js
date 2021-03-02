@@ -299,11 +299,17 @@ exports.dropFusions = () => {
 
 ///////////////////////////////////////////////////////////////////SECTIONS
 
-exports.createSection = (params) => {
-    return Section.create ({
-        order: params.order
-		,name: params.name
-	})       
+exports.findOrCreate = (params) => {
+    return Section.findOrCreate ({
+        where : {
+            order: params.order
+            ,name: params.name
+        }
+    })       
+    .catch((err) =>{
+        return
+    })      
+
 }
 
 

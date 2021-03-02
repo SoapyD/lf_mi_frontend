@@ -21,9 +21,12 @@ var path = require('path');
 const errorController = require('./controllers/error');
 
 const database = require('./util/database')
+
+
 const ssrsController = require('./util/ssrs2');
 const seeds = require('./util/seeds2')
 
+const TestRoutes = require("./routes/test");
 const IndexRoutes = require("./routes/index");
 const AdminRoutes = require("./routes/admin");
 const ReportsRoutes = require("./routes/reports");
@@ -109,6 +112,7 @@ passport.use(new SamlStrategy(
 
 //setup routes
 app.use(IndexRoutes);
+app.use("/test",TestRoutes);
 app.use("/admin",AdminRoutes);
 app.use("/reports",ReportsRoutes);
 app.use("/reports/:reportid/fusions",FusionsRoutes);
@@ -117,8 +121,7 @@ app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);
 database.sequelize
   .sync()
   .then(result => {
-    seeds.seed()
-
+    // seeds.seed()
   })
   .catch(err => {
     console.log(err)

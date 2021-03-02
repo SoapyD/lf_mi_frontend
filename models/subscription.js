@@ -47,8 +47,8 @@ const Subscription = database.sequelize.define('NODE_subscription', {
     body: Sequelize.STRING   
 });
 
-Subscription.belongsTo(Report);
-Subscription.belongsTo(Frequency);
+// Subscription.belongsTo(Report);
+// Subscription.belongsTo(Frequency);
 
 
 module.exports = Subscription
