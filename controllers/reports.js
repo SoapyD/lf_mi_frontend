@@ -1,17 +1,12 @@
 const Report = require("../models/report");
-const Fusion = require("../models/fusion");
-const SubSection = require("../models/subsection");
+// const Fusion = require("../models/fusion");
+// const SubSection = require("../models/subsection");
 const databaseQueriesUtil = require('../util/database_queries');
 const errorController = require('../controllers/error');
-const Subscription = require("../models/subscription");
+// const Subscription = require("../models/subscription");
 
-exports.getAllReports = (req,res) => { //middleware.isLoggedIn, 
+exports.getAllReports = (req,res) => {
 	
-    // Report.findAll({
-    //     order: [ [ 'name', 'ASC' ]]
-    // }).then((reports) => {
-	// 	res.render("reports/index", {reports:reports});
-	// })
 	databaseQueriesUtil.getAllReports()
 	.then((reports) => {
 		res.render("reports/index", {reports:reports});
@@ -23,7 +18,7 @@ exports.getAllReports = (req,res) => { //middleware.isLoggedIn,
 
 
 
-exports.getReport = (req, res) => { //middleware.isLoggedIn, 
+exports.getReport = (req, res) => {
 
 	databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, all subsections")
 	.then((result) => {
@@ -34,25 +29,16 @@ exports.getReport = (req, res) => { //middleware.isLoggedIn,
 	})
 };
 
-exports.getFormCreateReport = (req,res) => { //middleware.isLoggedIn, 
+exports.getFormCreateReport = (req,res) => {
 	res.render("reports/new");
 };
 
-exports.createReport = (req,res) => { //, middleware.isLoggedIn
-	
-	// let author = {
-	// 	id: req.user._id,
-	// 	username: req.user.username
-	// }
-	// let author = {
-	// 	id: "5ef4d0322ad3f50b9b181ecA", //5ef4d0322ad3f50b9b181ec3
-	// 	username: "tom_bombchild@hotmail.com"
-	// }	
+exports.createReport = (req,res) => {
 	
 	Report.create ({
 		name: req.body.name
 		,description: req.body.description
-		// ,author: author
+		,owner: req.session.passport.user.id
 	})
 	.then(report => {
 		// console.log(result);
@@ -65,7 +51,7 @@ exports.createReport = (req,res) => { //, middleware.isLoggedIn
 };
 
 
-exports.getEditReport = (req,res) => { //, middleware.isCampGroundOwnership
+exports.getEditReport = (req,res) => {
 
 	Report.findByPk(req.params.reportid)
 	.then((report) => {
@@ -76,7 +62,7 @@ exports.getEditReport = (req,res) => { //, middleware.isCampGroundOwnership
 	})
 };
 
-exports.updateReport = (req,res) => { //, middleware.isCampGroundOwnership
+exports.updateReport = (req,res) => {
 	
 	Report.findByPk(req.params.reportid)
 	.then((report) => {
@@ -85,7 +71,6 @@ exports.updateReport = (req,res) => { //, middleware.isCampGroundOwnership
 	
 		report.save()
 		.then((report) => {
-			// console.log(report)
 			res.redirect("/reports/" +req.params.reportid)
 		})
 		.catch(err => {
@@ -98,7 +83,7 @@ exports.updateReport = (req,res) => { //, middleware.isCampGroundOwnership
 };
 
 
-exports.updateCopyReport = (req,res) => { //, middleware.isCampGroundOwnership
+exports.updateCopyReport = (req,res) => {
 	
 
 	databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")

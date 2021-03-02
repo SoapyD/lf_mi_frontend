@@ -1,5 +1,6 @@
 const Report = require("../models/report");
 const Fusion = require("../models/fusion");
+const Section = require("../models/section");
 const SubSection = require("../models/subsection");
 const Frequency = require("../models/frequency");
 const Parameter = require("../models/parameter");
@@ -91,14 +92,6 @@ exports.dropReports = () => {
 ///////////////////////////////////////////////////////////////////FUSIONS
 
 exports.createFusion = (i, join_from_id, join_from, join_to_id, join_to) => {
-
-    // return Fusion.create({
-    //     order: i      
-    //     ,join_from_id: join_from_id
-    //     ,join_from: join_from                                                  
-    //     ,join_to_id: join_to_id
-    //     ,join_to: join_to                                   
-    // })
 
     return Fusion.findOrCreate({
     where: {
@@ -209,7 +202,7 @@ exports.getFusions = async(join_to_id, join_from, join_to) => {
 
 exports.getFusions2 = async(search_data) => {
 
-    //join_to_id, join_from, join_to
+    //PASS SEARCH TERMS TO THE QUERY THEN HAVE IT EXECUTE INSTEAD OF REQUIRING RIGID SEARCH TERMS
     let data = {}
     data['where'] = {}
     for(const key in search_data){ 
@@ -227,6 +220,7 @@ exports.getFusions2 = async(search_data) => {
 }
 
 
+//ADMIN FUNCTION
 exports.getAllLinkedFusionData = (fusions) => {
 
     if(fusions && fusions.length > 0)
@@ -247,6 +241,8 @@ exports.getAllLinkedFusionData = (fusions) => {
     }
 }
 
+
+//ADMIN FUNCTION
 exports.getAllFusableData = (data_types) => {
 
     if(data_types && data_types.length > 0)
@@ -265,8 +261,6 @@ exports.getAllFusableData = (data_types) => {
     else {
         return
     }
-
-
 }
 
 
@@ -302,6 +296,16 @@ exports.dropFusions = () => {
         return
     })        
 }
+
+///////////////////////////////////////////////////////////////////SECTIONS
+
+exports.createSection = (params) => {
+    return Section.create ({
+        order: params.order
+		,name: params.name
+	})       
+}
+
 
 ///////////////////////////////////////////////////////////////////SUB SECTIONS
 
