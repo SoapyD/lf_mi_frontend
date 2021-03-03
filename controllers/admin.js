@@ -1,5 +1,3 @@
-// const errorController = require('../controllers/error');
-// const databaseQueriesUtil = require('../util/database_queries');
 // const functionsUtil = require('../util/functions');
 const databaseQueriesUtil = require('../util/database_queries2');
 const testController = require('../controllers/tests');
@@ -12,25 +10,12 @@ exports.getRouteInfo = () => {
     route_info = {
         parameter: {
             type: "Parameter"
-            ,edit_fields: ['name','query']
-            // ,route: "admin/parameters"
-            // ,menu_name: "Parameters"
-            // ,get_all_function: "getParameters"
-            // ,get_single_function: "getParameter"
-            // ,create_function: "createParameter"
-            // ,delete_function: "deleteParameter"            
+            ,edit_fields: ['name','query']        
         }
         ,subsection: {
             type: "SubSection"
             ,edit_fields: ['name','path', 'description']
             ,join_from: ["Parameter"]
-            // ,route: "admin/subsections"
-            // ,menu_name: "Sub Sections"
-            // ,get_all_function: "getSubSections"
-            // ,get_single_function: "getSubSection"
-            // ,create_function: "createSubSection"
-            // ,delete_function: "deleteSubSection"               
-            // ,fusion_to: "SubSection"
         }       
         
     } 

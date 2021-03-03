@@ -292,12 +292,18 @@
                         subsection_element.attr('selected','selected');
                     }  
 
-                    //ADD IN THE ALTERNATE NAME TO THE SUBSECTION, IF AVAILABLE FROM THE FUSION
-                    subsection_element = subsection_chunk.find('input')
-                    if (subsection_element.length > 0)
-                    {
-                        subsection_element.val('<%- subsection.name %>');
-                    }  
+                    <% if(subsection.sectionsubsections) { %>
+
+                        //ADD IN THE ALTERNATE NAME TO THE SUBSECTION, IF AVAILABLE FROM THE FUSION
+                        subsection_element = subsection_chunk.find('input')
+                        if (subsection_element.length > 0)
+                        {
+                            subsection_element.val('<%- subsection.sectionsubsections.name %>');
+                        }
+                          
+                    <% } %>
+
+
 
 
                 <% }) %>

@@ -21,6 +21,9 @@ exports.reset = async() => {
 
 exports.create = async() => {
     //RESET THE TABLES 
+
+    try{
+
     await exports.reset()
 
     await database.sequelize.sync()
@@ -62,7 +65,11 @@ exports.create = async() => {
         {
             name: "sub section 3",
             path: "/test/test"
-        },                              
+        },     
+        {
+            name: "sub section 4",
+            path: "/test/test"
+        },                                     
         ]
     },    
     )
@@ -108,6 +115,7 @@ exports.create = async() => {
         params: [
         {
             order: 1,
+            name: "section renamed",
             sectionId: sections[0].id,
             subsectionId: subsections[0].id
         },   
@@ -118,6 +126,12 @@ exports.create = async() => {
         },   
         {
             order: 3,
+            name: "section INSERTION",
+            sectionId: sections[0].id,
+            subsectionId: subsections[3].id
+        },           
+        {
+            order: 4,
             sectionId: sections[0].id,
             subsectionId: subsections[2].id
         },                            
@@ -168,7 +182,14 @@ exports.create = async() => {
     })
 
 
-    let full_report = await exports.findData(findlist)    
+    let full_report = await exports.findData(findlist)   
+    
+    }    
+    catch(err){
+        console.log(err)
+
+    }
+
 }
 
 
