@@ -19,9 +19,7 @@ exports.reset = async() => {
     await models.Report.drop()        
 }
 
-
-exports.createTests = async(req,res) => { //, middleware.isLoggedIn
-
+exports.create = async() => {
     //RESET THE TABLES 
     await exports.reset()
 
@@ -38,6 +36,10 @@ exports.createTests = async(req,res) => { //, middleware.isLoggedIn
             name: "parameter 1",
             query: "SELECT * FROM nothing"
         },
+        {
+            name: "parameter 2",
+            query: "SELECT * FROM nothing"
+        },        
         ]
     }) 
 
@@ -166,7 +168,13 @@ exports.createTests = async(req,res) => { //, middleware.isLoggedIn
     })
 
 
-    let full_report = await exports.findData(findlist)
+    let full_report = await exports.findData(findlist)    
+}
+
+
+exports.createTests = async(req,res) => { //, middleware.isLoggedIn
+
+    await exports.create();
     
     res.send("creation complete")    
 };

@@ -13,13 +13,6 @@
     </div>
 </header>
 
-<!-- <a class="btn btn-primary btn-large" href="/admin/subsections">
-    Add Dynamic Report SubSections
-</a>
-
-<a class="btn btn-primary btn-large" href="/admin/parameters">
-    Add Dynamic Report Parameters
-</a> -->
 
 <div class="panel panel-primary">
 
@@ -30,15 +23,17 @@
     <% for(const route_key in route_info){ %>
 
         <div class="panel-body">
-            <a href=<%- route_info[route_key].route %>>
-                <%- route_info[route_key].menu_name %>
+            <a href="admin/<%- route_info[route_key].type.toLowerCase() %>">
+                <%- route_info[route_key].type %>
             </a>       
         </div>
 
     <% } %>
 </div>
 
-
+<div class="top-padding">
+    <a href="/">Go Back</a>
+</div>
 
 </div>
 

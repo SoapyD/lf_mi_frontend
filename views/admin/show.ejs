@@ -7,7 +7,7 @@
     <div class="container">
         
         <h1>
-            <%- menu_name %>
+            <%- type_info.type %>
         </h1>
 
     </div>
@@ -15,8 +15,8 @@
 
 
 
-<a class="btn btn-primary btn-large" href="/admin/<%- type %>/new">
-    Add <%- menu_name %>
+<a class="btn btn-primary btn-large" href="/admin/<%- type_info.type.toLowerCase() %>/new">
+    Add <%- type_info.type %>
 </a>
 
 <div class="top-padding">
@@ -34,7 +34,7 @@
             if (item.name !== undefined) {
                 %>
                 <div class="panel-body"> 
-                    <a href="/admin/<%- type %>/<%- item.id %>/edit">
+                    <a href="/admin/<%- type_info.type.toLowerCase() %>/<%- item.id %>/edit">
                         <%- item.name %>
                     </a>
                 </div> 
@@ -48,6 +48,11 @@
     </div>
 
 </div>
+
+<div class="top-padding">
+    <a href="/admin">Go Back</a>
+</div>
+
 
 </div>
 

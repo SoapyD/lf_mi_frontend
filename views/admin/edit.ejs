@@ -7,13 +7,13 @@
     <div class="container">
         
         <h1>
-            <%- item_info.menu_name %> Editor
+            <%- type_info.type %> Editor
         </h1>
 
     </div>
 </header>
 
-<form action="/admin/<%- type %>/<%= data.id %>?_method=PUT" method="POST"
+<form action="/admin/<%- type_info.type.toLowerCase() %>/<%= data.id %>?_method=PUT" method="POST"
     onsubmit="return confirm('Are you sure you want to save changes to this item?');">
 
     <div class="panel panel-primary">
@@ -22,13 +22,13 @@
             <h4><%- data.name %></h4> 
         </div>
 
-        <% item_info.edit_fields.forEach(function (item){ %>
+        <% type_info.edit_fields.forEach(function (item){ %>
 
             <div class="box s-padding">
                 <span>
                     <%- item %> :
                 </span>
-                <input class="form-control" type="text" name="<%- item %>" value="<%- data.dataValues[item] %>">
+                <input class="form-control" type="text" name="params[<%- item %>]" value="<%- data.dataValues[item] %>">
 
             </div>
             
@@ -37,19 +37,19 @@
     </div>
 
 
-    <% if (fusable_data && fusable_data.length > 0) { %>
-        <button class="btn btn-primary add-fusion" type="button">
-            Add Fusion
+    <% if (join_data && join_data.length > 0) { %>
+        <button class="btn btn-primary add-join" type="button">
+            Add join
         </button>	
 
         <div class="top-padding">        
             <div class="panel panel-primary">
     
                 <div class="panel-heading">
-                    <h4>Fusions</h4> 
+                    <h4>joins</h4> 
                 </div>
     
-                <div id="fusion-box">
+                <div id="join-box">
     
                 </div>
             </div>
@@ -60,7 +60,7 @@
 </form>
 
 
-<form action="/admin/<%- type %>/<%= data.id %>?_method=DELETE" method="POST" class="flex-right"
+<form action="/admin/<%- type_info.type.toLowerCase() %>/<%= data.id %>?_method=DELETE" method="POST" class="flex-right"
     onsubmit="return confirm('Are you sure you want to delete this item?');">
     <button class="btn btn-lg btn-primary">
         Delete
@@ -68,34 +68,32 @@
 </form>
 
 <div class="top-padding">
-    <a href="/admin/<%- type %>">Go Back</a>
+    <a href="/admin/<%- type_info.type.toLowerCase() %>">Go Back</a>
 </div>
 
 </div>
-
-
 
 <script>
 
-    function add_fusion() {
-        let fusion_box = $('#fusion-box')
-        let fusion_select = $('.fusion-select')
+    function add_join() {
+        let join_box = $('#join-box')
+        let join_select = $('.join-select')
 
         let markup = `
 
         <div class="box s-padding">
-        <select id="fusion_`+fusion_select.length+`" name="fusions[`+fusion_select.length+`]" type="string" class="full-width form-control fusion-select">
+        <select id="join_`+join_select.length+`" name="joins[`+join_select.length+`]" type="string" class="full-width form-control join-select">
 
         <option value=""></option>
 
-        <% if(item_info.fusion_from) { %>
-        <% item_info.fusion_from.forEach(function (fusion_from, i){ %>
+        <% if(type_info.join_from) { %>
+        <% type_info.join_from.forEach(function (join_from, i){ %>
 
-            <% let fusable_list = fusable_data[i] %>
+            <% let join_list = join_data[i] %>
 
-            <% fusable_list.forEach(function (fusable_item){ %>                
+            <% join_list.forEach(function (join_item){ %>                
 
-                    <option value="<%- fusion_from %>_<%- fusable_item.id %>"><%- fusion_from %>: <%- fusable_item.name %></option>
+                    <option value="<%- join_from %>_<%- join_item.id %>"><%- join_from %>: <%- join_item.name %></option>
             <% }) %>
         <% }) %>
         <% } %>
@@ -103,34 +101,43 @@
         </select>
         </div>
         `
-        fusion_box.append(markup)
-        // console.log($("#fusion_"+fusion_select.length))
+        join_box.append(markup)
+        // console.log($("#join_"+join_select.length))
 
-        let return_data = $("#fusion_"+fusion_select.length)
+        let return_data = $("#join_"+join_select.length)
         return return_data
     }
 
 
     // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
-    $(".add-fusion").click(add_fusion);	
+    $(".add-join").click(add_join);	
+
+    let join_picker;
 
 
-    let fusion_picker;
-    <% if(linked_data){ %>
-    <% linked_data.forEach(function (linked_item){ %>
-        fusion_picker = add_fusion()
+    <% if(type_info.join_from) { %>
 
-        // console.log(fusion_picker)
+        <% type_info.join_from.forEach(function (join_from, i){ %>
+            
 
-        selected_option = fusion_picker.find('option[value="<%- linked_item.table_type %>_<%- linked_item.id %>"]')
-        if (selected_option.length > 0)
-        {
-            selected_option.attr('selected','selected');
-        }            
+            <% if(data[join_from.toLowerCase()+'s']) { %>
+                <% data[join_from.toLowerCase()+'s'].forEach((join_item) => { %>
+                    join_picker = add_join()
 
-    <% }) %>
+                    selected_option = join_picker.find('option[value="<%- join_from %>_<%- join_item.id %>"]')
+                    if (selected_option.length > 0)
+                    {
+                        selected_option.attr('selected','selected');
+                    }       
+
+                <% }) %>
+            <% } %>
+
+        <% }) %>
     <% } %>
 
+
 </script>
+
 
 <%- include("../partials/footer") %>

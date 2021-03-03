@@ -1,32 +1,79 @@
 const Report = require("../models/report");
 // const Fusion = require("../models/fusion");
 // const SubSection = require("../models/subsection");
-const databaseQueriesUtil = require('../util/database_queries');
+const databaseQueriesUtil = require('../util/database_queries2');
 const errorController = require('../controllers/error');
 // const Subscription = require("../models/subscription");
 
-exports.getAllReports = (req,res) => {
+exports.getAllReports = async(req,res) => {
 	
-	databaseQueriesUtil.getAllReports()
-	.then((reports) => {
-		res.render("reports/index", {reports:reports});
-	})
-	.catch(err => {
-		errorController.get404()
-	})	
+
+    let find_list = []
+    find_list.push(
+    {
+        model: "Report",
+        search_type: "findAll"
+    }) 
+
+    try{
+        let reports = await databaseQueriesUtil.findData(find_list)
+        res.render("reports/index", {reports:reports[0]});
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to get report data");
+        res.redirect("/")        
+    }
+	
 };
 
 
 
-exports.getReport = (req, res) => {
+exports.getReport = async(req, res) => {
 
-	databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, all subsections")
-	.then((result) => {
-		res.render("reports/show_TEST2", {report:result[0], fusions:result[1], subsections: result[2]});
-	})
-	.catch(err => {
-		errorController.get404()
-	})
+
+    try{
+		let find_list = []
+		find_list.push(
+		{
+			model: "Report",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: req.params.reportid,
+				},
+				include: databaseQueriesUtil.searchType['Full Report'].include			
+			}]
+		}) 
+
+		//GET ALL REPORT DATA
+		let reports = await databaseQueriesUtil.findData(find_list)
+		
+		//GET ALL SUBSECTION DATA
+		find_list = []
+		find_list.push(
+		{
+			model: "SubSection",
+			search_type: "findAll"
+		}) 
+	
+		let subsections = await databaseQueriesUtil.findData(find_list)
+
+        res.render("reports/show", {report:reports[0], subsections: subsections[0]});
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to get report data");
+        res.redirect("/reports")        
+    }
+
+	// databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, all subsections")
+	// .then((result) => {
+	// 	res.render("reports/show_TEST2", {report:result[0], fusions:result[1], subsections: result[2]});
+	// })
+	// .catch(err => {
+	// 	errorController.get404()
+	// })
 };
 
 exports.getFormCreateReport = (req,res) => {

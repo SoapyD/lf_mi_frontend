@@ -13,7 +13,7 @@
     </div>
 </header>
 
-<form action="/admin/<%- type %>" method="POST"
+<form action="/admin/<%- type_info.type.toLowerCase() %>" method="POST"
     onsubmit="return confirm('Are you sure you want to save changes to this item?');">
 
     <div class="panel panel-primary">
@@ -22,13 +22,13 @@
             <h4>New Item</h4> 
         </div>
 
-        <% item_info.edit_fields.forEach(function (item){ %>
+        <% type_info.edit_fields.forEach(function (item){ %>
 
             <div class="box s-padding">
                 <span>
                     <%- item %> :
                 </span>
-                <input class="form-control" type="text" name="<%- item %>">
+                <input class="form-control" type="text" name="params[<%- item %>]">
 
             </div>
             
@@ -36,19 +36,21 @@
 
     </div>
 
-    <button class="btn btn-primary add-fusion" type="button">
-        Add Fusion
-    </button>	
+    <% if(type_info.join_from) {%>
+        <button class="btn btn-primary add-join" type="button">
+            Add join
+        </button>	
+    <% } %>
 
-    <% if (fusable_data && fusable_data.length > 0) { %>
+    <% if (join_data && join_data.length > 0) { %>
     <div class="top-padding">        
         <div class="panel panel-primary">
 
             <div class="panel-heading">
-                <h4>Fusions</h4> 
+                <h4>Joins</h4> 
             </div>
 
-            <div id="fusion-box">
+            <div id="join-box">
 
             </div>
         </div>
@@ -60,7 +62,7 @@
 </form>
 
 <div class="top-padding">
-    <a href="/admin/<%- type %>">Go Back</a>
+    <a href="/admin/<%- type_info.type.toLowerCase() %>">Go Back</a>
 </div>
 
 </div>
@@ -68,37 +70,40 @@
 
 <script>
 
-    function add_fusion() {
-        let fusion_box = $('#fusion-box')
-        let fusion_select = $('.fusion-select')
+    function add_join() {
+        let join_box = $('#join-box')
+        let join_select = $('.join-select')
 
         let markup = `
 
         <div class="box s-padding">
-        <select name="fusions[`+fusion_select.length+`]" type="string" class="full-width form-control fusion-select">
+        <select name="joins[`+join_select.length+`]" type="string" class="full-width form-control join-select">
 
         <option value=""></option>
 
-        <% item_info.fusion_from.forEach(function (fusion_from, i){ %>
+        <% if(type_info.join_from) {%>
 
-            <% let fusable_list = fusable_data[i] %>
+            <% type_info.join_from.forEach(function (join_from, i){ %>
 
-            <% fusable_list.forEach(function (fusable_item){ %>                
+                <% let join_list = join_data[i] %>
 
-                    <option value="<%- fusion_from %>_<%- fusable_item.id %>"><%- fusion_from %>: <%- fusable_item.name %></option>
+                <% join_list.forEach(function (join_item){ %>                
+
+                        <option value="<%- join_from %>_<%- join_item.id %>"><%- join_from %>: <%- join_item.name %></option>
+                <% }) %>
             <% }) %>
-        <% }) %>
+        <% } %>
 
         </select>
         </div>
         `
-        fusion_box.append(markup)
-        // console.log(fusion_box)
+        join_box.append(markup)
+        // console.log(join_box)
     }
 
 
     // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
-    $(".add-fusion").click(add_fusion);	
+    $(".add-join").click(add_join);	
 
 </script>
 

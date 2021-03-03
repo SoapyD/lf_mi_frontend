@@ -1,6 +1,8 @@
 // const errorController = require('../controllers/error');
-const databaseQueriesUtil = require('../util/database_queries');
-const functionsUtil = require('../util/functions');
+// const databaseQueriesUtil = require('../util/database_queries');
+// const functionsUtil = require('../util/functions');
+const databaseQueriesUtil = require('../util/database_queries2');
+const testController = require('../controllers/tests');
 
 
 exports.getRouteInfo = () => {
@@ -8,27 +10,27 @@ exports.getRouteInfo = () => {
     let route_info;
 
     route_info = {
-        parameters: {
-            route: "admin/parameters"
-            ,menu_name: "Parameters"
-            ,get_all_function: "getParameters"
-            ,get_single_function: "getParameter"
-            ,create_function: "createParameter"
-            ,delete_function: "deleteParameter"            
+        parameter: {
+            type: "Parameter"
             ,edit_fields: ['name','query']
-            ,type: "Parameter"
+            // ,route: "admin/parameters"
+            // ,menu_name: "Parameters"
+            // ,get_all_function: "getParameters"
+            // ,get_single_function: "getParameter"
+            // ,create_function: "createParameter"
+            // ,delete_function: "deleteParameter"            
         }
-        ,subsections: {
-            route: "admin/subsections"
-            ,menu_name: "Sub Sections"
-            ,get_all_function: "getSubSections"
-            ,get_single_function: "getSubSection"
-            ,create_function: "createSubSection"
-            ,delete_function: "deleteSubSection"               
+        ,subsection: {
+            type: "SubSection"
             ,edit_fields: ['name','path', 'description']
-            ,fusion_from: ["Parameter"]
-            ,fusion_to: "SubSection"
-            ,type: "SubSection"
+            ,join_from: ["Parameter"]
+            // ,route: "admin/subsections"
+            // ,menu_name: "Sub Sections"
+            // ,get_all_function: "getSubSections"
+            // ,get_single_function: "getSubSection"
+            // ,create_function: "createSubSection"
+            // ,delete_function: "deleteSubSection"               
+            // ,fusion_to: "SubSection"
         }       
         
     } 
@@ -37,246 +39,412 @@ exports.getRouteInfo = () => {
 }
 
 
-exports.getAllOptions = (req,res) => { 
+exports.getAllOptions = async(req,res) => { 
 
-    let route_info = exports.getRouteInfo()
-    res.render("admin/index", {route_info: route_info})	
+    await testController.create();
+
+    try{
+        let route_info = exports.getRouteInfo()
+        res.render("admin/index", {route_info: route_info})	
+    }
+    catch(err){
+        req.flash("error", "That admin page does not exist");
+        res.redirect("/")         
+    }
 };
 
-exports.getItems = (req,res) => {
+exports.getItems = async(req,res) => {
     
     let type = req.params.item;
     let route_info = exports.getRouteInfo()
     
-    let item_info = route_info[type];
+    let type_info = route_info[type];
 
-    databaseQueriesUtil[item_info.get_all_function]()
-    .then((items)=> {
-
-        items.sort(functionsUtil.compare)
-
-        res.render("admin/show", {menu_name: item_info.menu_name, type:type, data: items})
-    }) 	
-};
-
-exports.getFormCreateItem = (req,res) => { //middleware.isLoggedIn, 
-
-    let type = req.params.item;
-    let route_info = exports.getRouteInfo()
-    
-    let item_info = route_info[type];
-
-    //GET ALL FUSABLE DATA FOR FORM DROPDOWNS
-    databaseQueriesUtil.getAllFusableData(item_info.fusion_from)
-    .then((fusable_data) => {    
-        res.render("admin/new", {item_info: item_info, type: type, fusable_data:fusable_data});
-    })
-};
-
-exports.createItem = (req,res) => {
-    
-    let type = req.params.item;
-    let route_info = exports.getRouteInfo()
-    
-    let item_info = route_info[type];
-
-    databaseQueriesUtil[item_info.create_function](req.body)
-    .then((item)=> {
-        
-        let fusions = req.body.fusions
-        if (fusions){
-
-            databaseQueriesUtil.createFusionsFromBody(item_info.fusion_to, item, fusions)
-            .then((fusions) => {
-                res.redirect("/admin/"+type);        
-            })
-        }
-
-        res.redirect("/admin/"+type);
+    let find_list = []
+    find_list.push(
+    {
+        model: type_info.type,
+        search_type: "findAll"
     }) 
+
+    try{
+        let data = await databaseQueriesUtil.findData(find_list)
+        //     data.sort(functionsUtil.compare)
+        // res.send("show all")
+        res.render("admin/show", {type_info:type_info, data: data[0]})
+    }
+    catch(err){
+        // res.send("an error occurred")
+        req.flash("error", "There was an error trying to get all admin data types");
+        res.redirect("/")        
+    }
+
+    
+	
+};
+
+exports.getFormCreateItem = async(req,res) => { //middleware.isLoggedIn, 
+
+    let type = req.params.item;
+    let route_info = exports.getRouteInfo()
+    
+    let type_info = route_info[type];
+
+    let find_list = []
+    find_list.push(
+    {
+        model: type_info.join_from,
+        search_type: "findAll"
+    }) 
+
+    try{
+        if (type_info.join_from)
+        {
+            let data = await databaseQueriesUtil.findData(find_list)
+            res.render("admin/new", {type_info: type_info, join_data:data});
+        }
+        else{
+            res.render("admin/new", {type_info: type_info, join_data:[]});
+        }
+    }
+    catch(err){
+        // res.send("an error occurred")
+        req.flash("error", "There was an error trying to get create data form for "+type);
+        res.redirect("/admin/"+type)
+    }
+
+};
+
+exports.createItem = async(req,res) => {
+    
+    let type = req.params.item;
+    let route_info = exports.getRouteInfo()
+    
+    let type_info = route_info[type];
+
+    let creation_list = []
+    creation_list.push(
+    {
+        model: type_info.type,
+        params: [
+        {
+            where: req.body.params
+        },      
+        ]
+    }) 
+
+    try{
+        let data = await databaseQueriesUtil.createData(creation_list)
+       
+        //IF RECORD EXISTS
+        //DOESN'T WORK BECAUSE THE CREATION PROCESS CHECKS IF THE FIELDS PASSED MATCH, NOT JUST THE NAME
+        // if(data[0][1] = true){
+            let joins = req.body.joins
+
+            if(joins){
+    
+                let join_creation_list = []
+    
+                for(const key in joins){ 
+                    if (joins[key] !== ''){
+                        let join_data = joins[key].split('_')
+                        let join_type_info = route_info[join_data[0].toLowerCase()];
+    
+                        // console.log(data[0].id)
+                        let rules = []
+                        rules["model"] = type_info.type+join_type_info.type
+                        rules["params"] = []
+                        let params = {}
+                        params["where"] = {}
+                        params["where"][type+"Id"] = data[0][0].id
+                        params["where"][join_data[0].toLowerCase()+"Id"] = Number(join_data[1])
+                        rules["params"].push(params)
+    
+                        join_creation_list.push(rules) 
+                        
+    
+                    }
+                }        
+                let join_data = await databaseQueriesUtil.createData(join_creation_list)
+                res.redirect("/admin/"+type);
+                //IF THERE ARE ANY JOINS, TURN THEM INTO SEARCH TERMS
+            }
+            else{
+                res.redirect("/admin/"+type); 
+            }                
+        // }
+        // else{
+        //     req.flash("error", "cannot create "+type+" that has the same name as an existing "+type+". Please choose another name");
+        //     res.redirect("/admin/"+type);             
+        // }
+
+
+
+    }
+    catch (err){
+        console.log(err)
+        req.flash("error", "There was an error trying to save record for "+type);
+        res.redirect("/admin/"+type); 
+    }
     	
 };
 
 
 
-exports.getEditItems = (req,res) => {
+exports.getEditItems = async(req,res) => {
     
     let type = req.params.item;
     let id = Number(req.params.id)
     let route_info = exports.getRouteInfo()
     
-    let item_info = route_info[type];
+    let type_info = route_info[type];
 
-    //GET THE ITEM BEING EDITTED
-    databaseQueriesUtil[item_info.get_single_function](id)
-    .then((item)=> {
+    try {
+        let findlist = []
 
-        //GET ALL FUSABLE DATA FOR FORM DROPDOWNS
-        if (item_info.fusion_from){
-            databaseQueriesUtil.getAllFusableData(item_info.fusion_from)
-            .then((fusable_data) => {
-
-                //GET ALL FUSIONS
-                databaseQueriesUtil.getFusions(id, item_info.fusion_from, item_info.fusion_to)
-                .then((fusions)=> { 
-                    //GET LINKED DATA
-                    if(fusions && fusions.length > 0){
-                        databaseQueriesUtil.getAllLinkedFusionData(fusions)
-                        .then((linked_data) => {
-                            res.render("admin/edit", {item_info: item_info, type:type, data: item, fusable_data: fusable_data, fusions: fusions, linked_data: linked_data})
-                        })     
+        let search_criteria = {
+            model: type_info.type,
+            search_type: "findOne",
+            params: [
+                {
+                    where: {
+                        id: id
                     }
-                    else{
-                        res.render("admin/edit", {item_info: item_info, type:type, data: item, fusable_data: fusable_data, fusions:null, linked_data:null})
-                    }
-
-                })
-            })
-        }
-        else{ 
-            res.render("admin/edit", {item_info: item_info, type:type, data: item, fusable_data:null, fusions:null, linked_data:null})
-        }
-
-
-    }) 	  
-};
-
-
-
-exports.updateItem = (req,res) => { //, middleware.isCampGroundOwnership
-
-    let type = req.params.item;
-    let route_info = exports.getRouteInfo()
-    
-    let item_info = route_info[type];    
-
-    // res.redirect("/admin/" + type)
-
-    //GET THE ITEM BEING EDITTED
-    databaseQueriesUtil[item_info.get_single_function](req.params.id)
-    .then((item)=> {
-        if(item){
-            for(const key in req.body){
-                // console.log(key)
-                if (key !== "fusions"){
-                    item[key] = req.body[key]
                 }
-            }
-            item.save()
-            .then((item) => {
-                
-                //GET ALL FUSIONS
-                databaseQueriesUtil.getFusions(req.params.id, item_info.fusion_from, item_info.fusion_to)
-                .then((current_fusions)=> {
-                    //CHECK TO SEE IF THERE'S ANY FUSIONS THAT NEED SAVING                 
-                    if(req.body.fusions){
-                        databaseQueriesUtil.createFusionsFromBody(item_info.fusion_to, item, req.body.fusions)
-                        .then((fusions) => {
-
-                            //RETURN WHICH CURRENT FUSIONS AND DELETE ANY THAT AREN'T IN BODY
-
-                            //LOOP THROUGH FUSIONS
-                            let id_list = []
-                            current_fusions.forEach((current_fusion) => {
-                                let found = fusions.find(element => element[0].join_from_id === current_fusion.join_from_id && element[0].join_from === current_fusion.join_from);                                
-                                if(found == null)
-                                {
-                                    id_list.push(current_fusion.id)
-                                }                            
-                            })
-
-                            if(id_list){
-                                databaseQueriesUtil.destroyFusionsByID(id_list)
-                                .then((result) => {
-                                    res.redirect("/admin/"+type);
-                                })
-                            }
-                            else{
-                                res.redirect("/admin/"+type);        
-                            }
-                        })                        
-                    }
-                    else{
-                        res.redirect("/admin/" + type)
-                    }
-                })
+            ]
+        }
+    
+        //APPEND THE INCLUDE FOR ANY JOINS ASSOCIATED WITH THE SEARCH TYPE
+    
+        if(type_info.join_from){
+            type_info.join_from.forEach((join_type) => {
+                search_criteria['params'][0]["include"] = databaseQueriesUtil.searchType["SubSection"].include
             })
+        
+            
         }
-        else {
-            res.redirect("/admin/" + type)
-        }
-    })    
-		
-};
-
-
-exports.deleteItem = (req,res) => { //, middleware.isCampGroundOwnership
+        findlist.push(search_criteria) 
     
-    let type = req.params.item;
-    let route_info = exports.getRouteInfo()
+        //GET THE EDITABLE ITEM, INCLUDING ANY JOINS
+        let data = await databaseQueriesUtil.findData(findlist)
     
-    let item_info = route_info[type];    
-
-
-    let search_data = {
-        join_from_id: req.params.id
-        ,join_from: item_info.type
-    }    
-    databaseQueriesUtil.getFusions2(search_data)
-    .then((reliant_fusions)=> {   
-
-        if(reliant_fusions && reliant_fusions.length > 0){
-            req.flash("error", "Can't Delete Item as there's fusions reliant on it");
-            res.redirect("/admin/" + type + "/" + req.params.id + '/edit');
+    
+        //GET ALL JOINABLE DATA
+        if (type_info.join_from)
+        {
+    
+            findlist = []
+            findlist.push(
+            {
+                model: type_info.join_from,
+                search_type: "findAll"
+            }) 
+    
+            let join_data = await databaseQueriesUtil.findData(findlist)
+    
+            res.render("admin/edit", {type_info: type_info, data: data[0], join_data: join_data})
         }
         else{
-            //GET THE ITEM BEING EDITTED
-            databaseQueriesUtil[item_info.get_single_function](req.params.id)
-            .then((item)=> {
+            res.render("admin/edit", {type_info: type_info, data: data[0], join_data: []})
+        }
+    }
+    catch (err){
+        console.log(err)
+        req.flash("error", "There was an error trying to retrieve record for "+type);
+        res.redirect("/admin/"+type); 
+    }
 
-                databaseQueriesUtil[item_info.delete_function](Number(req.params.id))
-                .then((d_item) => {
 
-                    if (item_info.fusion_to && item_info.fusion_from)
-                    {
-                        search_data = {
-                            join_to_id: req.params.id
-                            ,join_to: item_info.fusion_to
-                            ,join_from: item_info.fusion_from
-                        }
+};
+
+
+
+exports.updateItem = async(req,res) => { //, middleware.isCampGroundOwnership
+
+    let id = Number(req.params.id)    
+    let type = req.params.item;
+    let route_info = exports.getRouteInfo()
     
-                        //GET ALL FUSIONS
-                        // databaseQueriesUtil.getFusions(req.params.id, item_info.fusion_from, item_info.fusion_to)
-                        databaseQueriesUtil.getFusions2(search_data)
-                        .then((current_fusions)=> {
-    
-    
-                            if(current_fusions){
-                                let fusion_ids = []
-                                current_fusions.forEach((fusion) => {
-                                    fusion_ids.push(fusion.id)
-                                })
-                
-                                //DELETE ALL ASSOCIATED FUSIONS
-                                databaseQueriesUtil.destroyFusionsByID(fusion_ids)
-                                .then((current_fusions)=> {
-                                    res.redirect("/admin/" + type) 
-                                })
-                            }
-                            else{
-                                res.redirect("/admin/" + type) 
-                            }
-                        })                        
-                    }
-                    else{
-                        res.redirect("/admin/" + type) 
-                    }
+    let type_info = route_info[type];    
 
-                })        
+    let findlist = []
+    findlist.push({
+        model: type_info.type,
+        search_type: "findOne",
+        params: [
+            {
+                where: {
+                    id: id
+                }
+            }
+        ]
+    })
 
-            })
+    try {
+        //FIND THE RECORD WE'RE UPDATING
+        let data = await databaseQueriesUtil.findData(findlist)
+
+        let updatelist = []
+        updatelist.push({
+            params: [
+                req.body.params
+            ]
+        })    
+
+        //UPDATE THE RECORD
+        data = await databaseQueriesUtil.updateData(data[0], updatelist)
+
+
+        //LOOP THROUGH AND SAVE THE JOINS IN THE BODY
+        let joins = req.body.joins
+        let join_type_info;
+        let rules = [];
+        let params = {}
+        let created_join_data;
+
+        if(joins){
+        
+            let join_creation_list = []
+
+            for(const key in joins){ 
+                if (joins[key] !== ''){
+                    let join_data = joins[key].split('_')
+                    join_type_info = route_info[join_data[0].toLowerCase()];
+
+                    rules = []
+                    rules["model"] = type_info.type+join_type_info.type
+                    rules["params"] = []
+                    params = {}
+                    params["where"] = {}
+                    params["where"][type+"Id"] = data[0].id
+                    params["where"][join_data[0].toLowerCase()+"Id"] = Number(join_data[1])
+                    rules["params"].push(params)
+
+                    join_creation_list.push(rules) 
+                }
+            }        
+            created_join_data = await databaseQueriesUtil.createData(join_creation_list)
         }
 
+
+        //GET THE JOINS ALREADY ASSOCIATED WITH THE ITEM
+        
+        type_info.join_from.forEach(async(join_type) => {
+
+            findlist = []
+            rules = []
+            rules["model"] = type_info.type+join_type
+            rules["search_type"] = "findAll"
+            rules["params"] = []
+            params = {}
+            params["where"] = {}
+            params["where"][type+"Id"] = data[0].id
+            rules["params"].push(params)
+
+            findlist.push(rules) 
+    
+
+            let join_data = await databaseQueriesUtil.findData(findlist)
+        
+            if(join_data){
+
+                let destroylist = []
+
+                //CHECK THE OLD JOINS STILL EXIST
+                join_data[0].forEach((join) => {
+                    let check = created_join_data.find(element => 
+                        element[type_info.type+'Id'] === join[type_info.type+'Id'] 
+                        && element[join_type+'Id'] === join[join_type+'Id']
+                        );
+
+                    //if it doesn't delete it
+                    if(!check){
+                        rules = []
+                        rules["model"] = type_info.type+join_type
+                        rules["params"] = []
+                        params = {}
+                        params["where"] = {}
+                        params["where"][type+"Id"] = join[type_info.type.toLowerCase()+'Id'] 
+                        params["where"][join_type.toLowerCase()+"Id"] = join[join_type.toLowerCase()+'Id']
+                        rules["params"].push(params)
+
+                        destroylist.push(rules) 
+                    }
+                })
+                
+                databaseQueriesUtil.destroyData(destroylist)
+            }
+         
+
+        })
+
+        
+
+        res.redirect("/admin/"+type);
+    }
+    catch (err){
+        console.log(err)
+        req.flash("error", "There was an error trying to save record for "+type);
+        res.redirect("/admin/"+type+'/'+id); 
+    }
+
+
+};
+
+
+exports.deleteItem = async(req,res) => { //, middleware.isCampGroundOwnership
+    
+    let type = req.params.item;
+    let route_info = exports.getRouteInfo()
+    
+    let type_info = route_info[type];    
+    let id = Number(req.params.id) 
+
+
+    //CHECK THERE AREN'T EXISTING JOINS BASED ON THE ELEMENT
+
+    //GET THE ITEM BEING DELETED
+
+    let findlist = []
+    findlist.push({
+        model: type_info.type,
+        search_type: "findOne",
+        params: [
+            {
+                where: {
+                    id: id
+                }
+            }
+        ]
     })
-		
+
+    try {
+        //FIND THE RECORD WE'RE UPDATING
+        let data = await databaseQueriesUtil.findData(findlist)
+
+        //DELETE THE ITEM
+        let destroylist = []
+        destroylist.push({
+            model: type_info.type,
+            params: [
+                {
+                    where: {
+                        id: id
+                    }
+                }
+            ]
+        })
+        //THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
+        let deletions = await databaseQueriesUtil.destroyData(destroylist)
+
+        res.redirect("/admin/" + type)
+
+
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to delete record for "+type);
+        res.redirect("/admin/"+type+'/'+id); 
+    }
+
 };
