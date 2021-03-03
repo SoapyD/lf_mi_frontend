@@ -260,7 +260,7 @@ exports.updateCopyReport = async(req,res) => {
 						params = {}
 						params["where"] = {
 							order: sectionsubsection.order,
-							name: sectionsubsection.name+" COPY",
+							name: sectionsubsection.name,
 							sectionId: copied_section[0][0].id,
 							subsectionId: sectionsubsection.subsectionId
 						}		
