@@ -15,21 +15,17 @@ models.Section.belongsToMany(models.SubSection, {
   through: 'NODE_REPORT_sectionsubsections',
   as: 'subsections',
   foreignKey: 'sectionId',
-  otherKey: 'subsectionId',
-  unique: false,
-  constraints: false
+  otherKey: 'subsectionId'
 });
 
-models.SectionSubSection.belongsTo(models.Section, {foreignKey: 'sectionId',unique: false,constraints: false})
-models.SectionSubSection.belongsTo(models.SubSection, {foreignKey: 'subsectionId',unique: false,constraints: false})
+models.SectionSubSection.belongsTo(models.Section, {foreignKey: 'sectionId'})
+models.SectionSubSection.belongsTo(models.SubSection, {foreignKey: 'subsectionId'})
 
 models.SubSection.belongsToMany(models.Section, {
     through: 'NODE_REPORT_sectionsubsections',
     as: 'sections',
     foreignKey: 'subsectionId',
-    otherKey: 'sectionId',
-    unique: false,
-    constraints: false    
+    otherKey: 'sectionId'
 });
 
 

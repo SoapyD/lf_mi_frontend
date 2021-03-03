@@ -7,7 +7,6 @@ const errorController = require('../controllers/error');
 
 exports.getAllReports = async(req,res) => {
 	
-
     let find_list = []
     find_list.push(
     {
@@ -31,6 +30,7 @@ exports.getAllReports = async(req,res) => {
 
 exports.getReport = async(req, res) => {
 
+	let id = req.params.reportid;
 
     try{
 		let find_list = []
@@ -40,7 +40,7 @@ exports.getReport = async(req, res) => {
 			search_type: "findOne",
 			params: [{
 				where: {
-					id: req.params.reportid,
+					id: id,
 				},
 				include: databaseQueriesUtil.searchType['Full Report'].include			
 			}]
@@ -151,96 +151,215 @@ exports.getEditReport = async(req,res) => {
 
 exports.updateReport = async(req,res) => {
 	
-	// Report.findByPk(req.params.reportid)
-	// .then((report) => {
-	// 	report.name = req.body.report.name;
-	// 	report.description = req.body.report.description;
+	let id = req.params.reportid;
 	
-	// 	report.save()
-	// 	.then((report) => {
-	// 		res.redirect("/reports/" +req.params.reportid)
-	// 	})
-	// 	.catch(err => {
-	// 		errorController.get404()
-	// 	})		
-	// })	
-	// .catch(err => {
-	// 	errorController.get404()
-	// })			
+	try {
+		let findlist = []
+		findlist.push({
+			model: "Report",
+			search_type: "findOne",
+			params: [
+				{
+					where: {
+						id: id
+					}
+				}
+			]
+		})
+
+		//GET THE EDITABLE ITEM, INCLUDING ANY JOINS
+		let reports = await databaseQueriesUtil.findData(findlist)
+
+
+		let updatelist = []
+		updatelist.push({
+			params: [
+				req.body.params
+			]
+		})    
+
+		//UPDATE THE RECORD
+		let data = await databaseQueriesUtil.updateData(reports[0], updatelist)
+		res.redirect("/reports/" +id)
+	}	
+	catch(err){
+		console.log(err)
+		req.flash("error", "There was an error trying to update your report");
+		res.redirect("/reports/"+ id)        
+	}	
 };
 
 
 exports.updateCopyReport = async(req,res) => {
 	
+	let id = req.params.reportid;
+	
+	//GET FULL REPORT
+    try{
+		let find_list = []
+		find_list.push(
+		{
+			model: "Report",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: id,
+				},
+				include: databaseQueriesUtil.searchType['Full Report'].include			
+			}]
+		}) 
 
-	// databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")
-	// .then((old_report_data) => {
+		//GET ALL REPORT DATA
+		let reports = await databaseQueriesUtil.findData(find_list)
+		let report = reports[0]
 
-	// 	databaseQueriesUtil.copyReport(req.session.passport.user.id, req.params.reportid, old_report_data)
-	// 	.then((new_report_data) => {
-	// 		let old_report = old_report_data[0]
-	// 		req.flash("success", 'Sucessfully copied report: '+old_report.name);		
-	// 		res.redirect("/reports/");
-	// 	})
-	// })					
-	// .catch(err => {
-	// 	errorController.get404()
-	// })			
+		let creation_list = []
+
+		//COPY THE REPORT
+		let search_criteria = {}
+		search_criteria["model"] = "Report"
+		search_criteria["params"] = []
+		params = {}
+		params["where"] = {
+			name: report.name + "_COPY",
+			description: report.description,
+			owner: req.session.passport.user.id
+		}
+		search_criteria["params"].push(params)
+
+		creation_list.push(search_criteria)
+		let copied_report = await databaseQueriesUtil.createData(creation_list)
+		
+		if (report.sections){
+			report.sections.forEach( async(section) => {
+
+				creation_list = []
+				let create_sections = {}
+				create_sections["model"] = "Section"
+				create_sections["params"] = []
+				params = {}
+				params["where"] = {
+					order: section.order,
+					name: section.name,
+					reportId: copied_report[0][0].id
+				}
+				create_sections["params"].push(params)
+				creation_list.push(create_sections)
+				let copied_section = await databaseQueriesUtil.createData(creation_list)
+
+				if (section.subsections){
+					creation_list = []
+
+					let create_sectionsubsections = {}
+					create_sectionsubsections["model"] = "SectionSubSection"
+					create_sectionsubsections["params"] = []
+
+					section.subsections.forEach( async(subsection) => {
+
+						let sectionsubsection = subsection.sectionsubsections
+						params = {}
+						params["where"] = {
+							order: sectionsubsection.order,
+							name: sectionsubsection.name+" COPY",
+							sectionId: copied_section[0][0].id,
+							subsectionId: sectionsubsection.subsectionId
+						}		
+						create_sectionsubsections["params"].push(params)
+					})
+
+					creation_list.push(create_sectionsubsections)	
+					let copied_sectionsubsections = await databaseQueriesUtil.createData(creation_list)
+				}
+			})
+		}
+
+		
+		// creation_list.push(create_sectionsubsections)				
+
+		// creation_list.push() 
+	
+		let creations = await databaseQueriesUtil.createData(creation_list)	
+
+		req.flash("success", 'Sucessfully copied report');		
+		res.redirect("/reports/");
+
+	}
+	catch(err){
+		console.log(err)
+		req.flash("error", "There was an error trying to copy your report");
+		res.redirect("/reports/"+ id)        
+	}
+
 };
 
 
 exports.deleteReport = async(req,res) => { //, middleware.isCampGroundOwnership
 	
+	let id = req.params.reportid;
+	
+	try {
 
-	// databaseQueriesUtil.getActiveSubscriptions(req.params.reportid)
-	// .then((subscriptions) => {
+		//DELETE THE ITEM
+		let destroylist = []
+		destroylist.push({
+			model: "Report",
+			search_type: "findOne",
+			params: [
+				{
+					where: {
+						id: id
+					},
+					include: databaseQueriesUtil.searchType['Full Report'].include
+				}
+			]
+		})
+		//GET FULL REPORT DATA
+		let reports = await databaseQueriesUtil.findData(destroylist)
+		//THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
+		// console.log("test")
+		let deletions = await databaseQueriesUtil.destroyData(destroylist)
 
-	// 	if(subscriptions && subscriptions.length > 0){
-	// 		req.flash("error", 'Error, cannot delete a report with active subscriptions. Please disable or delete all subscriptions and try again.');
-	// 		res.redirect("/reports/"+req.params.reportid)
-	// 	}
-	// 	else{
-	// 		databaseQueriesUtil.destroyReport(req.params.reportid)
-	// 		.then((data) => {
+		//DELETE ALL OF THE JOINS TOO
+		destroylist = []
+		let section_deletions = {}
+		section_deletions["model"] = "Section"
+		section_deletions["params"] = []
 
-	// 			//GET ANY SUBSECTION FUSIONS SO THEY CAN BE DELETED
-	// 			search_data = {
-	// 				join_to_id: req.params.reportid
-	// 				,join_to: "Report"
-	// 				,join_from: "SubSection"
-	// 			}
+		let sectionsubsection_deletions = {}
+		sectionsubsection_deletions["model"] = "SectionSubSection"
+		sectionsubsection_deletions["params"] = []
 
-	// 			//GET ALL FUSIONS
-	// 			databaseQueriesUtil.getFusions2(search_data)
-	// 			.then((current_fusions)=> {
+		if (reports[0].sections){
+			reports[0].sections.forEach((section) => {
 
-	// 				if(current_fusions){
-	// 					let fusion_ids = []
-	// 					current_fusions.forEach((fusion) => {
-	// 						fusion_ids.push(fusion.id)
-	// 					})
-		
-	// 					//DELETE ALL ASSOCIATED FUSIONS
-	// 					databaseQueriesUtil.destroyFusionsByID(fusion_ids)
-	// 					.then((current_fusions)=> {
-	// 						req.flash("success", 'Sucessfully deleted report');
-	// 						res.redirect("/reports/")
-	// 					})
-	// 				}
-	// 				else{
-	// 					req.flash("success", 'Sucessfully deleted report');
-	// 					res.redirect("/reports/")
-	// 				}
+				params = {}
+				params["where"] = {}
+				params["where"]["id"] = section.id 				
+				section_deletions["params"].push(params)
 
+				if (section.subsections){
+					section.subsections.forEach((subsection) => {
 
-	// 			})
+						params = {}
+						params["where"] = {}
+						params["where"]["sectionId"] = section.id
+						params["where"]["subsectionId"] = subsection.id						 				
+						sectionsubsection_deletions["params"].push(params)
 
-	// 		})
-	// 		.catch(err => {
-	// 			req.flash("error", 'Error, could not delete report');
-	// 			res.redirect("/reports/")
-	// 		})			
-	// 	}
-	// })
+					})
+				}
+			})
+		}
+		destroylist.push(section_deletions)
+		destroylist.push(sectionsubsection_deletions)
+		deletions = await databaseQueriesUtil.destroyData(destroylist)
+
+		res.redirect("/reports/")
+	}	
+	catch(err){
+		console.log(err)
+		req.flash("error", "There was an error trying to update your report");
+		res.redirect("/reports/"+ id)        
+	}		
 
 };

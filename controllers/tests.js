@@ -84,6 +84,7 @@ exports.create = async() => {
         params: [
         {
             name: "report 1"
+            ,owner: "93e16e04-771c-4137-b169-748d2dc103c3"
         },            
         ]
     },    
