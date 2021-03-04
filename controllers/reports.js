@@ -189,6 +189,145 @@ exports.updateReport = async(req,res) => {
 	}	
 };
 
+exports.updateJoinReport = async(req,res) => {
+    //GET ALL CURRENT JOINS
+	let id = req.params.reportid;
+
+    try{
+		let find_list = []
+		find_list.push(
+		{
+			model: "Report",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: id,
+				},
+				include: databaseQueriesUtil.searchType['Full Report'].include			
+			}]
+		}) 
+
+	    //GET FULL REPORT
+		let reports = await databaseQueriesUtil.findData(find_list)
+        let report = reports[0]
+
+        //CREATE THE SECTIONS AND SUBSECTIONS THAT HAVE BEEN PASSED FROM THE BODY
+
+        let sections = req.body.Report
+		let section_order = 1
+
+        for(const section_key in sections){ 
+            
+            //CREATE SECTION
+
+            let creation_list = []
+            let create_sections = {}
+            create_sections["model"] = "Section"
+            create_sections["params"] = []
+            params = {}
+			params["where"] = sections[section_key]["params"]
+
+			//APPEND DATA TO THE SECTION
+            params["where"]["order"] = section_order			
+            params["where"]["reportId"] = report.id
+            create_sections["params"].push(params)
+            creation_list.push(create_sections)
+            let created_section = await databaseQueriesUtil.createData(creation_list)
+
+            creation_list = []
+            create_sections = {}
+			
+			let subsection_order = 1
+
+			create_sections["model"] = "SectionSubSection"
+			create_sections["params"] = []		
+
+            for(const subsection_key in sections[section_key]){ 
+                let subsection = sections[section_key][subsection_key]
+    
+                if (subsection_key.includes("Sub Section")){
+    
+                    if(subsection.id !== ""){
+
+				
+                        params = {}
+                        // params["where"] = {}
+                        // params["where"]["name"] = subsection["params"]["name"]
+                        // params["where"]["order"] = subsection_order
+                        // params["where"]["sectionId"] = created_section[0][0].id
+                        // params["where"]["subsectionId"] = Number(subsection["params"]["id"])
+
+                        params["name"] = subsection["params"]["name"]
+                        params["order"] = subsection_order
+                        params["sectionId"] = created_section[0][0].id
+                        params["subsectionId"] = Number(subsection["params"]["id"])
+
+                        create_sections["params"].push(params)
+						
+						subsection_order++;
+                    }
+                }
+			}
+			creation_list.push(create_sections)
+
+			let created_sectionsubsections;
+			if(creation_list.length > 0){
+				created_sectionsubsections = await databaseQueriesUtil.createData2("SectionSubSection", creation_list)
+			}
+			//CREATE SUBSECTIONS
+			section_order++;
+        }        
+
+
+        //DESTROY ANY CURRENT JOINS THAT AREN'T IN THE NEWLY CREATED ONES        
+		//DELETE ALL OF THE JOINS TOO
+		// let destroylist = []
+		// let section_deletions = {}
+		// section_deletions["model"] = "Section"
+		// section_deletions["params"] = []
+
+		// let sectionsubsection_deletions = {}
+		// sectionsubsection_deletions["model"] = "SectionSubSection"
+		// sectionsubsection_deletions["params"] = []
+
+		// if (report.sections){
+		// 	report.sections.forEach((section) => {
+
+		// 		params = {}
+		// 		params["where"] = {}
+		// 		params["where"]["id"] = section.id 				
+		// 		section_deletions["params"].push(params)
+
+		// 		if (section.subsections){
+		// 			section.subsections.forEach((subsection) => {
+
+		// 				params = {}
+		// 				params["where"] = {}
+		// 				params["where"]["sectionId"] = section.id
+		// 				params["where"]["subsectionId"] = subsection.id						 				
+		// 				sectionsubsection_deletions["params"].push(params)
+
+		// 			})
+		// 		}
+		// 	})
+		// }
+		// destroylist.push(section_deletions)
+		// destroylist.push(sectionsubsection_deletions)
+		// deletions = await databaseQueriesUtil.destroyData(destroylist)
+
+
+		//CREATE SECTIONSUBSECTIONS
+		req.flash("success", "Report Updated"); 
+		res.redirect("/reports/"+ id)
+
+    }
+	catch(err){
+		console.log(err)
+		req.flash("error", "There was an error trying to update your report");
+		res.redirect("/reports/"+ id)        
+    }	
+}
+
 
 exports.updateCopyReport = async(req,res) => {
 	

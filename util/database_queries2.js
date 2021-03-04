@@ -46,13 +46,14 @@ exports.searchType = {
     }
 }
 
-exports.createData = async(creation_list) => {
+exports.createData = async(creation_list, search_type="findOrCreate") => {
 
     let promises = [];
 
     creation_list.forEach((list) => {
         list.params.forEach((item) => {
-            promises.push(models[list.model].findOrCreate(item))
+            promises.push(models[list.model][search_type](item))
+            // promises.push(models[list.model].create(item))
         })
     })
 
@@ -61,6 +62,68 @@ exports.createData = async(creation_list) => {
         console.log(err)
     })  
 }
+
+exports.createData2 = async(type, creation_list) => {
+    
+    //check records are there
+    let checks = await exports.createRecordsNull(type, creation_list)
+    let created = await exports.createRecord(type, creation_list, checks)
+    return created
+}
+
+exports.createRecord = async(type, creation_list, checks) => {
+    let promises = [];
+
+    let i = 0;
+    creation_list.forEach( async(list) => {
+        list.params.forEach( async(item) => {
+    
+
+            if(checks[i][0] === null){
+                promises.push(models[list.model].create(item))
+            }
+
+            i++;
+        })
+    })
+
+    return Promise.all(promises)
+    .catch((err) => {
+        console.log(err)
+    })  
+}
+
+exports.createRecordsNull = async(type, creation_list) => {
+
+    let promises = [];
+
+    creation_list.forEach( async(list) => {
+        list.params.forEach( async(item) => {
+
+            let findlist = []
+
+            let search_criteria = {
+                model: type,
+                search_type: "findOne",
+                params: [
+                    {
+                        where: item
+                    }
+                ]
+            }     
+            findlist.push(search_criteria)       
+
+            promises.push(exports.findData(findlist))
+        })
+    })
+
+    return Promise.all(promises)
+    .catch((err) => {
+        console.log(err)
+    })       
+}
+
+
 
 exports.findData = async(find_list) => {
 

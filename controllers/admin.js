@@ -114,8 +114,9 @@ exports.createItem = async(req,res) => {
         params: [
         {
             where: req.body.params
-        },      
+        },
         ]
+        // params: [req.body.params]       
     }) 
 
     try{

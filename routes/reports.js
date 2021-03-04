@@ -20,6 +20,9 @@ router.get("/:reportid/edit", middleware.isLoggedIn, reportsController.getEditRe
 //UPDATE REPORT
 router.put("/:reportid", middleware.isLoggedIn, reportsController.updateReport)
 
+//JOIN REPORT
+router.put("/:reportid/join", middleware.isLoggedIn, reportsController.updateJoinReport)
+
 //COPY REPORT
 router.put("/:reportid/copy", middleware.isLoggedIn, reportsController.updateCopyReport)
 

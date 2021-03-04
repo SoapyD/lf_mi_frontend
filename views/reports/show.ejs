@@ -68,7 +68,7 @@
     disable-form
     <% } %>">
 
-    <form action="/reports/<%= report.id %>/fusions" method="POST"
+    <form action="/reports/<%= report.id %>/join?_method=PUT" method="POST"
         onsubmit="return confirm('Are you sure you want to save changes to this report?');">
 
         <% if(user.id === report.owner) { %> 

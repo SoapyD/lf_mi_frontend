@@ -30,7 +30,7 @@ const TestRoutes = require("./routes/test");
 const IndexRoutes = require("./routes/index");
 const AdminRoutes = require("./routes/admin");
 const ReportsRoutes = require("./routes/reports");
-const FusionsRoutes = require("./routes/fusions");
+// const FusionsRoutes = require("./routes/fusions");
 const SubscriptionsRoutes = require("./routes/subscriptions");
 
 //setup app
@@ -115,7 +115,7 @@ app.use(IndexRoutes);
 app.use("/test",TestRoutes);
 app.use("/admin",AdminRoutes);
 app.use("/reports",ReportsRoutes);
-app.use("/reports/:reportid/fusions",FusionsRoutes);
+// app.use("/reports/:reportid/fusions",FusionsRoutes);
 app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);
 
 database.sequelize

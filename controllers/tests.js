@@ -99,6 +99,7 @@ exports.create = async() => {
             params: [
                 {
                     name: "section 1",
+                    order: 1,
                     reportId: reports[0].id
                 },            
             ]
@@ -122,20 +123,21 @@ exports.create = async() => {
         },   
         {
             order: 2,
+            name: "",
             sectionId: sections[0].id,
             subsectionId: subsections[1].id
         },   
-        {
-            order: 3,
-            name: "section INSERTION",
-            sectionId: sections[0].id,
-            subsectionId: subsections[3].id
-        },           
-        {
-            order: 4,
-            sectionId: sections[0].id,
-            subsectionId: subsections[2].id
-        },                            
+        // {
+        //     order: 3,
+        //     name: "section INSERTION",
+        //     sectionId: sections[0].id,
+        //     subsectionId: subsections[3].id
+        // },           
+        // {
+        //     order: 4,
+        //     sectionId: sections[0].id,
+        //     subsectionId: subsections[2].id
+        // },                            
         ]
     },    
     )
