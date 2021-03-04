@@ -111,20 +111,20 @@ exports.createItem = async(req,res) => {
     creation_list.push(
     {
         model: type_info.type,
-        params: [
-        {
-            where: req.body.params
-        },
-        ]
-        // params: [req.body.params]       
+        // params: [
+        // {
+        //     where: req.body.params
+        // },
+        // ]
+        params: [req.body.params]       
     }) 
 
     try{
-        let data = await databaseQueriesUtil.createData(creation_list)
+        let data = await databaseQueriesUtil.createData2(creation_list)
        
         //IF RECORD EXISTS
         //DOESN'T WORK BECAUSE THE CREATION PROCESS CHECKS IF THE FIELDS PASSED MATCH, NOT JUST THE NAME
-        // if(data[0][1] = true){
+        if(data[0]){
             let joins = req.body.joins
 
             if(joins){
@@ -141,28 +141,31 @@ exports.createItem = async(req,res) => {
                         rules["model"] = type_info.type+join_type_info.type
                         rules["params"] = []
                         let params = {}
-                        params["where"] = {}
-                        params["where"][type+"Id"] = data[0][0].id
-                        params["where"][join_data[0].toLowerCase()+"Id"] = Number(join_data[1])
-                        rules["params"].push(params)
-    
+                        // params["where"] = {}
+                        // params["where"][type+"Id"] = data[0][0].id
+                        // params["where"][join_data[0].toLowerCase()+"Id"] = Number(join_data[1])
+                        // rules["params"].push(params)
+                        params[type+"Id"] = data[0].id
+                        params[join_data[0].toLowerCase()+"Id"] = Number(join_data[1])
+                        rules["params"].push(params)    
+
                         join_creation_list.push(rules) 
                         
     
                     }
                 }        
-                let join_data = await databaseQueriesUtil.createData(join_creation_list)
+                let join_data = await databaseQueriesUtil.createData2(join_creation_list)
                 res.redirect("/admin/"+type);
                 //IF THERE ARE ANY JOINS, TURN THEM INTO SEARCH TERMS
             }
             else{
                 res.redirect("/admin/"+type); 
             }                
-        // }
-        // else{
-        //     req.flash("error", "cannot create "+type+" that has the same name as an existing "+type+". Please choose another name");
-        //     res.redirect("/admin/"+type);             
-        // }
+        }
+        else{
+            req.flash("error", "cannot create "+type+" that has the same name as an existing "+type+". Please choose another name");
+            res.redirect("/admin/"+type);             
+        }
 
 
 
@@ -301,15 +304,17 @@ exports.updateItem = async(req,res) => { //, middleware.isCampGroundOwnership
                     rules["model"] = type_info.type+join_type_info.type
                     rules["params"] = []
                     params = {}
-                    params["where"] = {}
-                    params["where"][type+"Id"] = data[0].id
-                    params["where"][join_data[0].toLowerCase()+"Id"] = Number(join_data[1])
+                    // params["where"] = {}
+                    // params["where"][type+"Id"] = data[0].id
+                    // params["where"][join_data[0].toLowerCase()+"Id"] = Number(join_data[1])
+                    params[type+"Id"] = data[0].id
+                    params[join_data[0].toLowerCase()+"Id"] = Number(join_data[1])                    
                     rules["params"].push(params)
 
                     join_creation_list.push(rules) 
                 }
             }        
-            created_join_data = await databaseQueriesUtil.createData(join_creation_list)
+            created_join_data = await databaseQueriesUtil.createData2(join_creation_list)
         }
 
 

@@ -161,14 +161,14 @@
 	function add_subsection_function(){
 
         let parent = $(this).parent();
-        // console.log(parent)
+
         add_subsection(parent)
     
 	}
 
     function add_subsection(parent){
 
-        // console.log(section_data.id)
+
         let parent_span = $(parent[0]).find("span")[0].innerText
         let text_number = 'Sub Section '+(parent.children().find('.subsection').length + 1)
         let number = $(".subsection").length + 1        
@@ -196,12 +196,12 @@
 
             <div class="box">
                 <span>Alternate Name</span>
-                <input class="form-control" type="text" name="Report[`+parent_span+`][`+text_number+`][params][name]" placeholder="name" >
+                <input class="form-control subsection-name" type="text" name="Report[`+parent_span+`][`+text_number+`][params][name]" placeholder="name" >
             </div>
 
             <div class="box">
                 <span>Options</span>
-                <select name="Report[`+parent_span+`][`+text_number+`][params][options]" type="number" class="full-width form-control" multiple size="3">
+                <select name="Report[`+parent_span+`][`+text_number+`][params][options]" type="number" class="full-width form-control subsection-dropdown" multiple size="3">
                     <option value="graph" selected>graph</option>
                     <option value="table" selected>table</option>
                     <option value="comments" selected>comments</option>
@@ -249,7 +249,7 @@
             //RELABEL SECTION
             let section_name = 'Section ' + (i + 1)
             $(this).find('span')[0].innerText = section_name
-            $(this).find('input')[0].name = section_name + '[params][name]'
+            $(this).find('input')[0].name = 'Report[' + section_name + '][params][name]'
 
             let subsections = $(this).children().find('.subsection')
 
@@ -257,11 +257,17 @@
                 
                 //RELABEL SUBSECTION
                 let subsection_name = 'Sub Section ' + (i + 1)
+
+
                 $(this).find('span')[0].innerText = subsection_name
-                $(this).find('input')[0].name = section_name + '['+subsection_name+']'+'[params][name]'
+
+                $(this).find('.subsection-name')[0].name = 'Report[' + section_name + ']['+subsection_name+']'+'[params][name]'
+                $(this).find('.subsection-options')[0].name = 'Report[' + section_name + ']['+subsection_name+']'+'[params][id]'
+                $(this).find('.subsection-dropdown')[0].name = 'Report[' + section_name + ']['+subsection_name+']'+'[params][dropdown]'
             })
 
         })
+
     }    
 
 
@@ -281,7 +287,7 @@
             section_chunk = add_section_function()
 
             section_element = section_chunk.find('input')
-            console.log(section_element)
+
             if (section_element.length > 0)
             {
                 section_element.val('<%- section.name %>');
@@ -293,7 +299,7 @@
 
                     //FIND THE SUBSECTION OPTION THAT MATCHES THE FUSED SECTION ID
                     subsection_element = subsection_chunk.find('.subsection-options > option[value="<%- subsection.id %>"]')
-                    console.log(subsection_element)
+
                     if (subsection_element.length > 0)
                     {
                         subsection_element.attr('selected','selected');

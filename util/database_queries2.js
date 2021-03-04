@@ -46,6 +46,14 @@ exports.searchType = {
     }
 }
 
+//  #####  ######  #######    #    ####### #######       ######  #######  #####  ####### ######  ######  
+// #     # #     # #         # #      #    #             #     # #       #     # #     # #     # #     # 
+// #       #     # #        #   #     #    #             #     # #       #       #     # #     # #     # 
+// #       ######  #####   #     #    #    #####   ##### ######  #####   #       #     # ######  #     # 
+// #       #   #   #       #######    #    #             #   #   #       #       #     # #   #   #     # 
+// #     # #    #  #       #     #    #    #             #    #  #       #     # #     # #    #  #     # 
+//  #####  #     # ####### #     #    #    #######       #     # #######  #####  ####### #     # ######  
+
 exports.createData = async(creation_list, search_type="findOrCreate") => {
 
     let promises = [];
@@ -63,24 +71,31 @@ exports.createData = async(creation_list, search_type="findOrCreate") => {
     })  
 }
 
-exports.createData2 = async(type, creation_list) => {
+exports.createData2 = async(creation_list) => {
     
     //check records are there
-    let checks = await exports.createRecordsNull(type, creation_list)
-    let created = await exports.createRecord(type, creation_list, checks)
+    let checks = await exports.checkRecordsNull(creation_list)
+    let created = await exports.createRecord(creation_list, checks)
     return created
 }
 
-exports.createRecord = async(type, creation_list, checks) => {
+exports.createRecord = async(creation_list, checks) => {
     let promises = [];
 
     let i = 0;
     creation_list.forEach( async(list) => {
         list.params.forEach( async(item) => {
     
-
+            //IF ITEM DOESN'T EXIST, CREATE IT            
             if(checks[i][0] === null){
                 promises.push(models[list.model].create(item))
+            }
+            else{
+                let searchcriteria = {
+                    where: item
+                }
+                
+                promises.push(models[list.model].findOne(searchcriteria))
             }
 
             i++;
@@ -93,7 +108,16 @@ exports.createRecord = async(type, creation_list, checks) => {
     })  
 }
 
-exports.createRecordsNull = async(type, creation_list) => {
+//  #####  #     # #######  #####  #    #       ######  #######  #####  ####### ######  ######   #####        #     # #     # #       #       
+// #     # #     # #       #     # #   #        #     # #       #     # #     # #     # #     # #     #       ##    # #     # #       #       
+// #       #     # #       #       #  #         #     # #       #       #     # #     # #     # #             # #   # #     # #       #       
+// #       ####### #####   #       ###    ##### ######  #####   #       #     # ######  #     #  #####  ##### #  #  # #     # #       #       
+// #       #     # #       #       #  #         #   #   #       #       #     # #   #   #     #       #       #   # # #     # #       #       
+// #     # #     # #       #     # #   #        #    #  #       #     # #     # #    #  #     # #     #       #    ## #     # #       #       
+//  #####  #     # #######  #####  #    #       #     # #######  #####  ####### #     # ######   #####        #     #  #####  ####### ####### 
+                                                                                                                                           
+
+exports.checkRecordsNull = async(creation_list) => {
 
     let promises = [];
 
@@ -103,7 +127,7 @@ exports.createRecordsNull = async(type, creation_list) => {
             let findlist = []
 
             let search_criteria = {
-                model: type,
+                model: list.model,
                 search_type: "findOne",
                 params: [
                     {
@@ -124,6 +148,13 @@ exports.createRecordsNull = async(type, creation_list) => {
 }
 
 
+// ####### ### #     # ######        ######     #    #######    #    
+// #        #  ##    # #     #       #     #   # #      #      # #   
+// #        #  # #   # #     #       #     #  #   #     #     #   #  
+// #####    #  #  #  # #     # ##### #     # #     #    #    #     # 
+// #        #  #   # # #     #       #     # #######    #    ####### 
+// #        #  #    ## #     #       #     # #     #    #    #     # 
+// #       ### #     # ######        ######  #     #    #    #     # 
 
 exports.findData = async(find_list) => {
 
@@ -148,6 +179,14 @@ exports.findData = async(find_list) => {
     })    
 }
 
+// #     # ######  ######     #    ####### #######       ######     #    #######    #    
+// #     # #     # #     #   # #      #    #             #     #   # #      #      # #   
+// #     # #     # #     #  #   #     #    #             #     #  #   #     #     #   #  
+// #     # ######  #     # #     #    #    #####   ##### #     # #     #    #    #     # 
+// #     # #       #     # #######    #    #             #     # #######    #    ####### 
+// #     # #       #     # #     #    #    #             #     # #     #    #    #     # 
+//  #####  #       ######  #     #    #    #######       ######  #     #    #    #     # 
+
 exports.updateData = async(item, update_list) => {
 
     let promises = [];
@@ -168,6 +207,14 @@ exports.updateData = async(item, update_list) => {
     })      
 }
 
+
+// ######  #######  #####  ####### ######  ####### #     #       ######     #    #######    #    
+// #     # #       #     #    #    #     # #     #  #   #        #     #   # #      #      # #   
+// #     # #       #          #    #     # #     #   # #         #     #  #   #     #     #   #  
+// #     # #####    #####     #    ######  #     #    #    ##### #     # #     #    #    #     # 
+// #     # #             #    #    #   #   #     #    #          #     # #######    #    ####### 
+// #     # #       #     #    #    #    #  #     #    #          #     # #     #    #    #     # 
+// ######  #######  #####     #    #     # #######    #          ######  #     #    #    #     # 
 
 exports.destroyData = async(destroy_list) => {
 

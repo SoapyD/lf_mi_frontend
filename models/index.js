@@ -18,8 +18,8 @@ models.Section.belongsToMany(models.SubSection, {
   otherKey: 'subsectionId'
 });
 
-models.SectionSubSection.belongsTo(models.Section, {foreignKey: 'sectionId'})
-models.SectionSubSection.belongsTo(models.SubSection, {foreignKey: 'subsectionId'})
+models.SectionSubSection.belongsTo(models.Section, {foreignKey: 'sectionId', constraints: false})
+models.SectionSubSection.belongsTo(models.SubSection, {foreignKey: 'subsectionId', constraints: false})
 
 models.SubSection.belongsToMany(models.Section, {
     through: 'NODE_REPORT_sectionsubsections',

@@ -57,7 +57,9 @@
 						<li><a href="/admin">Admin</a></li>
 					<% } %>
 				<% } %>
+				<% if(user) { %>
 					<li><a href="/reports">Reports</a></li>
+				<% } %>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<% if(!user) { %>
