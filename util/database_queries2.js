@@ -87,16 +87,17 @@ exports.createRecord = async(creation_list, checks) => {
         list.params.forEach( async(item) => {
     
             //IF ITEM DOESN'T EXIST, CREATE IT            
-            if(checks[i][0] === null){
-                promises.push(models[list.model].create(item))
-            }
-            else{
-                let searchcriteria = {
-                    where: item
-                }
+            promises.push(models[list.model].create(item))
+            // if(checks[i][0] === null){
+            //     promises.push(models[list.model].create(item))
+            // }
+            // else{
+            //     let searchcriteria = {
+            //         where: item
+            //     }
                 
-                promises.push(models[list.model].findOne(searchcriteria))
-            }
+            //     promises.push(models[list.model].findOne(searchcriteria))
+            // }
 
             i++;
         })

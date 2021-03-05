@@ -223,63 +223,72 @@ exports.updateJoinReport = async(req,res) => {
 		let reports = await databaseQueriesUtil.findData(find_list)
         let report = reports[0]
 
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 		//DELETE THE ITEM
-		// let destroylist = []
-		// destroylist.push({
+		let destroylist = []
+
+		// let report_deletions = {
 		// 	model: "Report",
 		// 	search_type: "findOne",
 		// 	params: [
 		// 		{
 		// 			where: {
 		// 				id: id
-		// 			},
-		// 			include: databaseQueriesUtil.searchType['Full Report'].include
+		// 			}
 		// 		}
 		// 	]
-		// })
-		// //GET FULL REPORT DATA
-		// await databaseQueriesUtil.findData(destroylist)
-		// //THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
-		// // console.log("test")
-		// let deletions = await databaseQueriesUtil.destroyData(destroylist)
-
-		// //DELETE ALL OF THE JOINS TOO
-		// destroylist = []
-		// let section_deletions = {}
-		// section_deletions["model"] = "Section"
-		// section_deletions["params"] = []
-
-		// let sectionsubsection_deletions = {}
-		// sectionsubsection_deletions["model"] = "SectionSubSection"
-		// sectionsubsection_deletions["params"] = []
-
-		// if (reports[0].sections){
-		// 	reports[0].sections.forEach((section) => {
-
-		// 		params = {}
-		// 		params["where"] = {}
-		// 		params["where"]["id"] = section.id 				
-		// 		section_deletions["params"].push(params)
-
-		// 		if (section.subsections){
-		// 			section.subsections.forEach((subsection) => {
-
-		// 				params = {}
-		// 				params["where"] = {}
-		// 				params["where"]["sectionId"] = section.id
-		// 				params["where"]["subsectionId"] = subsection.id						 				
-		// 				sectionsubsection_deletions["params"].push(params)
-
-		// 			})
-		// 		}
-		// 	})
 		// }
-		// destroylist.push(section_deletions)
-		// destroylist.push(sectionsubsection_deletions)
-		// deletions = await databaseQueriesUtil.destroyData(destroylist)
+		//GET FULL REPORT DATA
+		// let reports = await databaseQueriesUtil.findData(destroylist)
+		//THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
+		// console.log("test")
+		// let deletions = await databaseQueriesUtil.destroyData(report_destroylist)
 
+		//DELETE ALL OF THE JOINS TOO
+		destroylist = []
+		let section_deletions = {}
+		section_deletions["model"] = "Section"
+		section_deletions["params"] = []
+
+		let sectionsubsection_deletions = {}
+		sectionsubsection_deletions["model"] = "SectionSubSection"
+		sectionsubsection_deletions["params"] = []
+
+		if (reports[0].sections){
+			reports[0].sections.forEach((section) => {
+
+				params = {}
+				params["where"] = {}
+				params["where"]["id"] = section.id 				
+				section_deletions["params"].push(params)
+
+				if (section.subsections){
+					section.subsections.forEach((subsection) => {
+
+						params = {}
+						params["where"] = {}
+						params["where"]["sectionId"] = section.id
+						params["where"]["subsectionId"] = subsection.id						 				
+						sectionsubsection_deletions["params"].push(params)
+
+					})
+				}
+			})
+		}
+		destroylist.push(sectionsubsection_deletions)
+		// destroylist.push(section_deletions)
+		deletions = await databaseQueriesUtil.destroyData(destroylist)
+
+		destroylist = []
+		destroylist.push(section_deletions)
+		deletions = await databaseQueriesUtil.destroyData(destroylist)
+
+
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -360,60 +369,72 @@ exports.updateJoinReport = async(req,res) => {
         }        
 
 
+		/*
         //DESTROY ANY CURRENT JOINS THAT AREN'T IN THE NEWLY CREATED ONES        
 		//DELETE ALL OF THE JOINS TOO
-		// let destroylist = []
-		// let section_deletions = {}
-		// section_deletions["model"] = "Section"
-		// section_deletions["params"] = []
+		let destroylist = []
+		let section_deletions = {}
+		section_deletions["model"] = "Section"
+		section_deletions["params"] = []
 
-		// let sectionsubsection_deletions = {}
-		// sectionsubsection_deletions["model"] = "SectionSubSection"
-		// sectionsubsection_deletions["params"] = []
+		let sectionsubsection_deletions = {}
+		sectionsubsection_deletions["model"] = "SectionSubSection"
+		sectionsubsection_deletions["params"] = []
 
-		// if (report.sections){
-		// 	report.sections.forEach((section) => {
+		if (report.sections){
+			report.sections.forEach((section) => {
 
-		// 		// console.log(JSON.stringify(section.dataValues))
+				// console.log(JSON.stringify(section.dataValues))
 
-		// 		//IS THIS SECTION IN THE SAVED SECTIONS
-		// 		let found = created_section_LIST.find(element => 
-		// 			// console.log(JSON.stringify(element.dataValues) )
-		// 			// JSON.stringify(element.dataValues) === JSON.stringify(section.dataValues)
-		// 			element.id === section.id
-		// 			// && element.name === section.name
-		// 			);  
+				//IS THIS SECTION IN THE SAVED SECTIONS
+				let found = created_section_LIST.find(element => 
+					// console.log(JSON.stringify(element.dataValues) )
+					// JSON.stringify(element.dataValues) === JSON.stringify(section.dataValues)
+					element.id === section.id
+					// && element.name === section.name
+					);  
 
-		// 		if(!found){
-		// 			params = {}
-		// 			params["where"] = {}
-		// 			params["where"]["id"] = section.id 				
-		// 			section_deletions["params"].push(params)					
-		// 		}
+				let resetting_section = false
+				if(!found){
+					params = {}
+					params["where"] = {}
+					params["where"]["id"] = section.id 				
+					section_deletions["params"].push(params)
+					resetting_section = true					
+				}
 
-		// 		if (section.subsections){
-		// 			section.subsections.forEach((subsection) => {
+				if (section.subsections){
+					section.subsections.forEach((subsection) => {
 
 
-		// 				let found = created_sectionsubsections_LIST.find(element => 
-		// 					element.id === subsection.sectionsubsections.id
-		// 					);  
+						let found = created_sectionsubsections_LIST.find(element => 
+							element.id === subsection.sectionsubsections.id
+							);  
 		
-		// 				if(!found){
-		// 					params = {}
-		// 					params["where"] = {}
-		// 					params["where"]["sectionId"] = section.id
-		// 					params["where"]["subsectionId"] = subsection.id						 				
-		// 					sectionsubsection_deletions["params"].push(params)				
-		// 				}
-		// 			})
-		// 		}
-		// 	})
-		// }
-		// destroylist.push(section_deletions)
-		// destroylist.push(sectionsubsection_deletions)
-		// deletions = await databaseQueriesUtil.destroyData(destroylist)
+						let delete_item = false;
+						if(!found){
+							delete_item = true
+						}
+						if(resetting_section === false){
+							delete_item = true
+						}						
 
+						if(delete_item === true){
+							params = {}
+							params["where"] = {}
+							// params["where"]["id"] = subsection.sectionsubsections.id	
+							params["where"]["sectionId"] = section.id
+							params["where"]["subsectionId"] = subsection.id						 				
+							sectionsubsection_deletions["params"].push(params)				
+						}
+					})
+				}
+			})
+		}
+		destroylist.push(sectionsubsection_deletions)
+		destroylist.push(section_deletions)
+		deletions = await databaseQueriesUtil.destroyData(destroylist)
+		*/
 
 		//CREATE SECTIONSUBSECTIONS
 		req.flash("success", "Report Updated"); 
@@ -594,8 +615,8 @@ exports.deleteReport = async(req,res) => { //, middleware.isCampGroundOwnership
 				}
 			})
 		}
-		destroylist.push(section_deletions)
 		destroylist.push(sectionsubsection_deletions)
+		destroylist.push(section_deletions)
 		deletions = await databaseQueriesUtil.destroyData(destroylist)
 
 		res.redirect("/reports/")

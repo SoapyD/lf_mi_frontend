@@ -8,6 +8,7 @@ const Fusion = database.sequelize.define('NODE_REPORT_sectionsubsections', {
        autoIncrement: true,
        allowNull: false,
        primaryKey: true
+    //    ,unique: true
    },
 
    order: Sequelize.INTEGER
