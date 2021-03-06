@@ -7,16 +7,14 @@ models.Section = require("./section");
 models.SectionSubSection = require("./sectionsubsection");
 models.SubSection = require("./subsection");
 
+models.Subscription = require("./subscription");
+models.Frequency = require("./frequency");
+
 
 models.Report.hasMany(models.Section, {as: 'sections', foreignKey: "reportId"});
+models.Report.hasMany(models.Subscription, {as: 'subscriptions', foreignKey: "reportId"});
 
 models.Section.belongsTo(models.Report, {foreignKey: 'reportId'});
-// models.Section.belongsToMany(models.SubSection, {
-//   through: 'NODE_REPORT_sectionsubsections',
-//   as: 'subsections',
-//   foreignKey: 'sectionId',
-//   otherKey: 'subsectionId', 
-// });
 models.Section.belongsToMany(models.SubSection,{
   through: {
     model: 'NODE_REPORT_sectionsubsections',
@@ -30,12 +28,7 @@ models.Section.belongsToMany(models.SubSection,{
 models.SectionSubSection.belongsTo(models.Section, {foreignKey: 'sectionId'})
 models.SectionSubSection.belongsTo(models.SubSection, {foreignKey: 'subsectionId'})
 
-// models.SubSection.belongsToMany(models.Section, {
-//     through: 'NODE_REPORT_sectionsubsections',
-//     as: 'sections',
-//     foreignKey: 'subsectionId',
-//     otherKey: 'sectionId', 
-// });
+
 models.SubSection.belongsToMany(models.Section, {
     through: {
       model: 'NODE_REPORT_sectionsubsections',
@@ -45,14 +38,6 @@ models.SubSection.belongsToMany(models.Section, {
     foreignKey: 'subsectionId',
     constraints: false,
 })
-
-
-
-
-
-
-
-
 
 
 
@@ -83,5 +68,14 @@ models.Parameter.belongsToMany(models.SubSection, {
 });
 
 
+models.Subscription.belongsTo(models.Report, {foreignKey: 'reportId'});
+models.Subscription.belongsTo(models.Frequency, {as: 'frequency', foreignKey: "frequencyId"});
+
+// models.Frequency.hasMany(models.Frequency, {as: 'subscriptions', foreignKey: "frequencyId"});
+
 
 module.exports = models
+
+
+// models.Subscription.belongsTo(models.Report, {foreignKey: 'reportId'});
+// models.Report.hasMany(models.Subscription, {as: 'subscriptions', foreignKey: "reportId"});

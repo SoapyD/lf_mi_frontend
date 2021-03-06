@@ -6,7 +6,7 @@ const database = require('../util/database')
 const Report = require("./report");
 const Frequency = require("./frequency");
 
-const Subscription = database.sequelize.define('NODE_subscription', {
+const Subscription = database.sequelize.define('NODE_REPORT_subscription', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

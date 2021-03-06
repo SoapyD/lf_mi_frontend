@@ -16,6 +16,8 @@ exports.reset = async() => {
     await models.SectionSubSection.drop()
     await models.SubSection.drop()
     await models.Section.drop()
+    await models.Subscription.drop()    
+    await models.Frequency.drop()        
     await models.Report.drop()        
 }
 
@@ -169,6 +171,42 @@ exports.create = async() => {
     let subsectionparameters = await exports.createData(creation_list)
 
 
+
+
+    creation_list = []
+    creation_list.push(
+    {
+        model: "Frequency",
+        params: [
+        {
+            name: "Freq 1"
+        },                              
+        ]
+    },    
+    )
+
+    let frequencies = await exports.createData(creation_list)
+
+
+
+    creation_list = []
+    creation_list.push(
+    {
+        model: "Subscription",
+        params: [
+        {
+            reportId: reports[0].id,
+            frequencyId: frequencies[0].id,
+            name: "Cafcass Test"
+        },                              
+        ]
+    },    
+    )
+
+    let subscriptions = await exports.createData(creation_list)
+
+
+
     let findlist = []
 
     findlist.push({
@@ -186,6 +224,7 @@ exports.create = async() => {
 
 
     let full_report = await exports.findData(findlist)   
+    console.log("test complete")
     
     }    
     catch(err){
@@ -246,7 +285,17 @@ exports.searchType = {
                         ]
                     }
                 ]
-            }      
+            },
+            {
+                model: models.Subscription, 
+                as: "subscriptions",             
+                include: [
+                    {
+                        model: models.Frequency, 
+                        as: "frequency"
+                    }
+                ]
+            },                   
         ]        
     }
 }

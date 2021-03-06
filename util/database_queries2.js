@@ -29,7 +29,17 @@ exports.searchType = {
                         ]
                     }
                 ]
-            }      
+            },
+            {
+                model: models.Subscription, 
+                as: "subscriptions",             
+                include: [
+                    {
+                        model: models.Frequency, 
+                        as: "frequency"
+                    }
+                ]
+            }, 
         ]        
     },
     "SubSection": {

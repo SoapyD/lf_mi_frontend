@@ -10,3 +10,8 @@ exports.compare = ( a, b ) => {
     }
     return 0;
 }
+
+
+exports.onlyUnique = (value, index, self) => {
+    return self.indexOf(value) === index;
+}
