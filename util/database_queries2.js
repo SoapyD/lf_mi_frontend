@@ -1,5 +1,5 @@
 const models = require("../models");
-// const database = require('../util/database')
+const databaseUtil = require('../util/database')
 
 
 exports.searchType = {
@@ -189,6 +189,36 @@ exports.findData = async(find_list) => {
         console.log(err)
     })    
 }
+
+
+// ######  #     # #     #       ######  ######         #####  #     # ####### ######  ### #######  #####  
+// #     # #     # ##    #       #     # #     #       #     # #     # #       #     #  #  #       #     # 
+// #     # #     # # #   #       #     # #     #       #     # #     # #       #     #  #  #       #       
+// ######  #     # #  #  # ##### #     # ######  ##### #     # #     # #####   ######   #  #####    #####  
+// #   #   #     # #   # #       #     # #     #       #   # # #     # #       #   #    #  #             # 
+// #    #  #     # #    ##       #     # #     #       #    #  #     # #       #    #   #  #       #     # 
+// #     #  #####  #     #       ######  ######         #### #  #####  ####### #     # ### #######  #####  
+
+exports.runDBQueries = async(query_array) => {
+
+    let promises = [];
+
+    query_array.forEach((item) => {
+        if(item.query && item.query !== ""){
+            promises.push(databaseUtil.runQuery(item.query))    
+        }
+        else{
+            promises.push([])
+        }
+    })
+
+    return Promise.all(promises)
+    .catch((err) => {
+        console.log(err)
+    })      
+
+}
+
 
 // #     # ######  ######     #    ####### #######       ######     #    #######    #    
 // #     # #     # #     #   # #      #    #             #     #   # #      #      # #   

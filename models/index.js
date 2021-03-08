@@ -10,6 +10,9 @@ models.SubSection = require("./subsection");
 models.Subscription = require("./subscription");
 models.Frequency = require("./frequency");
 
+models.SubscriptionActivity = require("./subscriptionactivity");
+
+
 
 models.Report.hasMany(models.Section, {as: 'sections', foreignKey: "reportId"});
 models.Report.hasMany(models.Subscription, {as: 'subscriptions', foreignKey: "reportId"});
@@ -70,6 +73,10 @@ models.Parameter.belongsToMany(models.SubSection, {
 
 models.Subscription.belongsTo(models.Report, {foreignKey: 'reportId'});
 models.Subscription.belongsTo(models.Frequency, {as: 'frequency', foreignKey: "frequencyId"});
+
+
+models.SubscriptionActivity.belongsTo(models.Subscription, {foreignKey: 'subscriptionId'});
+
 
 // models.Frequency.hasMany(models.Frequency, {as: 'subscriptions', foreignKey: "frequencyId"});
 

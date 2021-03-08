@@ -14,17 +14,17 @@
  
 				<div class="form-group">
 					<p>Subscription Name:</p>
-					<input class="form-control" type="text" name="name" placeholder="name" value="<%= subscription.name %>">
+					<input class="form-control" type="text" name="params[name]" placeholder="name" value="<%= subscription.name %>">
 				</div>
 
 				<div class="form-group">	
 					<p>Frequency:</p>				
-					<select id="frequency-select" class="form-control" name="frequency">
+					<select id="frequency-select" class="form-control" name="params[frequencyId]">
 
 						<option value="">--Frequency--</option>
 						<% frequencies.forEach(function (frequency){ %>
 							<option value="<%= frequency.id %>"
-								<% if (frequency.id === subscription.NODEFrequencyId) { %>
+								<% if (frequency.id === subscription.frequencyId) { %>
 								 selected
 								<% } %>	
 							><%= frequency.name %></option>
@@ -35,33 +35,29 @@
 
 				<div class="form-group">
 					<p>Email To:</p>
-					<input class="form-control" type="text" name="email_to" placeholder="email to" value="<%= subscription.email_to %>">
+					<input class="form-control" type="text" name="params[email_to]" placeholder="email to" value="<%= subscription.email_to %>">
 				</div>
 
 				<div class="form-group">
 					<p>Email Subject:</p>
-					<input class="form-control" type="text" name="subject" placeholder="email subject" value="<%= subscription.subject %>">
+					<input class="form-control" type="text" name="params[subject]" placeholder="email subject" value="<%= subscription.subject %>">
 				</div>
 
 				<div class="form-group">
 					<p>Email Body:</p>
-					<input class="form-control" type="text" name="body" placeholder="email body" value="<%= subscription.body %>">
+					<input class="form-control" type="text" name="params[body]" placeholder="email body" value="<%= subscription.body %>">
 				</div>				
 
 				<div class="form-group">
 					<p>Start Date:</p>
-					<input class="form-control" type="date" name="start_date" value="<%= subscription.start_date %>">
+					<input class="form-control" type="date" name="params[start_date]" value="<%= subscription.start_date %>">
 				</div>				
 
 				<div class="form-group">
 					<p>Time:</p>
-					<input class="form-control" type="time" name="time" value="<%= subscription.time %>">
+					<input class="form-control" type="time" name="params[time]" value="<%= subscription.time %>">
 				</div>	
 
-				<!-- SETUP PARAMETERS -->
-				<% let parameters = parameter_set[0]; %>	
-				<% let parameter_values = parameter_set[1]; %>
-								
 
 				<% parameter_values.forEach(function (parameter_value, index){ %>
 					<% let parameter = parameters[index]; %>

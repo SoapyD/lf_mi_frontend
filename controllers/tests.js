@@ -16,6 +16,7 @@ exports.reset = async() => {
     await models.SectionSubSection.drop()
     await models.SubSection.drop()
     await models.Section.drop()
+    await models.SubscriptionActivity.drop()    
     await models.Subscription.drop()    
     await models.Frequency.drop()        
     await models.Report.drop()        
@@ -38,12 +39,12 @@ exports.create = async() => {
         model: "Parameter",
         params: [
         {
-            name: "parameter 1",
-            query: "SELECT * FROM nothing"
+            name: "company_filter",
+            query: 'SELECT dim_orgunit_cleaned AS value FROM DIMENSION_orgunit ORDER BY dim_orgunit_cleaned'
         },
         {
-            name: "parameter 2",
-            query: "SELECT * FROM nothing"
+            name: "source",
+            query: ""
         },        
         ]
     }) 
@@ -204,6 +205,22 @@ exports.create = async() => {
     )
 
     let subscriptions = await exports.createData(creation_list)
+
+
+    creation_list = []
+    creation_list.push(
+    {
+        model: "SubscriptionActivity",
+        params: [
+        {
+            running: 2
+            ,subscriptionId: subscriptions[0].id,
+        },                              
+        ]
+    },    
+    )
+
+    let subscriptionActivities = await exports.createData(creation_list)
 
 
 

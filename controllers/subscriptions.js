@@ -3,7 +3,7 @@
 const databaseQueriesUtil = require('../util/database_queries2');
 const functionsUtil = require('../util/functions');
 // const errorController = require('../controllers/error');
-// const ssrsUtil = require('../util/ssrs2');
+const ssrsUtil = require('../util/ssrs3');
 
 exports.getSubscriptions = async(req,res) => { //, middleware.isLoggedIn
 
@@ -63,13 +63,6 @@ exports.getFormCreateSubscription = async(req,res) => {
 		let reports = await databaseQueriesUtil.findData(find_list)
 		let report = reports[0]
 
-		find_list = []
-		find_list.push(
-		{
-			model: "Frequency",
-			search_type: "findAll"
-		}) 
-
 		let parameter_ids = []
 		if (report.sections){
 			report.sections.forEach((section) => {
@@ -103,11 +96,20 @@ exports.getFormCreateSubscription = async(req,res) => {
 
 		//GET ALL REPORT DATA
 		let parameters = await databaseQueriesUtil.findData(find_list)
+		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters)
+
+		find_list = []
+		find_list.push(
+		{
+			model: "Frequency",
+			search_type: "findAll"
+		}) 
 
 		let frequencies = await databaseQueriesUtil.findData(find_list)		
 
 		// res.render("subscriptions/index", {report:reports[0], subscriptions:subscriptions});
-		res.render("subscriptions/new", {report:report, frequencies:frequencies, parameter_set:parameters});
+		res.render("subscriptions/new", {report:report, frequencies:frequencies[0], 
+			parameters:parameters, parameter_values: parameter_values});
     }
     catch(err){
         console.log(err)
@@ -115,216 +117,363 @@ exports.getFormCreateSubscription = async(req,res) => {
         res.redirect("/reports/"+id+"/subscriptions")        
     }
 
-	// databaseQueriesUtil.getReport(req.params.reportid)
-	// .then((report) => {
-
-	// 	databaseQueriesUtil.getAllFrequencies()
-	// 	.then((frequencies) => {		
-	// 		databaseQueriesUtil.getSubscriptionParameters(req.params.reportid)
-	// 		.then((parameter_set) => {					
-	// 			res.render("subscriptions/new", {report:report, frequencies:frequencies, parameter_set:parameter_set});
-	// 		})
-	// 		.catch(err => {
-	// 			errorController.get404()
-	// 		})				
-	// 	})
-	// 	.catch(err => {
-	// 		errorController.get404()
-	// 	})	
-	// })    	
-	// .catch(err => {
-	// 	errorController.get404()
-	// })	
 };
 
 exports.createSubscription = async(req,res) => { //, middleware.isLoggedIn
 	
-	
-	// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
-	// let parameters = "{"
-	// req.body.parameters.forEach((parameter, index)=> {
-	// 	if (index > 0){
-	// 		parameters += ", "
-	// 	}
-	// 	parameters += parameter
-	// })
+	try{
 
-	// req.body.input_parameters.forEach((input_parameter, index)=> {
-	// 	if (index > 0 || parameters !== ""){
-	// 		parameters += ", "
-	// 	}
-	// 	parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
-	// })
+		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
+		let parameters = "{"
 
-	// parameters += "}"
+		if(req.body.parameters){
+			req.body.parameters.forEach((parameter, index)=> {
+				if (index > 0){
+					parameters += ", "
+				}
+				parameters += parameter
+			})
+		}
 
-	// Subscription.create ({
-	// 	name: req.body.name
-	// 	,email_to: req.body.email_to
-	// 	,subject: req.body.subject
-	// 	,body: req.body.body			
-	// 	,start_date: req.body.start_date
-	// 	,time: req.body.time
-	// 	,parameters: parameters 		
-	// 	,NODEReportId: req.params.reportid
-	// 	,NODEFrequencyId: req.body.frequency
-	// 	// ,author: author
-	// })
-	// .then(subscription => {
-	// 	// console.log(subscription);
-		
-	// 	res.redirect("/reports/"+req.params.reportid+"/subscriptions");
-	// })
-	// .catch(err => {
-	// 	errorController.get404()
-	// })	
+		if(req.body.input_parameters){
+			req.body.input_parameters.forEach((input_parameter, index)=> {
+				if (index > 0 || parameters !== ""){
+					parameters += ", "
+				}
+				parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
+			})
+		}
+
+		parameters += "}"
+
+
+		let params = req.body.params;
+		params['reportId'] = req.params.reportid
+		params['parameters'] = parameters
+
+		let creation_list = []
+		creation_list.push(
+		{
+			model: "Subscription",
+			params: [
+				params
+			]
+		}) 
+
+		let subscriptions = await databaseQueriesUtil.createData2(creation_list)	
+
+		res.redirect("/reports/"+req.params.reportid+"/subscriptions");
+
+	}
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to save new subscription form");
+        res.redirect("/reports/"+id+"/subscriptions")        
+	}
 
 };
 
 
-exports.getEditSubscription = async(req,res) => { //, middleware.isCampGroundOwnership
+exports.getEditSubscription = async(req,res) => {
 
-	// databaseQueriesUtil.getReport(req.params.reportid)
-	// .then((report) => {
-	// 	databaseQueriesUtil.getSubscription(req.params.subscriptionid)
-	// 	.then((subscription) => {
+	let id = req.params.reportid;
+	let subscription_id = req.params.subscriptionid;
 
-	// 		// let frequencies = databaseQueriesUtil.getAllFrequencies();
-	// 		databaseQueriesUtil.getAllFrequencies()
-	// 		.then((frequencies) => {
-	// 			databaseQueriesUtil.getSubscriptionParameters(req.params.reportid)
-	// 			.then((parameter_set) => {		
-	// 				let parameter_obj = JSON.parse(subscription.parameters);	
+    try{
+		let find_list = []
+		find_list.push(
+		{
+			model: "Report",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: id,
+				},
+				include: databaseQueriesUtil.searchType['Full Report'].include				
+			}]
+		}) 
 
-	// 				res.render("subscriptions/edit", 
-	// 				{report:report, subscription:subscription, frequencies:frequencies, parameter_set:parameter_set, parameter_obj: parameter_obj});
-	// 			})
-	// 			.catch(err => {
-	// 				errorController.get404()
-	// 			})					
-	// 		})
-	// 		.catch(err => {
-	// 			errorController.get404()
-	// 		})				
-	// 	})   
-	// 	.catch(err => {
-	// 		errorController.get404()
-	// 	})			
-	// }) 
-	// .catch(err => {
-	// 	errorController.get404()
-	// })		
+		//GET REPORT DATA
+		let reports = await databaseQueriesUtil.findData(find_list)
+		
+
+		find_list = []
+		find_list.push(
+		{
+			model: "Subscription",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: subscription_id,
+				}			
+			}]
+		})		
+		//GET SUBSCRIPTION DATA
+		let subscriptions = await databaseQueriesUtil.findData(find_list)		
+
+		let report = reports[0]
+
+		let parameter_ids = []
+		if (report.sections){
+			report.sections.forEach((section) => {
+				if (section.subsections){
+					section.subsections.forEach((subsection) => {
+
+						if (subsection.parameters){
+							subsection.parameters.forEach((parameter) => {
+								parameter_ids.push(parameter.id)
+							})
+						}							
+					})
+				}				
+			})
+		}
+
+		parameter_ids = parameter_ids.filter(functionsUtil.onlyUnique);
+
+		find_list = []
+		find_list.push(
+		{
+			model: "Parameter",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: parameter_ids,
+				}		
+			}]
+		}) 
+
+		//GET ALL REPORT DATA
+		let parameters = await databaseQueriesUtil.findData(find_list)
+		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters)
+
+
+		find_list = []
+		find_list.push(
+		{
+			model: "Frequency",
+			search_type: "findAll"
+		}) 
+
+		let frequencies = await databaseQueriesUtil.findData(find_list)		
+		let parameter_obj = JSON.parse(subscriptions[0].parameters);
+		
+		res.render("subscriptions/edit", 
+		{report:report, subscription:subscriptions[0], frequencies:frequencies[0],
+			parameters:parameters, parameter_values: parameter_values, 
+			parameter_obj: parameter_obj});
+		// res.render("subscriptions/index", {report:reports[0], subscriptions:subscriptions});
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to get subscription to edit");
+        res.redirect("/reports/")        
+    }
 
 };
 
 
 exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwnership
-	
-	// databaseQueriesUtil.getSubscription(req.params.subscriptionid)
-	// .then((subscription) => {
 
-	// 	// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED
-	// 	let parameters = "{"
-	// 	req.body.parameters.forEach((parameter, index)=> {
-	// 		if (index > 0){
-	// 			parameters += ", "
-	// 		}
-	// 		parameters += parameter
-	// 	})
+	let id = req.params.reportid;
+	let subscription_id = req.params.subscriptionid;
 
-	// 	req.body.input_parameters.forEach((input_parameter, index)=> {
-	// 		if (index > 0 || parameters !== ""){
-	// 			parameters += ", "
-	// 		}
-	// 		parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
-	// 	})
+	try{
+		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
+		let parameters = "{"
 
-	// 	parameters += "}"
+		if(req.body.parameters){
+			req.body.parameters.forEach((parameter, index)=> {
+				if (index > 0){
+					parameters += ", "
+				}
+				parameters += parameter
+			})
+		}
 
-	// 	subscription.name = req.body.name
+		if(req.body.input_parameters){
+			req.body.input_parameters.forEach((input_parameter, index)=> {
+				if (index > 0 || parameters !== ""){
+					parameters += ", "
+				}
+				parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
+			})
+		}
 
-	// 	subscription.email_to = req.body.email_to
-	// 	subscription.subject = req.body.subject
-	// 	subscription.body = req.body.body						
+		parameters += "}"
 
-	// 	subscription.start_date = req.body.start_date
-	// 	subscription.time = req.body.time		
-	// 	subscription.parameters = parameters;
-	// 	subscription.NODEReportId = req.params.reportid
-	// 	subscription.NODEFrequencyId = req.body.frequency
 
-	// 	subscription.save();
+		let find_list = []
+		find_list.push(
+		{
+			model: "Subscription",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: subscription_id,
+				}			
+			}]
+		})		
+		//GET SUBSCRIPTION DATA
+		let subscriptions = await databaseQueriesUtil.findData(find_list)		
 
-	// 	res.redirect("/reports/" +req.params.reportid+"/subscriptions");
-	// })   	
-	// .catch(err => {
-	// 	errorController.get404()
-	// })				
+
+		let params = req.body.params;
+		params['reportId'] = req.params.reportid
+		params['parameters'] = parameters
+
+		let update_list = []
+		update_list.push(
+		{
+			model: "Subscription",
+			params: [
+				params
+			]
+		}) 
+
+		let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptions[0], update_list)	
+
+		res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to get subscription to edit");
+        res.redirect("/reports/"+id+"/subscriptions")        
+    }
 };
 
 
 exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwnership
 	
-	// let subscriptions;
+	try{
 
-	// // check if subscriptions have been passed
-	// for (let itemsFromBodyIndex in req.body){
-	// 	if(itemsFromBodyIndex === "subscriptions"){
-			
-	// 		subscriptions = req.body.subscriptions
-	// 	}
-	// }
+		let id = req.params.reportid;
 
-	// if(subscriptions){
+		let subscription_ids;
 
-	// 	databaseQueriesUtil.getSubscriptions(req.params.reportid, subscriptions)
-	// 	.then((subscriptions) => {
+		// check if subscriptions have been passed
+		for (let itemsFromBodyIndex in req.body){
+			if(itemsFromBodyIndex === "subscriptions"){
+				
+				subscription_ids = req.body.subscriptions
+			}
+		}
 
-	// 		let subscription_ids = []
-	// 		subscriptions.forEach((subscription, i) => {
-	// 			subscription_ids.push(subscription.id);
-	// 		})			
+		if(subscription_ids){
 
-	// 		switch(req.body.action) {
-	// 			case "run":
+			let find_list = []
+			find_list.push(
+			{
+				model: "Subscription",
+				search_type: "findAll",
+				params: [{
+					where: {
+						reportId: req.params.reportid,
+						id: subscription_ids,
+					}			
+				}]
+			})		
+			//GET SUBSCRIPTION DATA
+			let subscriptions = await databaseQueriesUtil.findData(find_list)		
 
-	// 				databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")
-	// 				.then((result) => {
-	// 					ssrsUtil.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
-	// 					req.flash("success", 'Running Selected Active Subscriptions');
-	// 					res.redirect("/reports/" +req.params.reportid+"/subscriptions");
-	// 				})					
-	// 				break;
-	// 			case "enable":
-	// 				databaseQueriesUtil.bulkUpdateSubscriptions(subscriptions, {active: 1})
-	// 				.then((subscriptions) => {
-	// 					res.redirect("/reports/" +req.params.reportid+"/subscriptions");
-	// 				})
-	// 				break;
-	// 			case "disable":
-	// 				databaseQueriesUtil.bulkUpdateSubscriptions(subscriptions, {active: 0})
-	// 				.then((subscriptions) => {
-	// 					res.redirect("/reports/" +req.params.reportid+"/subscriptions");
-	// 				})
 
-	// 				break;
-	// 			case "delete":
+			// databaseQueriesUtil.getSubscriptions(req.params.reportid, subscriptions)
+			// .then((subscriptions) => {
+			if(subscriptions[0]) {
+				// let subscription_ids = []
+				let list = []
 
-	// 				databaseQueriesUtil.destroySubscription(subscription_ids)
-	// 				.then((result) => {
-	// 					req.flash("success", 'Selected Subscriptions Deleted');
-	// 					res.redirect("/reports/" +req.params.reportid+"/subscriptions");
-	// 				})
+				//GET THE FULL REPORT DATA
+				list = []
+				list.push(
+				{
+					model: "Report",
+					search_type: "findOne",
+					params: [{
+						where: {
+							id: id,
+						},
+						include: databaseQueriesUtil.searchType['Full Report'].include			
+					}]
+				}) 				
+				let reports = await databaseQueriesUtil.findData(list)
+
+				subscriptions[0].forEach( async(subscription, i) => {
+					// subscription_ids.push(subscription.id);
 					
-	// 				break;									
-	// 			default:
-	// 		}
-	// 	})
-	// 	.catch(err => {
-	// 		errorController.get404()
-	// 	})			
-	// }else{
-	// 	res.redirect("/reports/" +req.params.reportid+"/subscriptions");
-	// }
+					switch(req.body.action) {
+					case "run":
+						
+						ssrsUtil.run(reports[0], subscription);
+						req.flash("success", 'Running Selected Active Subscriptions');
 
+						// databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")
+						// .then((result) => {
+							// 	ssrsUtil.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
+						// 	req.flash("success", 'Running Selected Active Subscriptions');
+						// 	res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+						// })					
+						break;
+						case "enable":
+
+							list = []
+							list.push({
+								params: [
+									{active: 1}
+								]
+							})    
+					
+							//UPDATE THE RECORD
+							await databaseQueriesUtil.updateData(subscription, list)
+							// res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+						break;
+						case "disable":
+
+							list = []
+							list.push({
+								params: [
+									{active: 0}
+								]
+							})    
+					
+							//UPDATE THE RECORD
+							await databaseQueriesUtil.updateData(subscription, list)
+							// res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+						break;
+						case "delete":
+							
+							list = [];
+							list.push({
+								model: "Subscription",
+								params: [
+									{
+										where: {
+											id: subscription.id
+										}
+									}
+								]
+							})
+					
+							//DESTROY THE RECORD
+							await databaseQueriesUtil.destroyData(list)
+							// res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+						break;									
+						default:
+					}
+				})
+				
+				res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+			}
+			else{
+				res.redirect("/reports/" +req.params.reportid+"/subscriptions");			
+			}
+		}else{
+			res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+		}
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to use subscriptions");
+        res.redirect("/reports/"+id+"/subscriptions")        
+    }
 };

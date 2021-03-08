@@ -201,9 +201,6 @@ exports.updateJoinReport = async(req,res) => {
     //GET ALL CURRENT JOINS
 	let id = req.params.reportid;
 
- 
-
-
 
     try{
 		let find_list = []
@@ -368,74 +365,6 @@ exports.updateJoinReport = async(req,res) => {
 
         }        
 
-
-		/*
-        //DESTROY ANY CURRENT JOINS THAT AREN'T IN THE NEWLY CREATED ONES        
-		//DELETE ALL OF THE JOINS TOO
-		let destroylist = []
-		let section_deletions = {}
-		section_deletions["model"] = "Section"
-		section_deletions["params"] = []
-
-		let sectionsubsection_deletions = {}
-		sectionsubsection_deletions["model"] = "SectionSubSection"
-		sectionsubsection_deletions["params"] = []
-
-		if (report.sections){
-			report.sections.forEach((section) => {
-
-				// console.log(JSON.stringify(section.dataValues))
-
-				//IS THIS SECTION IN THE SAVED SECTIONS
-				let found = created_section_LIST.find(element => 
-					// console.log(JSON.stringify(element.dataValues) )
-					// JSON.stringify(element.dataValues) === JSON.stringify(section.dataValues)
-					element.id === section.id
-					// && element.name === section.name
-					);  
-
-				let resetting_section = false
-				if(!found){
-					params = {}
-					params["where"] = {}
-					params["where"]["id"] = section.id 				
-					section_deletions["params"].push(params)
-					resetting_section = true					
-				}
-
-				if (section.subsections){
-					section.subsections.forEach((subsection) => {
-
-
-						let found = created_sectionsubsections_LIST.find(element => 
-							element.id === subsection.sectionsubsections.id
-							);  
-		
-						let delete_item = false;
-						if(!found){
-							delete_item = true
-						}
-						if(resetting_section === false){
-							delete_item = true
-						}						
-
-						if(delete_item === true){
-							params = {}
-							params["where"] = {}
-							// params["where"]["id"] = subsection.sectionsubsections.id	
-							params["where"]["sectionId"] = section.id
-							params["where"]["subsectionId"] = subsection.id						 				
-							sectionsubsection_deletions["params"].push(params)				
-						}
-					})
-				}
-			})
-		}
-		destroylist.push(sectionsubsection_deletions)
-		destroylist.push(section_deletions)
-		deletions = await databaseQueriesUtil.destroyData(destroylist)
-		*/
-
 		//CREATE SECTIONSUBSECTIONS
 		req.flash("success", "Report Updated"); 
 		res.redirect("/reports/"+ id)
@@ -537,13 +466,6 @@ exports.updateCopyReport = async(req,res) => {
 
 			})
 		}
-
-		
-		// creation_list.push(create_sectionsubsections)				
-
-		// creation_list.push() 
-	
-		// let creations = await databaseQueriesUtil.createData2(creation_list)	
 
 		req.flash("success", 'Sucessfully copied report');		
 		res.redirect("/reports/");

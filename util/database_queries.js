@@ -5,7 +5,7 @@ const SubSection = require("../models/subsection");
 const Frequency = require("../models/frequency");
 const Parameter = require("../models/parameter");
 const Subscription = require("../models/subscription");
-const SubscriptionActivity = require("../models/subscription_activity");
+const SubscriptionActivity = require("../models/subscriptionactivity");
 
 const Database = require("./database");
 // const report = require("mssql-ssrs");

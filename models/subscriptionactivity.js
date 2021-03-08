@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const database = require('../util/database')
 
-const SubscriptionActivity = database.sequelize.define('NODE_subscription_activity', {
+const SubscriptionActivity = database.sequelize.define('NODE_REPORT_subscriptionactivity', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,
@@ -14,7 +14,7 @@ const SubscriptionActivity = database.sequelize.define('NODE_subscription_activi
    ,files_current: {type:Sequelize.INTEGER, defaultValue: 0}
    ,errors: {type:Sequelize.INTEGER, defaultValue: 0}
    ,log: {type:Sequelize.TEXT, defaultValue: ''}
-   ,subscription_id: Sequelize.INTEGER
+//    ,subscription_id: Sequelize.INTEGER
 });
 
 

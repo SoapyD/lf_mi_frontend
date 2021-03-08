@@ -12,11 +12,11 @@
 			<form action="/reports/<%= report.id %>/subscriptions" method="POST">
 				<div class="form-group">
 					<p>Subscription Name:</p>
-					<input class="form-control" type="text" name="name" placeholder="name" required>
+					<input class="form-control" type="text" name="params[name]" placeholder="name" required>
 				</div>
 				<div class="form-group">	
 					<p>Frequency:</p>				
-					<select id="frequency-select" class="form-control" name="frequency" required>
+					<select id="frequency-select" class="form-control" name="params[frequencyId]" required>
 						<option value="">--Frequency--</option>
 						<% frequencies.forEach(function (frequency){ %>
 							<option value="<%= frequency.id %>"><%= frequency.name %></option>
@@ -26,33 +26,28 @@
 
 				<div class="form-group">
 					<p>Email To:</p>
-					<input class="form-control" type="text" name="email_to" placeholder="email to">
+					<input class="form-control" type="text" name="params[email_to]" placeholder="email to">
 				</div>
 
 				<div class="form-group">
 					<p>Email Subject:</p>
-					<input class="form-control" type="text" name="subject" placeholder="email subject">
+					<input class="form-control" type="text" name="params[subject]" placeholder="email subject">
 				</div>
 
 				<div class="form-group">
 					<p>Email Body:</p>
-					<input class="form-control" type="text" name="body" placeholder="email body">
+					<input class="form-control" type="text" name="params[body]" placeholder="email body">
 				</div>		
 
 				<div class="form-group">
 					<p>Start Date:</p>
-					<input class="form-control" type="date" name="start_date" required>
+					<input class="form-control" type="date" name="params[start_date]" required>
 				</div>				
 
 				<div class="form-group">
 					<p>Time:</p>
-					<input class="form-control" type="time" name="time" required>
+					<input class="form-control" type="time" name="params[time]" required>
 				</div>	
-
-
-				<!-- SETUP PARAMETERS -->				
-				<% let parameters = parameter_set[0]; %>	
-				<% let parameter_values = parameter_set[1]; %>
 								
 
 				<% parameter_values.forEach(function (parameter_value, index){ %>
