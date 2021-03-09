@@ -23,7 +23,6 @@ const errorController = require('./controllers/error');
 const database = require('./util/database')
 
 
-const ssrsController = require('./util/ssrs2');
 const seeds = require('./util/seeds3')
 
 const TestRoutes = require("./routes/test");

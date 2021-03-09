@@ -2,7 +2,8 @@ const Report = require("../models/report");
 // const Fusion = require("../models/fusion");
 // const SubSection = require("../models/subsection");
 const databaseQueriesUtil = require('../util/database_queries2');
-const errorController = require('../controllers/error');
+const functionsUtil = require('../util/functions');
+// const errorController = require('../controllers/error');
 // const Subscription = require("../models/subscription");
 
 exports.getAllReports = async(req,res) => {
@@ -47,21 +48,10 @@ exports.getReport = async(req, res) => {
 		}) 
 
 		//GET ALL REPORT DATA
-		let reports = await databaseQueriesUtil.findData(find_list)
-		
+		let reports = await databaseQueriesUtil.findData(find_list)		
+
 		//SORT THE REPORT SUBSECTIONS BY ORDER
-		if(reports[0].sections){
-			reports[0].sections.forEach((section) => {
-
-				if(section.subsections){
-					section.subsections.sort(function (a, b) {
-						return a.sectionsubsections.order - b.sectionsubsections.order;
-					  });
-				}
-
-
-			})
-		}
+		let report = functionsUtil.sortReport(reports[0])
 
 		//GET ALL SUBSECTION DATA
 		find_list = []
@@ -72,8 +62,12 @@ exports.getReport = async(req, res) => {
 		}) 
 	
 		let subsections = await databaseQueriesUtil.findData(find_list)
+		if(subsections[0]){
+			subsections[0] = subsections[0].sort(functionsUtil.compareOrder)
+		}
 
-        res.render("reports/show", {report:reports[0], subsections: subsections[0]});
+
+        res.render("reports/show", {report:report, subsections: subsections[0]});
     }
     catch(err){
         console.log(err)

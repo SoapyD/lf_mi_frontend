@@ -2,6 +2,9 @@ const nodemailer = require("nodemailer");
 const Subscription = require("../models/subscription");
 
 exports.email = async(subscription, filename, filepath) => {
+
+    let promises = [];
+
     const transporter = nodemailer.createTransport({
         host: 'smtp.office365.com',
         service:'office365',
@@ -43,8 +46,11 @@ exports.email = async(subscription, filename, filepath) => {
         }
        
 
-        let info = await transporter.sendMail(email_data);
-        console.log("email sent")
+        // let info = await transporter.sendMail(email_data);
+        // console.log("email sent")
+        promises.push(transporter.sendMail(email_data))
+
+        return Promise.all(promises)
     }catch(err) {
         console.log(err)
     }

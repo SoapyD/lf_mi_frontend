@@ -1,6 +1,5 @@
 // const functionsUtil = require('../util/functions');
 const databaseQueriesUtil = require('../util/database_queries2');
-const testController = require('../controllers/tests');
 
 
 exports.getRouteInfo = () => {
@@ -25,8 +24,6 @@ exports.getRouteInfo = () => {
 
 
 exports.getAllOptions = async(req,res) => { 
-
-    await testController.create();
 
     try{
         let route_info = exports.getRouteInfo()

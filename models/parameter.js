@@ -15,6 +15,7 @@ const Parameter = database.sequelize.define('NODE_REPORT_parameter', {
     //     type: Sequelize.STRING,
     //     defaultValue: "Parameter" 
     // },
+    order: Sequelize.FLOAT,
     name: Sequelize.STRING,
     query: Sequelize.STRING,    
 });

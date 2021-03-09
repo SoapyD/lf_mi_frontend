@@ -34,18 +34,22 @@ exports.create = async() => {
         model: "SubSection",
         params: [
         {
+            order: 0,
             name: "front",
             path: "/99 - Test Reports/Tom Dev/Service Report/",
         },  
         {
+            order: 1,
             name: "Support Requests - 13month by Source",
             path: "/99 - Test Reports/Tom Dev/Service Report/"
         },  
         {
+            order: 1.1,
             name: "Support Requests - Incidents Opened and Resolved Per Month",
             path: "/99 - Test Reports/Tom Dev/Service Report/"
         },     
         {
+            order: 2,
             name: "Incidents - Open and Resolved per Month per Resolver Group",
             path: "/99 - Test Reports/Tom Dev/Service Report/"
         },                                     
@@ -63,14 +67,17 @@ exports.create = async() => {
         model: "Parameter",
         params: [
         {
+            order: 1,
             name: "report_name",
             query: ""
         },    
         {
+            order: 2,
             name: "company_filter",
             query: 'SELECT dim_orgunit_cleaned AS value FROM DIMENSION_orgunit ORDER BY dim_orgunit_cleaned'
         },
         {
+            order: 2.1,
             name: "source_table",
             query: ""
         },      
@@ -149,11 +156,11 @@ exports.create = async() => {
     {
         model: "Section",
         params: [
-            {
-                name: "Front",
-                order: 1,
-                reportId: reports[0].id
-            },      
+            // {
+            //     name: "Front",
+            //     order: 1,
+            //     reportId: reports[0].id
+            // },      
             {
                 name: "Support Requests",
                 order: 2,
@@ -176,28 +183,28 @@ exports.create = async() => {
     {
         model: "SectionSubSection",
         params: [
+        // {
+        //     order: 1,
+        //     name: "",
+        //     sectionId: sections[0].id,
+        //     subsectionId: subsections[0].id
+        // },   
         {
             order: 1,
             name: "",
             sectionId: sections[0].id,
-            subsectionId: subsections[0].id
-        },   
-        {
-            order: 1,
-            name: "",
-            sectionId: sections[1].id,
             subsectionId: subsections[1].id
         },         
         {
             order: 2,
             name: "",
-            sectionId: sections[1].id,
+            sectionId: sections[0].id,
             subsectionId: subsections[2].id
         },        
         {
             order: 1,
             name: "",
-            sectionId: sections[2].id,
+            sectionId: sections[1].id,
             subsectionId: subsections[3].id
         },                                    
         ]
@@ -247,7 +254,18 @@ exports.create = async() => {
             start_date: "2020-10-27",
             time: "16:01",     
             parameters: '{"report_name": "Service Report", "company_filter": "Cafcass", "source_table": "LF_Cafcass"}',              
-        },                              
+        },       
+        {
+            reportId: reports[0].id,
+            frequencyId: frequencies[0].id,
+            name: "Cafcass Test 2",
+            email_to: "thomas.cassady@littlefish.co.uk",
+            subject: "Test Service Report 2",
+            body: "please find attached your copy of the service report",
+            start_date: "2020-10-27",
+            time: "16:01",     
+            parameters: '{"report_name": "Service Report", "company_filter": "Cafcass", "source_table": "LF_Cafcass"}',              
+        },                                 
         ]
     },    
     )

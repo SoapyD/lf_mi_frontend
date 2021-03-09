@@ -9,6 +9,7 @@ const SubSection = database.sequelize.define('NODE_REPORT_subsection', {
        allowNull: false,
        primaryKey: true
    },
+   order: Sequelize.FLOAT,
    path: Sequelize.STRING,
    name: Sequelize.STRING,
    description: Sequelize.STRING

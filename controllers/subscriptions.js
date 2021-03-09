@@ -86,7 +86,7 @@ exports.getFormCreateSubscription = async(req,res) => {
 		find_list.push(
 		{
 			model: "Parameter",
-			search_type: "findOne",
+			search_type: "findAll",
 			params: [{
 				where: {
 					id: parameter_ids,
@@ -96,7 +96,12 @@ exports.getFormCreateSubscription = async(req,res) => {
 
 		//GET ALL REPORT DATA
 		let parameters = await databaseQueriesUtil.findData(find_list)
-		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters)
+
+		if(parameters[0]){
+			parameters[0] = parameters[0].sort(functionsUtil.compareOrder)
+		}
+
+		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters[0])
 
 		find_list = []
 		find_list.push(
@@ -109,7 +114,7 @@ exports.getFormCreateSubscription = async(req,res) => {
 
 		// res.render("subscriptions/index", {report:reports[0], subscriptions:subscriptions});
 		res.render("subscriptions/new", {report:report, frequencies:frequencies[0], 
-			parameters:parameters, parameter_values: parameter_values});
+			parameters:parameters[0], parameter_values: parameter_values});
     }
     catch(err){
         console.log(err)
@@ -235,7 +240,7 @@ exports.getEditSubscription = async(req,res) => {
 		find_list.push(
 		{
 			model: "Parameter",
-			search_type: "findOne",
+			search_type: "findAll",
 			params: [{
 				where: {
 					id: parameter_ids,
@@ -245,7 +250,12 @@ exports.getEditSubscription = async(req,res) => {
 
 		//GET ALL REPORT DATA
 		let parameters = await databaseQueriesUtil.findData(find_list)
-		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters)
+
+		if(parameters[0]){
+			parameters[0] = parameters[0].sort(functionsUtil.compareOrder)
+		}
+
+		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters[0])
 
 
 		find_list = []
@@ -260,14 +270,14 @@ exports.getEditSubscription = async(req,res) => {
 		
 		res.render("subscriptions/edit", 
 		{report:report, subscription:subscriptions[0], frequencies:frequencies[0],
-			parameters:parameters, parameter_values: parameter_values, 
+			parameters:parameters[0], parameter_values: parameter_values, 
 			parameter_obj: parameter_obj});
 		// res.render("subscriptions/index", {report:reports[0], subscriptions:subscriptions});
     }
     catch(err){
         console.log(err)
         req.flash("error", "There was an error trying to get subscription to edit");
-        res.redirect("/reports/")        
+        res.redirect("/reports/"+id+"/subscriptions")         
     }
 
 };
@@ -398,21 +408,19 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 				}) 				
 				let reports = await databaseQueriesUtil.findData(list)
 
+				let report = functionsUtil.sortReport(reports[0])
+				// let delay_i = 0
+
 				subscriptions[0].forEach( async(subscription, i) => {
-					// subscription_ids.push(subscription.id);
+
 					
 					switch(req.body.action) {
 					case "run":
 						
-						ssrsUtil.run(reports[0], subscription);
+						//RUN THE REPORT SUBSCRIPTIONS
+						ssrsUtil.run(i, report, subscription);
 						req.flash("success", 'Running Selected Active Subscriptions');
-
-						// databaseQueriesUtil.getFullReport(req.params.reportid, "report, fusions, subsections, parameters")
-						// .then((result) => {
-							// 	ssrsUtil.run(subscriptions, result[0], result[1], result[2], result[3], result[4]);
-						// 	req.flash("success", 'Running Selected Active Subscriptions');
-						// 	res.redirect("/reports/" +req.params.reportid+"/subscriptions");
-						// })					
+			
 						break;
 						case "enable":
 
@@ -425,7 +433,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 					
 							//UPDATE THE RECORD
 							await databaseQueriesUtil.updateData(subscription, list)
-							// res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+
 						break;
 						case "disable":
 
@@ -438,7 +446,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 					
 							//UPDATE THE RECORD
 							await databaseQueriesUtil.updateData(subscription, list)
-							// res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+
 						break;
 						case "delete":
 							
@@ -456,7 +464,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 					
 							//DESTROY THE RECORD
 							await databaseQueriesUtil.destroyData(list)
-							// res.redirect("/reports/" +req.params.reportid+"/subscriptions");
+
 						break;									
 						default:
 					}
