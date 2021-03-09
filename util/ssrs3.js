@@ -50,7 +50,8 @@ exports.run = async(report, subscription) => {
                 params: [
                     {
                         path: folder_path,
-                        files_expected: file_data.files_needed
+                        files_expected: file_data.files_needed,
+                        subscriptionId: subscription.id
                     }
                 ]
             }) 
@@ -62,17 +63,29 @@ exports.run = async(report, subscription) => {
             let filename = '';
             let outputname = '';
             let parameter_object = JSON.parse(subscription.parameters);
-            let contents_page = '-';
+            let contents_page = '';
 
             //CREATE THE CONTENT PAGE TEXT
             if(report.sections){
+
+
+                //FORMAT THE CONTENTS PAGE
+                report.sections.forEach((section) => {
+
+                    contents_page += section.order + ". " + section.name + "\n"
+
+                    section.subsections.forEach((subsection) => {
+                        if (subsection.name !== "front"){
+
+                            contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection.name + "\n"
+                        }      
+                    })
+                })
+
                 report.sections.forEach((section) => {
 
                     if(section.subsections){
-                        section.subsections.forEach((subsection) => {
-                            if (subsection.name !== "front"){
-                                contents_page += subsection.name + "\n"
-                            }                            
+                        section.subsections.forEach((subsection) => {                       
 
                             //GET SUBSECTION
                             //GET PARAMETER SUBSECTIONS
@@ -84,10 +97,13 @@ exports.run = async(report, subscription) => {
                                 })
                             }
 
+                            if(subsection.name === "front"){
+                                subsection_param_object['contents_page'] = contents_page;
+                            }
 
                             filepath = subsection.path;
                             filename = subsection.name;  
-                            let size = 3
+                            let size = 10
                             
                             let file_number = (section.order * 1000) + subsection.sectionsubsections.order
 
@@ -115,9 +131,9 @@ exports.run = async(report, subscription) => {
 
 exports.runReport = async(filepath, filename, parameters, output_path, output_file) => {
     
+    const reportPath = filepath + filename;
     try {
-        console.log("running: "+filename)
-        const reportPath = filepath + filename;
+        // console.log("running: "+filename)
         
         // Define parameters
         const fileType = 'WORD';
@@ -134,7 +150,7 @@ exports.runReport = async(filepath, filename, parameters, output_path, output_fi
             domain: null // optional
           };
         // This part errors on the server
-        console.log("getting report... "+reportPath)
+        console.log("running report... "+reportPath)
         report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
 
         
@@ -145,22 +161,37 @@ exports.runReport = async(filepath, filename, parameters, output_path, output_fi
     } catch (err) {
         console.log("ERROR RUNNING REPORT")
 
-        exports.checkFiles(output_path, err)
+        exports.checkFiles(output_path, reportPath, err)
     }
 }
 
 //ADD THE FILE TO THE SUBSCRIPTION ACTIVITY AND CHECK IF IT'S THEN COMPLETE
-exports.checkFiles = (output_path, err) => {
+exports.checkFiles = async(output_path, reportPath, err) => {
 
-    //RETUNR THE SUBSCRIPTION ACTIVITY ENTRY
-    databaseQueriesUtil.getSubscriptionActivity(-1, output_path)
-    .then((subscription_activity) => {
-        
+    let find_list = []
+    find_list.push(
+    {
+        model: "SubscriptionActivity",
+        search_type: "findOne",
+        params: [{
+            where: {
+                path: output_path,
+            }		
+        }]
+    }) 
+
+    //GET ALL REPORT DATA
+    let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+    let subscription_activity = subscriptionactivities[0]
+
+    if(subscription_activity){
+
         //UPDATE THE ERROR VALUE AND MESSAGES IF THERE ARE ANY, ELSE JUST INCREASE FILE COUNT
         if (err){
             subscription_activity.files_current++
             subscription_activity.errors++
             try {
+                subscription_activity.log += "<p>Error running report: "+reportPath+"</p>"
                 subscription_activity.log += err.body.toString() + '\n'
             } catch (err) {
                 //error
@@ -170,41 +201,78 @@ exports.checkFiles = (output_path, err) => {
             subscription_activity.files_current++
         }
 
-        //SAVE ACTIVITY DATA
-        subscription_activity.save()
-        .then((subscription_activity) => {
+		let update_list = []
+		update_list.push(
+		{
+			model: "SubscriptionActivity",
+			params: [
+				{
+                    files_current: subscription_activity.files_current,
+                    errors: subscription_activity.errors,
+                    log: subscription_activity.log
+                }
+			]
+		}) 
 
-            //IF THE FILE COUNT IS EQUAL TO FILES EXPECTED
-            if (subscription_activity.files_current === subscription_activity.files_expected){
+		let subscriptions_updated = await databaseQueriesUtil.updateData(subscription_activity, update_list)	
 
-                //GET THE SUBSCRIPTION
-                databaseQueriesUtil.getSubscription(subscription_activity.subscription_id)
-                .then(async(subscription) =>{
+        subscription_activity = subscriptions_updated[0]
 
-                    //IF THERE AREN'T ANY ERRORS, MERGE THE DOCUMENT, SAVE IT ONTO STORAGE THEN EMAIL IT OUT
-                    if(subscription_activity.errors === 0){
-                        //MERGE REPORT AND SEND
-                        // await exports.mergeDocument(item.folder_path, file_list, Date.now() )
-                        await mergeDocumentUtil.mergeDocument(output_path)
+        //IF THE FILE COUNT IS EQUAL TO FILES EXPECTED
+        if (subscription_activity.files_current === subscription_activity.files_expected){
 
-                        emailUtil.email(subscription, "output.docx",path.join(output_path,"output.docx"))
-                    }
-                    //ELSE EMAIL THE ERROR TO THE USER
-                    else{
-                        subscription.subject = 'Error Running Subscription: ' + subscription.name;
-                        subscription.body = subscription_activity.log                        
-                        emailUtil.email(subscription)
-                    }
-                    
-                    //SET THE SUBSCRIPTION TO NO LONGER RUNNING
-                    subscription_activity.running = 0;
-                    subscription_activity.save()
+            //GET THE SUBSCRIPTION
+            find_list = []
+            find_list.push(
+            {
+                model: "Subscription",
+                search_type: "findOne",
+                params: [{
+                    where: {
+                        id: subscription_activity.subscriptionId,
+                    }		
+                }]
+            }) 
 
-                })
+            //GET ALL REPORT DATA
+            let subscriptions = await databaseQueriesUtil.findData(find_list)
+            let subscription = subscriptions[0]
+
+            if(subscription){
+                //IF THERE AREN'T ANY ERRORS, MERGE THE DOCUMENT, SAVE IT ONTO STORAGE THEN EMAIL IT OUT
+                if(subscription_activity.errors === 0){
+                    //MERGE REPORT AND SEND
+                    await mergeDocumentUtil.mergeDocument(output_path)
+
+                    emailUtil.email(subscription, "output.docx",path.join(output_path,"output.docx"))
+
+                    //DELETE FILES AND TEMPORARY FOLDER
+                }
+                //ELSE EMAIL THE ERROR TO THE USER
+                else{
+                    subscription.subject = 'Error Running Subscription: ' + subscription.name;
+                    subscription.body = subscription_activity.log                        
+                    emailUtil.email(subscription)
+
+                    //DELETE FILES AND TEMPORARY FOLDER                    
+                }
+                
+                //SET THE SUBSCRIPTION TO NO LONGER RUNNING
+                update_list = []
+                update_list.push(
+                {
+                    model: "SubscriptionActivity",
+                    params: [
+                        {
+                            running: 0,
+                        }
+                    ]
+                }) 
+        
+                let subscriptions_updated = await databaseQueriesUtil.updateData(subscription_activity, update_list)
             }
-
-        })
-    })
+        }
+    }
 }
 
 

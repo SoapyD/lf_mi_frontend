@@ -24,7 +24,7 @@ const database = require('./util/database')
 
 
 const ssrsController = require('./util/ssrs2');
-const seeds = require('./util/seeds2')
+const seeds = require('./util/seeds3')
 
 const TestRoutes = require("./routes/test");
 const IndexRoutes = require("./routes/index");
@@ -122,6 +122,7 @@ database.sequelize
   .sync()
   .then(result => {
     // seeds.seed()
+    seeds.create()
   })
   .catch(err => {
     console.log(err)
