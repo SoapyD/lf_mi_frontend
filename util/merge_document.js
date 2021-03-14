@@ -8,7 +8,7 @@ const storageUtil = require('../util/storage');
 
 
 // exports.mergeDocument = async(filepath, file_list, filename) => {
-exports.mergeDocument = async(filepath) => {
+exports.mergeDocument = async(output_name, filepath) => {
 
     //UPLOAD THE REPORT FILES GENERATED
     var file_list = fs.readdirSync(filepath); 
@@ -26,9 +26,9 @@ exports.mergeDocument = async(filepath) => {
     
     docx.save('nodebuffer',function (data) {
 
-        fs.writeFile(path.join(filepath,"output.docx"), data, function(err){});
+        fs.writeFile(path.join(filepath,output_name+".docx"), data, function(err){});
 
-        filename = Date.now()
+        let filename = output_name+"_"+Date.now()+".docx"
         storageUtil.saveBlob(data, filename);
     });   
     /**/    

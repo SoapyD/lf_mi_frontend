@@ -17,7 +17,8 @@ const Parameter = database.sequelize.define('NODE_REPORT_parameter', {
     // },
     order: Sequelize.FLOAT,
     name: Sequelize.STRING,
-    query: Sequelize.STRING,    
+    query: Sequelize.STRING,
+    visible: {type:Sequelize.BOOLEAN, defaultValue: 1}  
 });
 
 

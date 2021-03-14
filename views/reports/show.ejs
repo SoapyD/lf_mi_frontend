@@ -11,7 +11,13 @@
 				<div class="caption-full">
 
 					<h4>
-						<a href="/reports/<%= report.id %>/edit"><%= report.name %></a>
+                        <a href=
+                        <% if(user.id === report.owner) { %>
+                            "/reports/<%= report.id %>/edit"
+                        <% } else { %>
+                            "/reports/<%= report.id %>"
+                        <% } %>
+                        ><%= report.name %></a>
 					</h4>				
 
 					<p>
@@ -132,6 +138,9 @@
                 <button class="btn btn-primary add-subsection" type="button">
                     Add Subsection
                 </button>	  
+                <button class="btn btn-primary delete-section" type="button">
+                    Delete Section
+                </button>	                
             <% } %>
 
             <ul class="sortable sortable-subsections">
@@ -145,9 +154,10 @@
 
         //GET ADD BUTTON FOR SECTION AND ADD CLICK FUNCTION TO IT
         let section_button = $("#section_"+number).children('.add-subsection')
-        
-
         section_button.click(add_subsection_function);
+
+        let delete_section_button = $("#section_"+number).children('.delete-section')
+        delete_section_button.click(delete_parent_function);
 
         <% if(user.id === report.owner) { %> 
             updateSortable()
@@ -177,7 +187,11 @@
         let markup = `        
         <li class="ui-state-default subsection tr-grab" id="subsection_`+number+`">
             
-            
+            <% if(user.id === report.owner) { %>   
+                <button class="btn btn-primary delete-subsection" type="button">
+                    Delete Subsection
+                </button>	                
+            <% } %>            
 
             <div class="box">
                 <span>`+text_number+`</span>
@@ -223,6 +237,9 @@
         parent.children('.sortable-subsections').append(markup)
         let subsection_button = $("#subsection_"+number).children('.add-paragraph')
 
+        let delete_subsection_button = $("#subsection_"+number).children('.delete-subsection')
+        delete_subsection_button.click(delete_parent_function);
+
         <% if(user.id === report.owner) { %>         
             updateSortable()       
         <% } %>
@@ -231,11 +248,15 @@
         return return_data
     }
 
-
-
     // ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
     $(".add-section").click(add_section_function);	
+
     
+    function delete_parent_function(){
+        let parent = $(this).parent();
+        parent.remove()
+        updateIndex()
+    }	
 
 
 

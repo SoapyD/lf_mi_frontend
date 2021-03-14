@@ -53,8 +53,9 @@
 				<% parameter_values.forEach(function (parameter_value, index){ %>
 					<% let parameter = parameters[index]; %>
 
+					<% if (parameter.visible === true ) { %>
+
 					<div class="form-group">	
-						
 						<p><%= parameter.name %>:</p>
 
 						<% if(parameter_value.recordset){ %>
@@ -64,7 +65,12 @@
 
 								<% parameter_value.recordset.forEach(function (record){ %>
 									<% let value = '"'+parameter.name+'" : '+'"'+record.value+'"'; %>
-									<option value="<%= value %>"><%= record.value %></option>
+									<option value="<%= value %>">
+										<% if(record.name) { %>
+											<%= record.name  %>
+										<% } else { %>
+											<%= record.value %> 
+										<% } %></option>
 								<% }) %>
 
 							</select>
@@ -73,6 +79,7 @@
 							<input id="<%= parameter.name %>-select" class="form-control" type="text" name="input_parameters[]" placeholder="" required>
 						<% } %>
 					</div>
+				<% } %>					
 				<% }) %>
 
 

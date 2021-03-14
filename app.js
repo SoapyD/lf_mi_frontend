@@ -10,10 +10,10 @@ const passport = require("passport");
 const SamlStrategy = require('passport-saml').Strategy;
 
 const ssrs = require('mssql-ssrs');
+const docx = require("docx");
 // const DocxMerger = require('./util/docx-merger/index.js');
 // const DocxMerger = require('docx-merger');
 // var builder = require('docx-builder');
-const docx = require("docx");
 
 var fs = require('fs');
 var path = require('path');
@@ -21,9 +21,8 @@ var path = require('path');
 const errorController = require('./controllers/error');
 
 const database = require('./util/database')
-
-
 const seeds = require('./util/seeds3')
+const timerUtil = require('./util/timer');
 
 const TestRoutes = require("./routes/test");
 const IndexRoutes = require("./routes/index");
@@ -120,7 +119,6 @@ app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);
 database.sequelize
   .sync()
   .then(result => {
-    // seeds.seed()
     seeds.create()
   })
   .catch(err => {
@@ -138,5 +136,5 @@ app.listen(process.env.PORT||80, process.env.IP, function(){
     console.log("Server has started!")
     
     //START THE COMPLETE DOCUMENT CHECKER
-    // setTimeout(ssrsController.checkFiles, 10000);
+    setTimeout(timerUtil.checkTimer, process.env.TIMER_MS);
 });

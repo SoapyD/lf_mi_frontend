@@ -216,6 +216,20 @@ a:focus, a:hover {
 	background: white;
 }
 
+.report-builder {
+	background: white;
+}
+
+.section {
+	background: #b6e19f;
+	border: 2px solid #7ac952;
+}
+
+.subsection {
+	background: #b5e1ee;
+	border: 1px solid #62bfdb;
+}
+
 span {
 	width: 10%;
 	display: flex;

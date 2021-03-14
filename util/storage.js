@@ -4,7 +4,7 @@
 const account = process.env.STORAGE_ACCOUNT;
 const accountKey = process.env.STORAGE_KEY;
 const container = process.env.STORAGE_CONTAINER;
-const blob_path = '';
+const blob_path = process.env.STORAGE_BLOBPATH;
 
 
 exports.saveBlob = async(content, filename) => {
@@ -30,7 +30,7 @@ exports.saveBlob = async(content, filename) => {
     const containerClient = blobServiceClient.getContainerClient(containerName);
      
     // const content = "Hello world!";
-    const blobName = blob_path+filename+".docx"
+    const blobName = blob_path+filename //+".docx"
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     if(content !== undefined)
     {
