@@ -130,9 +130,9 @@ exports.run = async(i, report, subscription) => {
                             subsection_param_object['Subsection_Name'] = section.order + "." + subsection.sectionsubsections.order+ ". "+subsection.name;
                             subsection_param_object['Add_Analysis_Box'] = "Y"
 
-                            if(subsection.name === "front"){
-                                subsection_param_object['contents_page'] = contents_page;
-                            }
+                            // if(subsection.name === "front"){
+                            //     subsection_param_object['contents_page'] = contents_page;
+                            // }
 
                             filepath = subsection.path;
                             filename = subsection.name;  

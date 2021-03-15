@@ -94,11 +94,31 @@ exports.checkFileNumber = async(subscription_activity) => {
         let subscription = subscriptions[0]
 
         if(subscription){
+
+            //get report data
+            find_list = []
+            find_list.push(
+            {
+                model: "Report",
+                search_type: "findOne",
+                params: [{
+                    where: {
+                        id: subscription.reportId,
+                    }		
+                }]
+            }) 
+
+            //GET ALL REPORT DATA
+            let reports = await databaseQueriesUtil.findData(find_list)
+            let report = reports[0]
+
             //IF THERE AREN'T ANY ERRORS, MERGE THE DOCUMENT, SAVE IT ONTO STORAGE THEN EMAIL IT OUT
             if(subscription_activity.errors === 0){
                 //MERGE REPORT AND SEND
-                let output_name = subscription.name+"_"+subscription.id
+                // let output_name = report.name+"_"+report.id+"_"+subscription.name+"_"+subscription.id
+                let output_name = report.name+"_"+subscription.name
                 await mergeDocumentUtil.mergeDocument(output_name, subscription_activity.path)
+                
 
                 await emailUtil.email(subscription, output_name+".docx",path.join(subscription_activity.path,output_name+".docx"))
 
