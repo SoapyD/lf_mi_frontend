@@ -33,26 +33,152 @@ exports.create = async() => {
     {
         model: "SubSection",
         params: [
-        // {
-        //     order: 0,
-        //     name: "front",
-        //     path: "/99 - Test Reports/Tom Dev/Service Report/",
-        // },  
+
+        //TOTAL VOLUME FLOW DIAGRAM
+
         {
-            order: 1,
+            order: 1.001,
             name: "Support Requests - Source per period",
-            path: "/99 - Test Reports/Tom Dev/Service Report/"
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Source per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Source per period_WH"
         },   
+
+        {
+            order: 1.002,
+            name: "Support Requests - Location per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Location per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Location per period_WH"
+        },   
+
+        {
+            order: 1.003,
+            name: "Support Requests - Time of Day per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Time of Day per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Time of Day per period_WH"
+        },   
+
+
+        //INCIDENTS - TOP 5 Categories and Subcategories
+        {
+            order: 2.0001,
+            name: "Incidents - Major Incident Review",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Major Incident Review_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Major Incident Review_WH",
+            period_type: 'single'
+        },    
+
+        {
+            order: 2.0012,
+            name: "Incidents - FCR per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - FCR per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - FCR per period_WH"
+        },    
+
+        {
+            order: 2.0013,
+            name: "Incidents - Category Trends per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Category Trends per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Category Trends per period_SNP"
+        },    
+
+        {
+            order: 2.002,
+            name: "Incidents - Opened and Resolved per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period_WH"
+        },           
+        {
+            order: 2.003,
+            name: "Incidents - Opened and Resolved per period per resolver group",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period per resolver group_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period per resolver group_WH"
+        },            
+        {
+            order: 2.004,
+            name: "Incidents - Priority per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Priority per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Priority per period_WH"
+        },       
+
+
+        //REQUESTS - top 5 category and subcategory
+
+
         {
             order: 2,
-            name: "Incidents - Opened and Resolved per period",
-            path: "/99 - Test Reports/Tom Dev/Service Report/"
-        },    
+            name: "Problems - Open and Closed current period",
+            path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed current period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed current period_WH",
+            period_type: 'single'
+        },       
         {
-            order: 3,
-            name: "Incidents - Opened and Resolved per period per resolver group",
-            path: "/99 - Test Reports/Tom Dev/Service Report/"
-        },                                                    
+            order: 3.002,
+            name: "Problems - Open and Closed per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed per period_WH"
+        }, 
+
+
+
+        //CSAT - customer satisfaction measurements
+
+        {
+            order: 4.002,
+            name: "CSAT - Service Feedback Summary",
+            path_snapshot: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary_WH",
+            path_warehouse: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary_WH",
+            period_type: 'single'
+        },  
+
+        {
+            order: 4.003,
+            name: "CSAT - CSAT per period",
+            path_snapshot: "/99 - Test Reports/Service Report/CSAT - CSAT per period_WH",
+            path_warehouse: "/99 - Test Reports/Service Report/CSAT - CSAT per period_WH"
+        },  
+
+        {
+            order: 5.001,
+            name: "Telephony - Summary",
+            path_snapshot: "/99 - Test Reports/Service Report/Telephony - Summary_WH",
+            path_warehouse: "/99 - Test Reports/Service Report/Telephony - Summary_WH"
+        },   
+
+
+        {
+            order: 10.001,
+            name: "Appendix - CSAT - Positive Customer Feedback",
+            path_snapshot: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback_WH",
+            period_type: 'single',
+            type: 'appendix'
+        },             
+        {
+            order: 10.002,
+            name: "Appendix - Category Trends Top 15",
+            path_snapshot: "/99 - Test Reports/Service Report/Appendix - Category Trends Top 15_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Appendix - Category Trends Top 15_WH",
+            type: 'appendix'
+        },           
+
+
+        {
+            order: 20.001,
+            name: "Template - Executive Summary",
+            path_snapshot: "/99 - Test Reports/Service Report/Template - Executive Summary",
+            path_warehouse: "/99 - Test Reports/Service Report/Template - Executive Summary",
+            period_type: "",
+            type: 'template'
+        },  
+        {
+            order: 20.002,
+            name: "Template - Actions Register",
+            path_snapshot: "/99 - Test Reports/Service Report/Template - Actions Register",
+            path_warehouse: "/99 - Test Reports/Service Report/Template - Actions Register",
+            period_type: "",
+            type: 'appendix template'
+        },  
+
         ]
     },    
     )
@@ -71,7 +197,12 @@ exports.create = async() => {
         //     name: "report_name",
         //     query: ""
         // },
-        
+        {
+            order: 0,
+            name: "database",
+            query: "SELECT 'snapshot' AS value UNION SELECT 'warehouse' AS value",
+            in_report: 0
+        },          
         {
             order: 0,
             name: "Section_Name",
@@ -101,12 +232,6 @@ exports.create = async() => {
             name: "source_table",
             query: ""
         },
-                  
-        {
-            order: 0.01,
-            name: "Database",
-            query: "SELECT 1 AS value, 'Snapshot' AS name UNION SELECT 2 AS value, 'Warehouse' AS name"
-        },  
 
         {
             order: 0.012,
@@ -124,11 +249,29 @@ exports.create = async() => {
             query: ""
         },          
 
+
         {
-            order: 5,
-            name: "aged_ticket_days",
+            order: 0.013,
+            name: "period_type_sp",
+            query: "SELECT type AS name ,value FROM [dbo].[daterange_view]"
+        },          
+        {
+            order: 0.0131,
+            name: "date_start_sp",      
             query: ""
-        },    
+        },  
+        {
+            order: 0.0132,
+            name: "date_end_sp",       
+            query: ""
+        },        
+
+
+        // {
+        //     order: 5,
+        //     name: "aged_ticket_days",
+        //     query: ""
+        // },    
 
 
         ]
@@ -137,47 +280,26 @@ exports.create = async() => {
     let parameters = await databaseQueriesUtil.createData2(creation_list)
 
 
-    creation_list = []
-    creation_list.push(
-    {
-        model: "SubSectionParameter",
-        params: []
-    },    
-    )
+    // creation_list = []
+    // creation_list.push(
+    // {
+    //     model: "SubSectionParameter",
+    //     params: []
+    // },    
+    // )
 
-    parameters.forEach((parameter) => {
-        subsections.forEach((subsection) => {
+    // parameters.forEach((parameter) => {
+    //     subsections.forEach((subsection) => {
 
-            if(parameter.order < 5){
-                creation_list[0].params.push({
-                    subsectionId: subsection.id,
-                    parameterId: parameter.id
-                })
-            }
-        })
+    //         creation_list[0].params.push({
+    //             subsectionId: subsection.id,
+    //             parameterId: parameter.id
+    //         })
+    //     })
 
-    })
+    // })
 
-    let find_list = []
-    find_list.push(
-    {
-        model: "SubSection",
-        search_type: "findOne",
-        params: [{
-            where: {
-                name: "Incidents - Opened and Resolved per period per resolver group",
-            }		
-        }]
-    }) 
-    let found_subsection = await databaseQueriesUtil.findData(find_list)
-
-
-    creation_list[0].params.push({
-        subsectionId: found_subsection[0].id,
-        parameterId: 10
-    })
-
-    let subsectionparameters = await databaseQueriesUtil.createData2(creation_list)
+    // let subsectionparameters = await databaseQueriesUtil.createData2(creation_list)
 
 
 
@@ -191,11 +313,11 @@ exports.create = async() => {
             ,description: "A template for the regularly used SSRS Service Report"
             ,owner: "93e16e04-771c-4137-b169-748d2dc103c3"
         },      
-        {
-            name: "Service Report - Not Owned"
-            ,description: "A copy of the Service Report not owned by the Admin to show what uneditable reports will look and act like"
-            ,owner: ""
-        },                 
+        // {
+        //     name: "Service Report - Not Owned"
+        //     ,description: "A copy of the Service Report not owned by the Admin to show what uneditable reports will look and act like"
+        //     ,owner: ""
+        // },                 
         ]
     },    
     )
@@ -208,22 +330,52 @@ exports.create = async() => {
         model: "Section",
         params: [    
             {
-                name: "Support Requests",
+                name: "Executive Summary",
                 order: 1,
                 reportId: reports[0].id
-            },       
+            },  
             {
-                name: "Incidents",
+                name: "Service Desk",
                 order: 2,
                 reportId: reports[0].id
-            },          
-
+            },   
             {
-                name: "Support Requests",
-                order: 1,
-                reportId: reports[1].id
-            },       
-                                          
+                name: "Incident Management",
+                order: 3,
+                reportId: reports[0].id
+            },              
+            {
+                name: "Requests",
+                order: 4,
+                reportId: reports[0].id
+            },        
+            {
+                name: "Problem Management",
+                order: 5,
+                reportId: reports[0].id
+            },                  
+            {
+                name: "Service Review Meetings Actions Register",
+                order: 6,
+                reportId: reports[0].id
+            },    
+            {
+                name: "Appendix A - Positive Customer Feedback",
+                order: 7,
+                reportId: reports[0].id
+            },    
+            {
+                name: "Appendix B - Trended Volumes for Reference",
+                order: 8,
+                reportId: reports[0].id
+            },   
+            {
+                name: "Appendix C - Category Trends - Within Top 15 Category Types",
+                order: 9,
+                reportId: reports[0].id
+            },   
+            
+
         ]
     })
     
@@ -231,44 +383,30 @@ exports.create = async() => {
 
 
 
-    creation_list = []
-    creation_list.push(
-    {
-        model: "SectionSubSection",
-        params: [
+    // creation_list = []
+    // creation_list.push(
+    // {
+    //     model: "SectionSubSection",
+    //     params: [
 
-        {
-            order: 1,
-            name: "",
-            sectionId: sections[0].id,
-            subsectionId: subsections[0].id
-        },         
-        {
-            order: 1,
-            name: "",
-            sectionId: sections[1].id,
-            subsectionId: subsections[1].id
-        },     
-        {
-            order: 2,
-            name: "",
-            sectionId: sections[1].id,
-            subsectionId: subsections[2].id
-        },     
+    //     {
+    //         order: 1,
+    //         name: "",
+    //         sectionId: sections[0].id,
+    //         subsectionId: subsections[0].id
+    //     },         
+    //     {
+    //         order: 1,
+    //         name: "",
+    //         sectionId: sections[1].id,
+    //         subsectionId: subsections[1].id
+    //     },     
 
-        {
-            order: 1,
-            name: "",
-            sectionId: sections[2].id,
-            subsectionId: subsections[0].id
-        },         
-      
+    //     ]
+    // },    
+    // )
 
-        ]
-    },    
-    )
-
-    let sectionsubsections = await databaseQueriesUtil.createData2(creation_list)
+    // let sectionsubsections = await databaseQueriesUtil.createData2(creation_list)
 
 
 
@@ -304,7 +442,7 @@ exports.create = async() => {
         {
             reportId: reports[0].id,
             frequencyId: frequencies[0].id,
-            name: "Snapshot Cafcass Test",
+            name: "Warehouse Fusion Test",
             email_to: "thomas.cassady@littlefish.co.uk",
             subject: "Test Service Report",
             body: "please find attached your copy of the service report",
@@ -312,39 +450,72 @@ exports.create = async() => {
             time: "16:01",     
             parameters: `
             {
-                "Database": 1, 
+                "database": "warehouse", 
                 "report_name": "Service Report", 
-                "company_filter": "Cafcass", 
-                "source_table": "LF_Cafcass", 
+                "company_filter": "Fusion Lifestyle", 
+                "source_table": "LF_FusionLifestyle", 
                 "period_type": "8",
                 "date_start": "01/01/2000", 
                 "date_end": "01/01/2000",
+                "period_type_sp": "1",
+                "date_start_sp": "01/01/2000", 
+                "date_end_sp": "01/01/2000",
+
                 "aged_ticket_days": "30"
             }`,              
         },       
-        {
-            reportId: reports[0].id,
-            frequencyId: frequencies[0].id,
-            name: "Warehouse Cafcass Test",
-            email_to: "thomas.cassady@littlefish.co.uk",
-            subject: "Test Service Report",
-            body: "please find attached your copy of the service report",
-            start_date: "2020-10-27",
-            time: "16:01",     
-            parameters: `
-            {
-                "Database": 2, 
-                "report_name": "Service Report", 
-                "company_filter": "Cafcass", 
-                "source_table": "LF_Cafcass", 
-                "period_type": "8",
-                "date_start": "01/01/2000", 
-                "date_end": "01/01/2000",
-                "aged_ticket_days": "30"
-            }`,              
-        }, 
-        
-      
+
+        // {
+        //     reportId: reports[0].id,
+        //     frequencyId: frequencies[0].id,
+        //     name: "Warehouse Fusion Test2",
+        //     email_to: "thomas.cassady@littlefish.co.uk",
+        //     subject: "Test Service Report",
+        //     body: "please find attached your copy of the service report",
+        //     start_date: "2020-10-27",
+        //     time: "16:01",     
+        //     parameters: `
+        //     {
+        //         "database": "warehouse", 
+        //         "report_name": "Service Report", 
+        //         "company_filter": "Fusion Lifestyle", 
+        //         "source_table": "LF_FusionLifestyle", 
+        //         "period_type": "8",
+        //         "date_start": "01/01/2000", 
+        //         "date_end": "01/01/2000",
+        //         "period_type_sp": "1",
+        //         "date_start_sp": "01/01/2000", 
+        //         "date_end_sp": "01/01/2000",
+
+        //         "aged_ticket_days": "30"
+        //     }`,              
+        // },  
+
+        // {
+        //     reportId: reports[0].id,
+        //     frequencyId: frequencies[0].id,
+        //     name: "Warehouse Fusion Test2",
+        //     email_to: "thomas.cassady@littlefish.co.uk",
+        //     subject: "Test Service Report",
+        //     body: "please find attached your copy of the service report",
+        //     start_date: "2020-10-27",
+        //     time: "16:01",     
+        //     parameters: `
+        //     {
+        //         "database": "warehouse", 
+        //         "report_name": "Service Report", 
+        //         "company_filter": "Fusion Lifestyle", 
+        //         "source_table": "LF_FusionLifestyle", 
+        //         "period_type": "8",
+        //         "date_start": "01/01/2000", 
+        //         "date_end": "01/01/2000",
+        //         "period_type_sp": "1",
+        //         "date_start_sp": "01/01/2000", 
+        //         "date_end_sp": "01/01/2000",
+
+        //         "aged_ticket_days": "30"
+        //     }`,              
+        // },  
 
         ]
     },    

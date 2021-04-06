@@ -108,7 +108,7 @@ exports.checkIncompleteSubActivity = async() => {
                         await emailUtil.email(subscription)
 
                         //DELETE FILES AND TEMPORARY FOLDER                    
-                        exports.deleteTemp(subscription_activity.path)
+                        exports.deleteTemp(subscriptionactivity.path)
 
                         //SET RUNNING TO FALSE
                         //EMAIL RECIPIENTS TO SAY THE FILE DIDN'T RUN

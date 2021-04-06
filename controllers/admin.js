@@ -9,11 +9,11 @@ exports.getRouteInfo = () => {
     route_info = {
         parameter: {
             type: "Parameter"
-            ,edit_fields: ['name','query']        
+            ,edit_fields: ['name','print_name','query']        
         }
         ,subsection: {
             type: "SubSection"
-            ,edit_fields: ['name','path', 'description']
+            ,edit_fields: ['name','path_snapshot','path_warehouse', 'description', 'period_type']
             ,join_from: ["Parameter"]
         }       
         

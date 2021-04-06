@@ -13,6 +13,8 @@ const Fusion = database.sequelize.define('NODE_REPORT_sectionsubsections', {
 
    order: Sequelize.INTEGER
    ,name: Sequelize.STRING    
+}, {
+   timestamps: false,
 });
 
 module.exports = Fusion

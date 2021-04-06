@@ -254,3 +254,8 @@ input {
 	/* Prevent user interaction with form while disabled */
 	pointer-events:none;
  }
+
+ .hide-element {
+	 visibility: hidden;
+	 display: none
+ }

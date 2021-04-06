@@ -19,7 +19,7 @@ exports.mergeDocument = async(output_name, filepath) => {
     })
     
 
-    var docx = new DocxMerger({},imported_files);
+    var docx = new DocxMerger({pageBreak: false},imported_files);
     //SAVING THE DOCX FILE
     console.log("merging document")
     

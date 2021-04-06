@@ -7,6 +7,7 @@ const functionsUtil = require('../util/functions');
 var fs = require('fs');
 var path = require('path');
 const tmp = require('tmp');
+const Subscription = require('../models/subscription');
 
 
 
@@ -19,7 +20,7 @@ const password = process.env.SSRS_PASS;
 var serverUrl = process.env.SSRS_URL; ///ReportServer2010
 
 
-exports.run = async(i, report, subscription) => {
+exports.run = async(subscription_number, report, subscription) => {
 
     try{
 
@@ -30,15 +31,29 @@ exports.run = async(i, report, subscription) => {
             let folder_path = tmpobj.name //'reports';//
 
             
-            let subsection_count = 0;
+            let subsection_count = 1; //1 for front cover
             if(report.sections){
                 report.sections.forEach((section) => {
 
                     if(section.subsections){
-                        subsection_count += section.subsections.length
+                        if(section.subsections.length > 0){
+                            subsection_count += 1 //1 for every section
+                        }
+                        subsection_count += (section.subsections.length * 3) //3 parts for each subsection, header/subsection/analysis
+
+                        section.subsections.forEach((subsection) => {
+                            if (subsection.type === "template"){
+                                subsection_count -= 1
+                            }
+
+                            if (subsection.type === "appendix" || subsection.type === "appendix template"){
+                                subsection_count -= 2
+                            }
+                        })
                     }
                 })
             }
+
 
             let file_data = {
                 folder_path: folder_path,
@@ -52,7 +67,7 @@ exports.run = async(i, report, subscription) => {
                 params: [
                     {
                         path: folder_path,
-                        files_expected: file_data.files_needed + 1,
+                        files_expected: file_data.files_needed,
                         subscriptionId: subscription.id
                     }
                 ]
@@ -70,7 +85,7 @@ exports.run = async(i, report, subscription) => {
             //CREATE THE CONTENT PAGE TEXT
             if(report.sections){
 
-                let subsection_count = 0
+                let subsection_total = 0
 
                 //FORMAT THE CONTENTS PAGE
                 report.sections.forEach((section) => {
@@ -78,36 +93,37 @@ exports.run = async(i, report, subscription) => {
                     contents_page += section.order + ". " + section.name + "\n"
 
                     section.subsections.forEach((subsection) => {
-                        if (subsection.name !== "front"){
+                        if (subsection.name !== "front" && subsection.type !== 'appendix'){
 
                             contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection.name + "\n"
                         }
-                        subsection_count++      
+                        subsection_total++      
                     })
                 })
 
                 //ADD FRONT PAGE
-                filepath = "/99 - Test Reports/Tom Dev/Service Report/"
-                filename = 'front'
+                filepath = "/99 - Test Reports/Service Report/_Front Cover"
                 subsection_param_object = 
                 {
-                    "report_name":"TEST REPORT", 
-                    "company_filter": "test org",
+                    "report_name":report.name, 
+                    "company_filter": subscription.name,
                     "contents_page": contents_page
                 }
                 outputname = "000000000"
                 let output_file = path.join(folder_path,outputname);
-                exports.runDelay(0, filepath, filename, subsection_param_object, folder_path, output_file)
+                exports.runDelay(((subsection_total*4) * subscription_number), filepath, subsection_param_object, folder_path, output_file)
 
 
+                //START THE DELAY VALUE AS THE SUBSCRIPTION NUMBER
+                let subsection_count = 0;
+                
                 //LOOP THROUGH EACH SECTION AND RUN THE SUBSECTIONS
-                let delay_i = i;
                 report.sections.forEach( async(section) => {
 
                     // setTimeout(() => {
 
                     if(section.subsections){
-                        section.subsections.forEach( async(subsection, n) => {                       
+                        section.subsections.forEach( async(subsection, subsection_number) => {                       
 
                             // setTimeout(() => {
 
@@ -115,49 +131,100 @@ exports.run = async(i, report, subscription) => {
                             //GET PARAMETER SUBSECTIONS
                             //PULL OUT ANY PARAMETERS SAID SUBSECTION NEEDS FROM OVERALL PARAMETER OBJECT
                             let subsection_param_object = {}
+                            let report_param_object = {}
                             if (subsection.parameters){
                                 subsection.parameters.forEach( async(parameter) => {
-                                    subsection_param_object[parameter.name] = parameter_object[parameter.name];
+                                    if(parameter.in_report === false || parameter.visible === false){
+                                        report_param_object[parameter.name] = parameter_object[parameter.name];
+                                    }
+                                    else{
+                                        subsection_param_object[parameter.name] = parameter_object[parameter.name];
+                                    }
                                 })
                             }
 
 
-                            //SET THE SECTION AND SUBSECTION NAMES
-                            subsection_param_object['Section_Name'] = ''
-                            if(n === 0){
-                                subsection_param_object['Section_Name'] = section.order + ". " + section.name;
-                            }
-                            subsection_param_object['Subsection_Name'] = section.order + "." + subsection.sectionsubsections.order+ ". "+subsection.name;
-                            subsection_param_object['Add_Analysis_Box'] = "Y"
-
-                            // if(subsection.name === "front"){
-                            //     subsection_param_object['contents_page'] = contents_page;
-                            // }
-
-                            filepath = subsection.path;
-                            filename = subsection.name;  
+                            let delay_timer_value = (((subsection_total*4) * subscription_number) + (subsection_count*4)) + 1 //+1 for front cover
                             let size = 10
-                            
-                            let file_number = (section.order * 1000) + subsection.sectionsubsections.order
+                            let file_number = (section.order * 1000) + delay_timer_value // + subsection.sectionsubsections.order
 
+
+                            //SET THE SECTION AND SUBSECTION NAMES
+                            report_param_object['Section_Name'] = ''
+                            if(subsection_number === 0){
+                                report_param_object['Section_Name'] = section.order + ". " + section.name;
+                            }
+                            let subsection_name = subsection.name
+                            if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
+                                subsection_name = subsection.sectionsubsections.name
+                            }
+                            
+                            report_param_object['Subsection_Name'] = section.order + "." + subsection.sectionsubsections.order+ ". "+subsection_name;
+                            report_param_object['Add_Analysis_Box'] = "Y"
+
+
+                            if(subsection_number === 0)
+                            {
+                                //ADD SECTION NAME
+                                filepath = "/99 - Test Reports/Service Report/_Section_Header"
+                                let temp_param_object = 
+                                {
+                                    "Section_Name":report_param_object['Section_Name'], 
+                                }
+                                outputname = "000000000" + (file_number-2);
+                                outputname = outputname.substr(outputname.length-size);
+                                let output_file = path.join(folder_path,outputname);
+                                exports.runDelay(delay_timer_value, filepath, temp_param_object, folder_path, output_file)    
+                            }
+                        
+                            
+
+
+                            //ADD SUBSECTION NAME
+                            if (subsection.type !== "appendix" && subsection.type !== 'appendix template'){
+                                filepath = "/99 - Test Reports/Service Report/_Subsection_Header"
+                                let temp_param_object = 
+                                {
+                                    "Subsection_Name":report_param_object['Subsection_Name'], 
+                                }
+                                outputname = "000000000" + (file_number-1);
+                                outputname = outputname.substr(outputname.length-size);
+                                let output_file = path.join(folder_path,outputname);
+                                exports.runDelay(delay_timer_value+1, filepath, temp_param_object, folder_path, output_file)
+                            }
+
+                            
+                            //ADD SUBSECTION
                             outputname = "000000000" + file_number;
                             outputname = outputname.substr(outputname.length-size);
         
-                            output_file = path.join(folder_path,outputname);                
-                            
-                            // console.log("timer set to: "+((subsection_count * i)+delay_i))
+                            output_file = path.join(folder_path,outputname); 
 
-                            exports.runDelay((subsection_count * i)+delay_i, filepath, filename, subsection_param_object, folder_path, output_file)
-                            // exports.runReport(filepath, filename, subsection_param_object, folder_path, output_file)
-                            delay_i++
-                            // console.log(subsection_i)
+                            if(report_param_object.database === "snapshot"){
+                                exports.runDelay(delay_timer_value+2, subsection.path_snapshot, subsection_param_object, folder_path, output_file)
+                            }
+                            if(report_param_object.database === "warehouse"){
+                                exports.runDelay(delay_timer_value+2, subsection.path_warehouse, subsection_param_object, folder_path, output_file)
+                            }
 
-                            // }, subsection_i * 5000);
+
+                            if(subsection.type !== 'appendix' && subsection.type !== 'template' && subsection.type !== 'appendix template'){
+                                //ADD ANALYSIS BOX
+                                filepath = "/99 - Test Reports/Service Report/_Subsection_Analysis"
+                                temp_param_object = 
+                                {
+                                }
+                                outputname = "000000000" + (file_number+1);
+                                outputname = outputname.substr(outputname.length-size);
+                                output_file = path.join(folder_path,outputname);
+                                exports.runDelay(delay_timer_value+3, filepath, temp_param_object, folder_path, output_file)
+                            }
+
+
+                            subsection_count++
 
                         })
                     }
-
-                    // }, subsection_i * 5000);
 
                 })
             }
@@ -171,16 +238,22 @@ exports.run = async(i, report, subscription) => {
 
 }
 
+let count = 1
+
 //RUN THE REPORT SECTION BUT ONLY AFTER A GIVEN DELAY
-exports.runDelay = async(i, filepath, filename, parameters, output_path, output_file) => {
+exports.runDelay = async(i, filepath, parameters, output_path, output_file) => {
     
+
+    // console.log(i + ' ||| ' + output_file + ' ||| ' + filepath + ' ||| ' + count)
+    // count++
+
     await functionsUtil.delay(3000 * i)
-    exports.runReport(filepath, filename, parameters, output_path, output_file)
+    exports.runReport(filepath, parameters, output_path, output_file)
 }
 
-exports.runReport = async(filepath, filename, parameters, output_path, output_file) => {
+exports.runReport = async(filepath, parameters, output_path, output_file) => {
     
-    const reportPath = filepath + filename;
+    const reportPath = filepath;
     try {
         // console.log("running: "+filename)
         

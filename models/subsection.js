@@ -10,9 +10,12 @@ const SubSection = database.sequelize.define('NODE_REPORT_subsection', {
        primaryKey: true
    },
    order: Sequelize.FLOAT,
-   path: Sequelize.STRING,
-   name: Sequelize.STRING,
-   description: Sequelize.STRING
+   path_warehouse: Sequelize.STRING,
+   path_snapshot: Sequelize.STRING,   
+   name: Sequelize.STRING, 
+   description: Sequelize.STRING,
+   period_type: {type: Sequelize.STRING, defaultValue: "full"},
+   type: {type: Sequelize.STRING, defaultValue: "normal"},
 });
 
 module.exports = SubSection

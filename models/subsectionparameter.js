@@ -9,6 +9,8 @@ const SubSectionParameter = database.sequelize.define('NODE_REPORT_subsectionpar
        allowNull: false,
        primaryKey: true
    }
-});
+}, {
+    timestamps: false,
+ });
 
 module.exports = SubSectionParameter

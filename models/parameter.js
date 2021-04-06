@@ -16,9 +16,12 @@ const Parameter = database.sequelize.define('NODE_REPORT_parameter', {
     //     defaultValue: "Parameter" 
     // },
     order: Sequelize.FLOAT,
-    name: Sequelize.STRING,
+    print_name: {type: Sequelize.STRING, defaultValue: ''}, //name as it appears in the app
+    name: Sequelize.STRING, //name of the parameter in the report
     query: Sequelize.STRING,
-    visible: {type:Sequelize.BOOLEAN, defaultValue: 1}  
+    visible: {type:Sequelize.BOOLEAN, defaultValue: 1},
+    in_report: {type:Sequelize.BOOLEAN, defaultValue: 1},   
+
 });
 
 
