@@ -10,14 +10,11 @@ exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proc
     //   min: 0,
     //   idle: 10000
     // },
-    dialectOptions: {
-      // encrypt: true
-      options: { 
-        encrypt: true,
-        // connectTimeout: 60000,
-        // "requestTimeout": 300000 
-      }
-    },
+    // dialectOptions: {
+    //   options: { 
+    //     encrypt: true,
+    //   }
+    // },
 
     pool: {
       max: 50,
