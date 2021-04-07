@@ -2,8 +2,6 @@ const Sequelize = require("sequelize");
 const sql = require('mssql')
 
 
-console.log(process.env.DB_TYPE)
-
 exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_SERVER,
     dialect: process.env.DB_TYPE,
@@ -13,13 +11,16 @@ exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proc
     //   idle: 10000
     // },
     dialectOptions: {
+      // encrypt: true
       options: { 
         encrypt: true,
+        // connectTimeout: 60000,
+        // "requestTimeout": 300000 
       }
     },
 
     pool: {
-      max: 50,
+      // max: 50,
       min: 0,
       acquire: 60000,
       idle: 40000
