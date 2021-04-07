@@ -20,10 +20,10 @@ exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proc
     },
 
     pool: {
-      max: 5,
+      max: 50,
       min: 0,
       acquire: 60000,
-      idle: 10000
+      idle: 40000
     },
 
     logging: false,
