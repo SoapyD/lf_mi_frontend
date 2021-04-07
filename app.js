@@ -120,6 +120,7 @@ database.sequelize
   .sync()
   .then(result => {
     // seeds.create()
+    seeds.test()
   })
   .catch(err => {
     console.log(err)

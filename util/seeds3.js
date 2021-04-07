@@ -15,6 +15,33 @@ exports.reset = async() => {
     await models.Report.drop()        
 }
 
+exports.test = async() => {
+
+    // await exports.reset()
+    // await database.sequelize.sync()
+
+    creation_list = []
+    creation_list.push(
+    {
+        model: "SubSection",
+        params: [
+
+        //TOTAL VOLUME FLOW DIAGRAM
+
+        {
+            order: 1.001,
+            name: "Support Requests - Source per period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Source per period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Source per period_WH"
+        },   
+
+        ]
+    },    
+    )
+    databaseQueriesUtil.createData2(creation_list)
+    console.log("TEST COMPLETE")
+}
+
 exports.create = async() => {
     //RESET THE TABLES 
 
