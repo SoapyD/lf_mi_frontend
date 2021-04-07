@@ -57,8 +57,14 @@ exports.create = async() => {
             path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Time of Day per period_WH"
         },   
 
+        {
+            order: 1.004,
+            name: "Support Requests - Heatmap for Total Tickets in period by Weekday",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Heatmap for Total Tickets in period by Weekday_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Heatmap for Total Tickets in period by Weekday_WH"
+        },   
 
-        //INCIDENTS - TOP 5 Categories and Subcategories
+
         {
             order: 2.0001,
             name: "Incidents - Major Incident Review",
@@ -66,19 +72,26 @@ exports.create = async() => {
             path_warehouse: "/99 - Test Reports/Service Report/Incidents - Major Incident Review_WH",
             period_type: 'single'
         },    
-
+        
         {
             order: 2.0012,
             name: "Incidents - FCR per period",
             path_snapshot: "/99 - Test Reports/Service Report/Incidents - FCR per period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/Incidents - FCR per period_WH"
         },    
-
+        
         {
             order: 2.0013,
             name: "Incidents - Category Trends per period",
             path_snapshot: "/99 - Test Reports/Service Report/Incidents - Category Trends per period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/Incidents - Category Trends per period_SNP"
+        },    
+
+        {
+            order: 2.00131,
+            name: "Incidents - Top 5 Categories with Subcategory breakdown",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Top 5 Category and Subcategory_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Top 5 Category and Subcategory_WH"
         },    
 
         {
@@ -101,18 +114,23 @@ exports.create = async() => {
         },       
 
 
-        //REQUESTS - top 5 category and subcategory
+        {
+            order: 1,
+            name: "Requests - Top 5 Categories with Subcategory breakdown",
+            path_snapshot: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory_WH"
+        },    
 
 
         {
-            order: 2,
+            order: 1,
             name: "Problems - Open and Closed current period",
             path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed current period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed current period_WH",
             period_type: 'single'
         },       
         {
-            order: 3.002,
+            order: 2,
             name: "Problems - Open and Closed per period",
             path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed per period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed per period_WH"
@@ -120,7 +138,13 @@ exports.create = async() => {
 
 
 
-        //CSAT - customer satisfaction measurements
+        {
+            order: 4.001,
+            name: "CSAT - Customer Satisfaction Measurements",
+            path_snapshot: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements_SNP",
+            period_type: 'single'
+        },  
 
         {
             order: 4.002,

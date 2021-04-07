@@ -119,7 +119,7 @@ app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);
 database.sequelize
   .sync()
   .then(result => {
-    seeds.create()
+    // seeds.create()
   })
   .catch(err => {
     console.log(err)

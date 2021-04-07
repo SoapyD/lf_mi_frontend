@@ -95,7 +95,12 @@ exports.run = async(subscription_number, report, subscription) => {
                     section.subsections.forEach((subsection) => {
                         if (subsection.name !== "front" && subsection.type !== 'appendix'){
 
-                            contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection.name + "\n"
+                            let subsection_name = subsection.name
+                            if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
+                                subsection_name = subsection.sectionsubsections.name
+                            }
+
+                            contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection_name + "\n"
                         }
                         subsection_total++      
                     })

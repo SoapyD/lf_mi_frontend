@@ -61,7 +61,21 @@ AND sb.name IN ('Template - Executive Summary')
 
 --SLA SUMMARY
 --SUPPORT REQUEST VOLUMES
---CUSTOMER SATISFACTION MEASUREMENTS
+
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+4 as [Order]
+,'Customer Satisfaction Measurements' AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Executive Summary'
+AND sb.name IN ('CSAT - Customer Satisfaction Measurements')
 
 ------------------------------------------------------------------------------------------------------SERVICE DESK
 
@@ -192,21 +206,64 @@ r.name = 'Service Report'
 AND s.name = 'Incident Management'
 AND sb.name IN ('Incidents - Priority per period')
 
---category trends
 
---top 5 incidents by category
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+4 as [Order]
+,'Category Trends - Within Top 5 Category Types, Last 3 Months' AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Incident Management'
+AND sb.name IN ('Incidents - Category Trends per period')
+
+
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+5 as [Order]
+,'Top 5 Incidents by Category and Subcategory' AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Incident Management'
+AND sb.name IN ('Incidents - Top 5 Categories with Subcategory breakdown')
+
 
 ------------------------------------------------------------------------------------------------------REQUESTS
 
 
---top 5 REQUESTS by category
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+1 as [Order]
+,'Top 5 Requests by Category and Subcategory' AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Requests'
+AND sb.name IN ('Requests - Top 5 Categories with Subcategory breakdown')
+
 
 ------------------------------------------------------------------------------------------------------PROBLEM MANAGEMENT
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 1 as [Order]
-,'Active And Closed Problems Summary' AS name
+,'Active and Closed Problems Summary' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
