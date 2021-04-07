@@ -5,11 +5,11 @@ const sql = require('mssql')
 exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_SERVER,
     dialect: process.env.DB_TYPE,
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    },
+    // pool: {
+    //   max: 5,
+    //   min: 0,
+    //   idle: 10000
+    // },
     dialectOptions: {
       // encrypt: true
       options: { 
