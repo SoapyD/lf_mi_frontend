@@ -128,7 +128,6 @@ database.sequelize
 
 
 
-// console.log(process.env)
 app.use(errorController.get404);
 
 
