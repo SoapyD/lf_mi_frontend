@@ -119,8 +119,10 @@ app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);
 database.sequelize
   .sync()
   .then(result => {
-    // seeds.create()
-    // seeds.test()
+    if(process.env._PROCESS_TYPE === 'Dev'){
+      seeds.create()
+      // seeds.test()
+    }
   })
   .catch(err => {
     console.log(err)
