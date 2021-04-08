@@ -74,162 +74,181 @@ exports.create = async() => {
         model: "SubSection",
         params: [
 
-        //TOTAL VOLUME FLOW DIAGRAM
+
+            {
+                order: 0,
+                name: "SLA - Summary - full period",
+                path_snapshot: "/99 - Test Reports/Service Report/SLA - Summary - full period_SNP",
+                path_warehouse: "/99 - Test Reports/Service Report/SLA - Summary - full period_SNP"
+            },  
+
+            //TOTAL VOLUME FLOW DIAGRAM
         {
             order: 1.000,
-            name: "Support Requests - Total Volume Flow Diagram",
-            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Total Volume Flow Diagram_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Total Volume Flow Diagram_SNP",
+            name: "Support Requests - Total Volume Flow Diagram - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Total Volume Flow Diagram - single period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Total Volume Flow Diagram - single period_SNP",
             period_type: "single"
         },   
 
         {
             order: 1.001,
-            name: "Support Requests - Source per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Source per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Source per period_WH"
+            name: "Support Requests - Source - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Source - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Source - full period_WH"
         },   
 
         {
             order: 1.002,
-            name: "Support Requests - Location per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Location per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Location per period_WH"
+            name: "Support Requests - Location - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Location - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Location - full period_WH"
         },   
 
         {
             order: 1.003,
-            name: "Support Requests - Time of Day per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Time of Day per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Time of Day per period_WH"
+            name: "Support Requests - Time of Day - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Time of Day - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Time of Day - full period_WH"
         },   
 
         {
             order: 1.004,
-            name: "Support Requests - Heatmaps for Total Registered Tickets",
-            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Heatmaps for Total Registered Tickets_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Heatmaps for Total Registered Tickets_WH",
+            name: "Support Requests - Heatmaps for Total Registered Tickets - single and full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Heatmaps for Total Registered Tickets - single and full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Heatmaps for Total Registered Tickets - single and full period_WH",
             period_type: 'both'
         },   
 
 
         {
             order: 2.0001,
-            name: "Incidents - Major Incident Review",
-            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Major Incident Review_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Major Incident Review_WH",
+            name: "Incidents - Major Incident Review - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Major Incident Review - single period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Major Incident Review - single period_WH",
             period_type: 'single'
         },    
         
         {
             order: 2.0012,
-            name: "Incidents - FCR per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Incidents - FCR per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Incidents - FCR per period_WH"
+            name: "Incidents - FCR - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - FCR - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - FCR - full period_WH"
         },    
         
         {
             order: 2.0013,
-            name: "Incidents - Category Trends per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Category Trends per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Category Trends per period_SNP"
+            name: "Incidents - Category Trends - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Category Trends - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Category Trends - full period_SNP"
         },    
 
         {
             order: 2.00131,
-            name: "Incidents - Top 5 Categories with Subcategory breakdown",
-            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Top 5 Category and Subcategory_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Top 5 Category and Subcategory_WH"
+            name: "Incidents - Top 5 Categories with Subcategory breakdown - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Top 5 Category and Subcategory - single period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Top 5 Category and Subcategory - single period_WH",
+            period_type: 'single'
         },    
 
         {
             order: 2.002,
-            name: "Incidents - Opened and Resolved per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period_WH"
+            name: "Incidents - Opened and Resolved - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved - full period_WH"
         },           
         {
             order: 2.003,
-            name: "Incidents - Opened and Resolved per period per resolver group",
-            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period per resolver group_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per period per resolver group_WH"
+            name: "Incidents - Opened and Resolved per resolver group - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per resolver group - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Opened and Resolved per resolver group - full period_WH"
         },            
         {
             order: 2.004,
-            name: "Incidents - Priority per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Priority per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Priority per period_WH"
+            name: "Incidents - Priority - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Incidents - Priority - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Incidents - Priority - full period_WH"
         },       
 
 
         {
             order: 1,
-            name: "Requests - Top 5 Categories with Subcategory breakdown",
-            path_snapshot: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory_WH"
+            name: "Requests - Top 5 Categories with Subcategory - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory - single period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory - single period_WH",
+            period_type: 'single'
         },    
 
 
         {
             order: 1,
-            name: "Problems - Open and Closed current period",
-            path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed current period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed current period_WH",
+            name: "Problems - Open and Closed - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed - single period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed - single period_WH",
             period_type: 'single'
         },       
         {
             order: 2,
-            name: "Problems - Open and Closed per period",
-            path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed per period_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed per period_WH"
+            name: "Problems - Open and Closed - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed - full period_WH"
         }, 
 
 
 
         {
             order: 4.001,
-            name: "CSAT - Customer Satisfaction Measurements",
-            path_snapshot: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements_SNP",
+            name: "CSAT - Customer Satisfaction Measurements - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements - single period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements - single period_SNP",
             period_type: 'single'
         },  
 
         {
             order: 4.002,
-            name: "CSAT - Service Feedback Summary",
-            path_snapshot: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary_WH",
-            path_warehouse: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary_WH",
+            name: "CSAT - Service Feedback Summary - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary - single period_WH",
+            path_warehouse: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary - single period_WH",
             period_type: 'single'
         },  
 
         {
             order: 4.003,
-            name: "CSAT - CSAT per period",
-            path_snapshot: "/99 - Test Reports/Service Report/CSAT - CSAT per period_WH",
-            path_warehouse: "/99 - Test Reports/Service Report/CSAT - CSAT per period_WH"
+            name: "CSAT - Summary - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/CSAT - Summary - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/CSAT - Summary - full period_WH"
         },  
 
         {
             order: 5.001,
-            name: "Telephony - Summary",
-            path_snapshot: "/99 - Test Reports/Service Report/Telephony - Summary_WH",
-            path_warehouse: "/99 - Test Reports/Service Report/Telephony - Summary_WH"
+            name: "Telephony - Summary - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Telephony - Summary - full period_WH",
+            path_warehouse: "/99 - Test Reports/Service Report/Telephony - Summary - full period_WH"
         },   
 
 
         {
             order: 10.001,
-            name: "Appendix - CSAT - Positive Customer Feedback",
-            path_snapshot: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback_WH",
-            path_warehouse: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback_WH",
+            name: "Appendix - CSAT - Positive Customer Feedback - single period",
+            path_snapshot: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback - single period_WH",
+            path_warehouse: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback - single period_WH",
             period_type: 'single',
             type: 'appendix'
         },             
+
+        {
+            order: 10.0011,
+            name: "Appendix - Trended Volumes for Reference - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Appendix - Trended Volumes for Reference - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Appendix - Trended Volumes for Reference - full period_SNP",
+            type: 'appendix'
+        },            
+
         {
             order: 10.002,
-            name: "Appendix - Category Trends Top 15",
-            path_snapshot: "/99 - Test Reports/Service Report/Appendix - Category Trends Top 15_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Appendix - Category Trends Top 15_WH",
+            name: "Appendix - Category Trends Top 15 - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/Appendix - Category Trends Top 15 - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Appendix - Category Trends Top 15 - full period_WH",
             type: 'appendix'
         },           
 
@@ -557,7 +576,7 @@ exports.create = async() => {
 
                 "aged_ticket_days": "30",
 
-                "core_hours_start": "8",
+                "core_hours_start": "6",
                 "core_hours_end": "18",
                 "customer_filter": "_No Teams",
                 "third_party_filter": "SAM Team" 

@@ -74,7 +74,7 @@ exports.checkFiles = async(output_path, reportPath, err) => {
 
 exports.checkFileNumber = async(subscription_activity) => {
     //IF THE FILE COUNT IS EQUAL TO FILES EXPECTED
-    if (subscription_activity.files_current === subscription_activity.files_expected){
+    if (subscription_activity.files_current + subscription_activity.errors === subscription_activity.files_expected){
 
         //GET THE SUBSCRIPTION
         find_list = []
