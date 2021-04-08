@@ -137,5 +137,5 @@ app.listen(process.env.PORT||80, process.env.IP, function(){
     console.log("Server has started!")
     
     //START THE COMPLETE DOCUMENT CHECKER
-    setTimeout(timerUtil.checkTimer, process.env.TIMER_MS);
+    // setTimeout(timerUtil.checkTimer, process.env.TIMER_MS);
 });

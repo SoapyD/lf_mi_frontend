@@ -62,6 +62,13 @@ exports.create = async() => {
         params: [
 
         //TOTAL VOLUME FLOW DIAGRAM
+        {
+            order: 1.000,
+            name: "Support Requests - Total Volume Flow Diagram",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Total Volume Flow Diagram_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Total Volume Flow Diagram_SNP",
+            period_type: "single"
+        },   
 
         {
             order: 1.001,
@@ -86,9 +93,10 @@ exports.create = async() => {
 
         {
             order: 1.004,
-            name: "Support Requests - Heatmap for Total Tickets in period by Weekday",
-            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Heatmap for Total Tickets in period by Weekday_SNP",
-            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Heatmap for Total Tickets in period by Weekday_WH"
+            name: "Support Requests - Heatmaps for Total Registered Tickets",
+            path_snapshot: "/99 - Test Reports/Service Report/Support Requests - Heatmaps for Total Registered Tickets_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/Support Requests - Heatmaps for Total Registered Tickets_WH",
+            period_type: 'both'
         },   
 
 
@@ -199,7 +207,7 @@ exports.create = async() => {
         {
             order: 10.001,
             name: "Appendix - CSAT - Positive Customer Feedback",
-            path_snapshot: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback_SNP",
+            path_snapshot: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback_WH",
             path_warehouse: "/99 - Test Reports/Service Report/Appendix - CSAT - Positive Customer Feedback_WH",
             period_type: 'single',
             type: 'appendix'
@@ -316,6 +324,28 @@ exports.create = async() => {
             name: "date_end_sp",       
             query: ""
         },        
+
+        {
+            order: 0.0141,
+            name: "core_hours_start",       
+            query: ""
+        },        
+        {
+            order: 0.0142,
+            name: "core_hours_end",       
+            query: ""
+        },        
+
+        {
+            order: 0.0151,
+            name: "customer_filter",       
+            query: ""
+        },        
+        {
+            order: 0.0152,
+            name: "third_party_filter",       
+            query: ""
+        },    
 
 
         // {
@@ -512,61 +542,45 @@ exports.create = async() => {
                 "date_start_sp": "01/01/2000", 
                 "date_end_sp": "01/01/2000",
 
-                "aged_ticket_days": "30"
+                "aged_ticket_days": "30",
+
+                "core_hours_start": "8",
+                "core_hours_end": "18",
+                "customer_filter": "_No Teams",
+                "third_party_filter": "SAM Team" 
             }`,              
         },       
 
-        // {
-        //     reportId: reports[0].id,
-        //     frequencyId: frequencies[0].id,
-        //     name: "Warehouse Fusion Test2",
-        //     email_to: "thomas.cassady@littlefish.co.uk",
-        //     subject: "Test Service Report",
-        //     body: "please find attached your copy of the service report",
-        //     start_date: "2020-10-27",
-        //     time: "16:01",     
-        //     parameters: `
-        //     {
-        //         "database": "warehouse", 
-        //         "report_name": "Service Report", 
-        //         "company_filter": "Fusion Lifestyle", 
-        //         "source_table": "LF_FusionLifestyle", 
-        //         "period_type": "8",
-        //         "date_start": "01/01/2000", 
-        //         "date_end": "01/01/2000",
-        //         "period_type_sp": "1",
-        //         "date_start_sp": "01/01/2000", 
-        //         "date_end_sp": "01/01/2000",
+        {
+            reportId: reports[0].id,
+            frequencyId: frequencies[0].id,
+            name: "Snapshot Fusion Test",
+            email_to: "thomas.cassady@littlefish.co.uk",
+            subject: "Test Service Report",
+            body: "please find attached your copy of the service report",
+            start_date: "2020-10-27",
+            time: "16:01",     
+            parameters: `
+            {
+                "database": "snapshot", 
+                "report_name": "Service Report", 
+                "company_filter": "Fusion Lifestyle", 
+                "source_table": "LF_FusionLifestyle", 
+                "period_type": "8",
+                "date_start": "01/01/2000", 
+                "date_end": "01/01/2000",
+                "period_type_sp": "1",
+                "date_start_sp": "01/01/2000", 
+                "date_end_sp": "01/01/2000",
 
-        //         "aged_ticket_days": "30"
-        //     }`,              
-        // },  
+                "aged_ticket_days": "30",
 
-        // {
-        //     reportId: reports[0].id,
-        //     frequencyId: frequencies[0].id,
-        //     name: "Warehouse Fusion Test2",
-        //     email_to: "thomas.cassady@littlefish.co.uk",
-        //     subject: "Test Service Report",
-        //     body: "please find attached your copy of the service report",
-        //     start_date: "2020-10-27",
-        //     time: "16:01",     
-        //     parameters: `
-        //     {
-        //         "database": "warehouse", 
-        //         "report_name": "Service Report", 
-        //         "company_filter": "Fusion Lifestyle", 
-        //         "source_table": "LF_FusionLifestyle", 
-        //         "period_type": "8",
-        //         "date_start": "01/01/2000", 
-        //         "date_end": "01/01/2000",
-        //         "period_type_sp": "1",
-        //         "date_start_sp": "01/01/2000", 
-        //         "date_end_sp": "01/01/2000",
-
-        //         "aged_ticket_days": "30"
-        //     }`,              
-        // },  
+                "core_hours_start": "8",
+                "core_hours_end": "18",
+                "customer_filter": "_No Teams",
+                "third_party_filter": "SAM Team" 
+            }`,              
+        },     
 
         ]
     },    

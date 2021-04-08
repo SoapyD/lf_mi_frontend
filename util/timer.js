@@ -40,7 +40,7 @@ exports.checkIncompleteSubActivity = async() => {
                 let file_list = fs.readdirSync(subscriptionactivity.path);
 
                 //IF FILES EXIST, CREATE DOCUMENT
-                if(file_list.length >= subscriptionactivity.files_expected){
+                if(file_list.length + subscriptionactivity.errors >= subscriptionactivity.files_expected){
                     //create the merge document
                     console.log("Subscription has expected number of files")
                     
