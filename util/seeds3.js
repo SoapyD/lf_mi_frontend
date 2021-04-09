@@ -332,7 +332,7 @@ exports.create = async() => {
         {
             order: 0.012,
             name: "period_type",
-            query: "SELECT type AS name ,value FROM [dbo].[daterange_view]",
+            query: "", //"SELECT type AS name ,value FROM [dbo].[daterange_view]",
             parameter_type: 'full'
         },          
         {
@@ -352,7 +352,7 @@ exports.create = async() => {
         {
             order: 0.013,
             name: "period_type_sp",
-            query: "SELECT type AS name ,value FROM [dbo].[daterange_view]",
+            query: "", //"SELECT type AS name ,value FROM [dbo].[daterange_view]",
             parameter_type: 'single'
         },          
         {
@@ -569,7 +569,7 @@ exports.create = async() => {
         },     
         {
             order: 0.01907,
-            name: "successfyul_changes_target",       
+            name: "successful_changes_target",       
             query: "",
             parameter_type: 'sla'
         },   
@@ -660,13 +660,13 @@ exports.create = async() => {
         },     
         {
             order: 0.01922,
-            name: "combined_sla_target",       
+            name: "combined_SLA_target",       
             query: "",
             parameter_type: 'sla'
         },  
         {
             order: 0.01923,
-            name: "aged_ticket_days",
+            name: "aged_tickets_days",
             query: "",
             parameter_type: 'sla'
         },   
@@ -865,7 +865,7 @@ exports.create = async() => {
                 "date_start_sp": "01/01/2000", 
                 "date_end_sp": "01/01/2000",
 
-                "aged_ticket_days": "30",
+                "aged_tickets_days": "30",
 
                 "core_hours_start": "6",
                 "core_hours_end": "18",
@@ -895,7 +895,7 @@ exports.create = async() => {
                 "P3toP5_resolution_target": "0.95",
                 "combined_response_target": "0.95",
                 "combined_sla_target": "0.95",
-                "aged_ticket_days": "30",
+                "aged_tickets_days": "30",
                 "reopened_tickets_target": "0.02"   
 
             }`,              
@@ -923,7 +923,7 @@ exports.create = async() => {
                 "date_start_sp": "01/01/2000", 
                 "date_end_sp": "01/01/2000",
 
-                "aged_ticket_days": "30",
+                "aged_tickets_days": "30",
 
                 "core_hours_start": "8",
                 "core_hours_end": "18",
@@ -937,7 +937,7 @@ exports.create = async() => {
                 "telephony_40second_target": "0.99",
                 "fcr_target": "0.7",
                 "old_incidents_target": "0.015",
-                "successfyul_changes_target": "0.95",
+                "successful_changes_target": "0.95",
                 "p1_response_time": "15 minutes",
                 "p2_response_time": "30 minutes",
                 "p3_response_time": "2 hours",
@@ -952,11 +952,66 @@ exports.create = async() => {
                 "priority3_target": "0.9",
                 "P3toP5_resolution_target": "0.95",
                 "combined_response_target": "0.95",
-                "combined_sla_target": "0.95",
-                "aged_ticket_days": "30",
+                "combined_SLA_target": "0.95",
+                "aged_tickets_days": "30",
                 "reopened_tickets_target": "0.02"                
+            }`       
+        },
+        {
+            reportId: reports[0].id,
+            frequencyId: frequencies[0].id,
+            name: "Fusion Lifestyle",
+            email_to: "Ashley.Grantham@littlefish.co.uk",
+            subject: "Service Report",
+            body: "please find attached your copy of the service report for Fusion Lifestyle",
+            start_date: "2020-10-27",
+            time: "16:01",     
+            parameters: `
+            {
+                "database": "snapshot", 
+                "report_name": "Service Report", 
+                "company_filter": "Fusion Lifestyle", 
+                "source_table": "LF_FusionLifestyle", 
+                "period_type": "8",
+                "date_start": "01/01/2000", 
+                "date_end": "01/01/2000",
+                "period_type_sp": "1",
+                "date_start_sp": "01/01/2000", 
+                "date_end_sp": "01/01/2000",
 
-            }`,              
+                "aged_tickets_days": "30",
+
+                "core_hours_start": "8",
+                "core_hours_end": "18",
+                "customer_filter": "_No Teams",
+                "third_party_filter": "SAM Team",
+            
+                "telephony_sla_target": "0.85",
+                "ddi_filter": "Fusion Lifestyle",
+                "telephony_20second_target": "0.85",
+                "telephony_30second_target": "0.9",
+                "telephony_40second_target": "0.99",
+                "fcr_target": "0.7",
+                "old_incidents_target": "0.015",
+                "successful_changes_target": "0.95",
+                "p1_response_time": "15 minutes",
+                "p2_response_time": "30 minutes",
+                "p3_response_time": "2 hours",
+                "p1_response_target": "0.9",
+                "p2_response_target": "0.9",
+                "p3_response_target": "0.9",
+                "priority1_hours": "4 hours",
+                "priority2_hours": "8 hours",
+                "priority3_hours": "72 hours",
+                "priority1_target": "0.9",
+                "priority2_target": "0.9",
+                "priority3_target": "0.9",
+                "P3toP5_resolution_target": "0.95",
+                "combined_response_target": "0.95",
+                "combined_SLA_target": "0.95",
+                "aged_tickets_days": "30",
+                "reopened_tickets_target": "0.02"                
+            }`,                    
         },     
 
 //                "selected_slas": "a,b,c,d,e,f,g,h,i,j,k,l,m",

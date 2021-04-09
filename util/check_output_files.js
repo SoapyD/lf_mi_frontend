@@ -30,7 +30,7 @@ exports.checkFiles = async(output_path, reportPath, err) => {
 
             //UPDATE THE ERROR VALUE AND MESSAGES IF THERE ARE ANY, ELSE JUST INCREASE FILE COUNT
             if (err){
-                subscription_activity.files_current++
+                // subscription_activity.files_current++
                 subscription_activity.errors++
                 try {
                     subscription_activity.log += "<p>Error running report: "+reportPath+"</p>"
