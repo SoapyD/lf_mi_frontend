@@ -1,4 +1,4 @@
-// const functionsUtil = require('../util/functions');
+const functionsUtil = require('../util/functions');
 const databaseQueriesUtil = require('../util/database_queries2');
 
 
@@ -53,10 +53,15 @@ exports.getItems = async(req,res) => {
         let data = await databaseQueriesUtil.findData(find_list)
         //     data.sort(functionsUtil.compare)
         // res.send("show all")
+
+        if(data[0]){
+            data[0] = data[0].sort(functionsUtil.compareOrder)
+        }
+
+
         res.render("admin/show", {type_info:type_info, data: data[0]})
     }
     catch(err){
-        // res.send("an error occurred")
         req.flash("error", "There was an error trying to get all admin data types");
         res.redirect("/")        
     }

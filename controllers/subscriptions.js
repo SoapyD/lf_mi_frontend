@@ -29,6 +29,10 @@ exports.getSubscriptions = async(req,res) => { //, middleware.isLoggedIn
 		if (reports[0].subscriptions)
 		{
 			subscriptions = reports[0].subscriptions
+
+			if(subscriptions){
+			    subscriptions = subscriptions.sort(functionsUtil.compareOrder)
+			}
 		}
 
 		res.render("subscriptions/index", {report:reports[0], subscriptions:subscriptions});

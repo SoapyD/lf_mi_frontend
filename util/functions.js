@@ -32,6 +32,13 @@ exports.compare = ( a, b ) => {
     return 0;
 }
 
+
+
+// example of how the below can be used
+// if(subsections[0]){
+//     subsections[0] = subsections[0].sort(functionsUtil.compareOrder)
+// }
+
 exports.compareOrder = ( a, b ) => {
     if ( a.order < b.order ){
         return -1;

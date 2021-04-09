@@ -75,14 +75,13 @@ exports.create = async() => {
         params: [
 
 
-            {
-                order: 0,
-                name: "SLA - Summary - full period",
-                path_snapshot: "/99 - Test Reports/Service Report/SLA - Summary - full period_SNP",
-                path_warehouse: "/99 - Test Reports/Service Report/SLA - Summary - full period_SNP"
-            },  
+        {
+            order: 0,
+            name: "SLA - Summary - full period",
+            path_snapshot: "/99 - Test Reports/Service Report/SLA - Summary - full period_SNP",
+            path_warehouse: "/99 - Test Reports/Service Report/SLA - Summary - full period_SNP"
+        },  
 
-            //TOTAL VOLUME FLOW DIAGRAM
         {
             order: 1.000,
             name: "Support Requests - Total Volume Flow Diagram - single period",
@@ -172,7 +171,7 @@ exports.create = async() => {
 
 
         {
-            order: 1,
+            order: 3,
             name: "Requests - Top 5 Categories with Subcategory - single period",
             path_snapshot: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory - single period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/Requests - Top 5 Category and Subcategory - single period_WH",
@@ -181,14 +180,14 @@ exports.create = async() => {
 
 
         {
-            order: 1,
+            order: 4,
             name: "Problems - Open and Closed - single period",
             path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed - single period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed - single period_WH",
             period_type: 'single'
         },       
         {
-            order: 2,
+            order: 4.001,
             name: "Problems - Open and Closed - full period",
             path_snapshot: "/99 - Test Reports/Service Report/Problems - Open and Closed - full period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/Problems - Open and Closed - full period_WH"
@@ -197,7 +196,7 @@ exports.create = async() => {
 
 
         {
-            order: 4.001,
+            order: 5.001,
             name: "CSAT - Customer Satisfaction Measurements - single period",
             path_snapshot: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements - single period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/CSAT - Customer Satisfaction Measurements - single period_SNP",
@@ -205,7 +204,7 @@ exports.create = async() => {
         },  
 
         {
-            order: 4.002,
+            order: 5.002,
             name: "CSAT - Service Feedback Summary - single period",
             path_snapshot: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary - single period_WH",
             path_warehouse: "/99 - Test Reports/Service Report/CSAT - Service Feedback Summary - single period_WH",
@@ -213,14 +212,14 @@ exports.create = async() => {
         },  
 
         {
-            order: 4.003,
+            order: 5.003,
             name: "CSAT - Summary - full period",
             path_snapshot: "/99 - Test Reports/Service Report/CSAT - Summary - full period_SNP",
             path_warehouse: "/99 - Test Reports/Service Report/CSAT - Summary - full period_WH"
         },  
 
         {
-            order: 5.001,
+            order: 6.001,
             name: "Telephony - Summary - full period",
             path_snapshot: "/99 - Test Reports/Service Report/Telephony - Summary - full period_WH",
             path_warehouse: "/99 - Test Reports/Service Report/Telephony - Summary - full period_WH"
@@ -292,99 +291,391 @@ exports.create = async() => {
             order: 0,
             name: "database",
             query: "SELECT 'snapshot' AS value UNION SELECT 'warehouse' AS value",
-            in_report: 0
+            in_report: 0,
+            parameter_type: 'all'
         },          
         {
             order: 0,
             name: "Section_Name",
             query: "",
-            visible: 0
+            visible: 0,
+            parameter_type: 'all'
         },
         {
             order: 0,
             name: "Subsection_Name",
             query: "",
-            visible: 0
+            visible: 0,
+            parameter_type: 'all'
         },            
         {
             order: 0,
             name: "Add_Analysis_Box",
             query: "",
-            visible: 0
+            visible: 0,
+            parameter_type: 'all'
         },   
 
         {
             order: 2,
             name: "company_filter",
-            query: 'SELECT dim_orgunit_cleaned AS value FROM DIMENSION_orgunit ORDER BY dim_orgunit_cleaned'
+            query: 'SELECT dim_orgunit_cleaned AS value FROM DIMENSION_orgunit ORDER BY dim_orgunit_cleaned',
+            parameter_type: 'all'
         },
         {
             order: 2.1,
             name: "source_table",
-            query: ""
+            query: "",
+            parameter_type: 'all'
         },
 
         {
             order: 0.012,
             name: "period_type",
-            query: "SELECT type AS name ,value FROM [dbo].[daterange_view]"
+            query: "SELECT type AS name ,value FROM [dbo].[daterange_view]",
+            parameter_type: 'full'
         },          
         {
             order: 0.0121,
             name: "date_start",
-            query: ""
+            query: "",
+            parameter_type: 'full'
         },  
         {
             order: 0.0122,
             name: "date_end",
-            query: ""
+            query: "",
+            parameter_type: 'full'
         },          
 
 
         {
             order: 0.013,
             name: "period_type_sp",
-            query: "SELECT type AS name ,value FROM [dbo].[daterange_view]"
+            query: "SELECT type AS name ,value FROM [dbo].[daterange_view]",
+            parameter_type: 'single'
         },          
         {
             order: 0.0131,
             name: "date_start_sp",      
-            query: ""
+            query: "",
+            parameter_type: 'single'
         },  
         {
             order: 0.0132,
             name: "date_end_sp",       
-            query: ""
+            query: "",
+            parameter_type: 'single'
         },        
 
         {
             order: 0.0141,
             name: "core_hours_start",       
-            query: ""
+            query: "",
+            parameter_type: 'data'
         },        
         {
             order: 0.0142,
             name: "core_hours_end",       
-            query: ""
+            query: "",
+            parameter_type: 'data'
         },        
 
         {
             order: 0.0151,
             name: "customer_filter",       
-            query: ""
+            query: "",
+            parameter_type: 'data'
         },        
         {
             order: 0.0152,
             name: "third_party_filter",       
-            query: ""
+            query: "",
+            parameter_type: 'data'
         },    
+        {
+            order: 0.0153,
+            name: "telephony_sla_target",       
+            query: "",
+            parameter_type: 'data'
+        },   
 
 
+
+ 
         // {
-        //     order: 5,
-        //     name: "aged_ticket_days",
-        //     query: ""
-        // },    
+        //     order: 0.019,
+        //     name: "selected_slas",
+        //     query: 
+        //     `
+        //     SELECT
+        //     'Telephones answered within 20 seconds' AS name,
+        //     'a' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Telephones answered within 30 seconds' AS name,
+        //     'o' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Telephones answered within 40 seconds' AS name,
+        //     'p' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Telephone and LF Live FCR rate' AS name,
+        //     'b' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Availability of any of the Service Desk channels' AS name,
+        //     'c' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 1 Incident Response' AS name,
+        //     'd' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 2 Incident Response' AS name,
+        //     'e' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 3 Incident Response' AS name,
+        //     'f' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Combined Incident Response' AS name,
+        //     'g' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 1 Incident Resolution' AS name,
+        //     'h' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 2 Incident Resolution' AS name,
+        //     'i' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 3 Incident Resolution' AS name,
+        //     'j' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Combined Incident Resolution' AS name,
+        //     'k' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'p3-p5 Incident Resolution' AS name,
+        //     'n' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Incidents older than 1 month' AS name,
+        //     'l' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Changes implemented successfully at first attempt' AS name,
+        //     'm' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Volume of Incidents Re-opened' AS name,
+        //     'q' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 1 Incident Response (No Monitoring)' AS name,
+        //     'r' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 2 Incident Response (No Monitoring)' AS name,
+        //     's' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 1 Incident Resolution (No Monitoring)' AS name,
+        //     't' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Priority 2 Incident Resolution (No Monitoring)' AS name,
+        //     'u' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Combined Incident Resolution (No Monitoring)' AS name,
+        //     'v' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Incidents older than 1 month (No Monitoring)' AS name,
+        //     'w' AS value
+            
+        //     UNION ALL
+        //     SELECT
+        //     'Incidents older than 1 month (No P4s)' AS name,
+        //     'x' AS value            
+        //     `,
+        //     parameter_type: 'sla'
+        // },   
+
+        {
+            order: 0.01901,
+            name: "ddi_filter",       
+            query: "",
+            parameter_type: 'sla'
+        },    
+        {
+            order: 0.01902,
+            name: "telephony_20second_target",       
+            query: "",
+            parameter_type: 'sla'
+        },    
+        {
+            order: 0.01903,
+            name: "telephony_30second_target",       
+            query: "",
+            parameter_type: 'sla'
+        },  
+        {
+            order: 0.01904,
+            name: "telephony_40second_target",       
+            query: "",
+            parameter_type: 'sla'
+        },          
+
+        {
+            order: 0.01905,
+            name: "fcr_target",       
+            query: "",
+            parameter_type: 'sla'
+        },     
+        {
+            order: 0.01906,
+            name: "old_incidents_target",       
+            query: "",
+            parameter_type: 'sla'
+        },     
+        {
+            order: 0.01907,
+            name: "successfyul_changes_target",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01908,
+            name: "p1_response_time",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01909,
+            name: "p2_response_time",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01910,
+            name: "p3_response_time",       
+            query: "",
+            parameter_type: 'sla'
+        },           
+        {
+            order: 0.01911,
+            name: "p1_response_target",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01912,
+            name: "p2_response_target",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01913,
+            name: "p3_response_target",       
+            query: "",
+            parameter_type: 'sla'
+        },           
+
+        {
+            order: 0.01914,
+            name: "priority1_hours",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01915,
+            name: "priority2_hours",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01916,
+            name: "priority3_hours",       
+            query: "",
+            parameter_type: 'sla'
+        },           
+        {
+            order: 0.01917,
+            name: "priority1_target",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01918,
+            name: "priority2_target",       
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01919,
+            name: "priority3_target",       
+            query: "",
+            parameter_type: 'sla'
+        },         
+        {
+            order: 0.01920,
+            name: "P3toP5_resolution_target",       
+            query: "",
+            parameter_type: 'sla'
+        },      
+        {
+            order: 0.01921,
+            name: "combined_response_target",       
+            query: "",
+            parameter_type: 'sla'
+        },     
+        {
+            order: 0.01922,
+            name: "combined_sla_target",       
+            query: "",
+            parameter_type: 'sla'
+        },  
+        {
+            order: 0.01923,
+            name: "aged_ticket_days",
+            query: "",
+            parameter_type: 'sla'
+        },   
+        {
+            order: 0.01924,
+            name: "reopened_tickets_target",
+            query: "",
+            parameter_type: 'sla'
+        },   
 
 
         ]
@@ -580,6 +871,34 @@ exports.create = async() => {
                 "core_hours_end": "18",
                 "customer_filter": "_No Teams",
                 "third_party_filter": "SAM Team" 
+
+                "selected_slas": "a,b,c,d,e,f,g,h,i,j,k,l,m",
+
+                "ddi_filter": "Fusion Lifestyle",
+                "telephony_20second_target": "0.85",
+                "telephony_30second_target": "0.9",
+                "telephony_40second_target": "0.99",
+                "fcr_target": "0.7",
+                "old_incidents_target": "0.015",
+                "successfyul_changes_target": "0.95",
+                "p1_response_time": "15 minutes",
+                "p2_response_time": "30 minutes",
+                "p3_response_time": "2 hours",
+                "p1_response_target": "0.9",
+                "p2_response_target": "0.9",
+                "p3_response_target": "0.9",
+                "priority1_hours": "4 hours",
+                "priority2_hours": "8 hours",
+                "priority3_hours": "72 hours",
+                "priority1_target": "0.9",
+                "priority2_target": "0.9",
+                "priority3_target": "0.9",
+                "P3toP5_resolution_target": "0.95",
+                "combined_response_target": "0.95",
+                "combined_sla_target": "0.95",
+                "aged_ticket_days": "30",
+                "reopened_tickets_target": "0.02"   
+
             }`,              
         },       
 
@@ -610,7 +929,35 @@ exports.create = async() => {
                 "core_hours_start": "8",
                 "core_hours_end": "18",
                 "customer_filter": "_No Teams",
-                "third_party_filter": "SAM Team" 
+                "third_party_filter": "SAM Team",
+                
+                "selected_slas": "a,b,c,d,e,f,g,h,i,j,k,l,m",
+
+                "ddi_filter": "Fusion Lifestyle",
+                "telephony_20second_target": "0.85",
+                "telephony_30second_target": "0.9",
+                "telephony_40second_target": "0.99",
+                "fcr_target": "0.7",
+                "old_incidents_target": "0.015",
+                "successfyul_changes_target": "0.95",
+                "p1_response_time": "15 minutes",
+                "p2_response_time": "30 minutes",
+                "p3_response_time": "2 hours",
+                "p1_response_target": "0.9",
+                "p2_response_target": "0.9",
+                "p3_response_target": "0.9",
+                "priority1_hours": "4 hours",
+                "priority2_hours": "8 hours",
+                "priority3_hours": "72 hours",
+                "priority1_target": "0.9",
+                "priority2_target": "0.9",
+                "priority3_target": "0.9",
+                "P3toP5_resolution_target": "0.95",
+                "combined_response_target": "0.95",
+                "combined_sla_target": "0.95",
+                "aged_ticket_days": "30",
+                "reopened_tickets_target": "0.02"                
+
             }`,              
         },     
 

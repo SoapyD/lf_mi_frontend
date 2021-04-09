@@ -8,9 +8,8 @@ from
 [dbo].[NODE_REPORT_parameters] p
 WHERE
 period_type = 'full'
-AND p.name NOT LIKE ('%_SP%')
-AND p.name NOT LIKE ('%core_hours%')
-AND p.name NOT IN ('customer_filter','third_party_filter')
+AND p.parameter_type IN ('all','full')
+
 
 INSERT INTO NODE_REPORT_subsectionparameters 
 SELECT
@@ -21,9 +20,7 @@ from
 [dbo].[NODE_REPORT_parameters] p
 WHERE
 period_type = 'single'
-AND p.name NOT IN ('period_type','date_start','date_end')
-AND p.name NOT LIKE ('%core_hours%')
-AND p.name NOT IN ('customer_filter','third_party_filter')
+AND p.parameter_type IN ('all','single')
 
 INSERT INTO NODE_REPORT_subsectionparameters 
 SELECT
@@ -34,8 +31,7 @@ from
 [dbo].[NODE_REPORT_parameters] p
 WHERE
 period_type = 'both'
-AND p.name NOT LIKE ('%core_hours%')
-AND p.name NOT IN ('customer_filter','third_party_filter')
+AND p.parameter_type IN ('all','single','full')
 
 
 INSERT INTO NODE_REPORT_subsectionparameters 
@@ -50,6 +46,20 @@ WHERE
 AND p.name IN ('database')
 
 
+
+
+
+
+INSERT INTO NODE_REPORT_subsectionparameters 
+SELECT
+ss.id AS subsectionId,
+p.id AS parameterId
+from 
+[dbo].[NODE_REPORT_subsections] ss,
+[dbo].[NODE_REPORT_parameters] p
+WHERE
+ss.name = 'SLA - Summary - full period'
+AND p.parameter_type IN ('sla')
 
 INSERT INTO NODE_REPORT_subsectionparameters 
 SELECT
@@ -73,6 +83,31 @@ from
 WHERE
 ss.name = 'Support Requests - Total Volume Flow Diagram - single period'
 AND p.name IN ('customer_filter','third_party_filter')
+
+INSERT INTO NODE_REPORT_subsectionparameters 
+SELECT
+ss.id AS subsectionId,
+p.id AS parameterId
+from 
+[dbo].[NODE_REPORT_subsections] ss,
+[dbo].[NODE_REPORT_parameters] p
+WHERE
+ss.name = 'Incidents - FCR - full period'
+AND p.name IN ('fcr_target')
+
+
+INSERT INTO NODE_REPORT_subsectionparameters 
+SELECT
+ss.id AS subsectionId,
+p.id AS parameterId
+from 
+[dbo].[NODE_REPORT_subsections] ss,
+[dbo].[NODE_REPORT_parameters] p
+WHERE
+ss.name = 'Telephony - Summary - full period'
+AND p.name IN ('telephony_sla_target')
+
+
 
 
 
