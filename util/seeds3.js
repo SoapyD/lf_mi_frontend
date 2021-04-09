@@ -870,10 +870,9 @@ exports.create = async() => {
                 "core_hours_start": "6",
                 "core_hours_end": "18",
                 "customer_filter": "_No Teams",
-                "third_party_filter": "SAM Team" 
+                "third_party_filter": "SAM Team", 
 
-                "selected_slas": "a,b,c,d,e,f,g,h,i,j,k,l,m",
-
+                "telephony_sla_target": "0.85",
                 "ddi_filter": "Fusion Lifestyle",
                 "telephony_20second_target": "0.85",
                 "telephony_30second_target": "0.9",
@@ -930,9 +929,8 @@ exports.create = async() => {
                 "core_hours_end": "18",
                 "customer_filter": "_No Teams",
                 "third_party_filter": "SAM Team",
-                
-                "selected_slas": "a,b,c,d,e,f,g,h,i,j,k,l,m",
-
+            
+                "telephony_sla_target": "0.85",
                 "ddi_filter": "Fusion Lifestyle",
                 "telephony_20second_target": "0.85",
                 "telephony_30second_target": "0.9",
@@ -960,6 +958,8 @@ exports.create = async() => {
 
             }`,              
         },     
+
+//                "selected_slas": "a,b,c,d,e,f,g,h,i,j,k,l,m",
 
         ]
     },    
