@@ -1,0 +1,101 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+	
+	<h1 style="text-align:center;">
+		Create a New Subscription
+	</h1>
+
+	<div class="row">
+		
+		<div style="width:30%; margin:30px auto; ">			
+			<form action="/reports/<%= report.id %>/subscriptions" method="POST">
+				<div class="form-group">
+					<p>Subscription Name:</p>
+					<input class="form-control" type="text" name="params[name]" placeholder="name" required>
+				</div>
+				<div class="form-group">	
+					<p>Frequency:</p>				
+					<select id="frequency-select" class="form-control" name="params[frequencyId]" required>
+						<option value="">--Frequency--</option>
+						<% frequencies.forEach(function (frequency){ %>
+							<option value="<%= frequency.id %>"><%= frequency.name %></option>
+						<% }) %>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<p>Email To:</p>
+					<input class="form-control" type="text" name="params[email_to]" placeholder="email to">
+				</div>
+
+				<div class="form-group">
+					<p>Email Subject:</p>
+					<input class="form-control" type="text" name="params[subject]" placeholder="email subject">
+				</div>
+
+				<div class="form-group">
+					<p>Email Body:</p>
+					<input class="form-control" type="text" name="params[body]" placeholder="email body">
+				</div>		
+
+				<div class="form-group">
+					<p>Start Date:</p>
+					<input class="form-control" type="date" name="params[start_date]" required>
+				</div>				
+
+				<div class="form-group">
+					<p>Time:</p>
+					<input class="form-control" type="time" name="params[time]" required>
+				</div>	
+								
+
+				<% parameter_values.forEach(function (parameter_value, index){ %>
+					<% let parameter = parameters[index]; %>
+
+					<% if (parameter.visible === true ) { %>
+
+					<div class="form-group">	
+						<p><%= parameter.name %>:</p>
+
+						<% if(parameter_value.recordset){ %>
+							<select id="<%= parameter.name %>-select" class="form-control" name="parameters[]" required>
+		
+								<option value="">--<%= parameter.name %>--</option>
+
+								<% parameter_value.recordset.forEach(function (record){ %>
+									<% let value = '"'+parameter.name+'" : '+'"'+record.value+'"'; %>
+									<option value="<%= value %>">
+										<% if(record.name) { %>
+											<%= record.name  %>
+										<% } else { %>
+											<%= record.value %> 
+										<% } %></option>
+								<% }) %>
+
+							</select>
+						<% }else{ %>
+							<input value="<%= parameter.name %>" id="<%= parameter.name %>-hidden" class="form-control" type="hidden" name="input_parameter_names[]">
+							<input id="<%= parameter.name %>-select" class="form-control" type="text" name="input_parameters[]" placeholder="" required>
+						<% } %>
+					</div>
+				<% } %>					
+				<% }) %>
+
+
+				<div class="form-group">					
+					<button class="btn btn-lg btn-primary btn-block">
+						Submit
+					</button>						
+				</div>				
+
+			</form>
+			<a href="/reports/<%= report.id %>/subscriptions">Go Back</a>
+		</div>
+		
+	</div>
+	
+</div>
+
+
+<%- include("../partials/footer") %>

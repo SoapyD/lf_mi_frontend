@@ -245,6 +245,7 @@ input {
 	flex-direction: row;	
 }
 
+
 .disable-form {
 
 	/* Make form elements appear disabled against grey background */
@@ -258,4 +259,8 @@ input {
  .hide-element {
 	 visibility: hidden;
 	 display: none
+ }
+
+ #subject-box {
+	 height: 100px;
  }

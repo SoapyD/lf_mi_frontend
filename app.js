@@ -120,7 +120,7 @@ database.sequelize
   .sync()
   .then(result => {
     if(process.env._PROCESS_TYPE === 'Dev'){
-      seeds.create()
+      // seeds.create()
       // seeds.test()
     }
   })

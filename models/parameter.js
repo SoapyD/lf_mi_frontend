@@ -16,6 +16,8 @@ const Parameter = database.sequelize.define('NODE_REPORT_parameter', {
     //     defaultValue: "Parameter" 
     // },
     order: Sequelize.FLOAT,
+    group: Sequelize.STRING,
+    field_type: {type: Sequelize.STRING, defaultValue: 'text'},
     print_name: {type: Sequelize.STRING, defaultValue: ''}, //name as it appears in the app
     name: Sequelize.STRING, //name of the parameter in the report
     query: Sequelize.STRING('MAX'),

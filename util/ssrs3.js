@@ -19,6 +19,100 @@ const username = process.env.SSRS_USER;
 const password = process.env.SSRS_PASS;
 var serverUrl = process.env.SSRS_URL; ///ReportServer2010
 
+exports.run_TEST = async(subscription_number, report, subscription) => {
+
+    try{
+
+        if (subscription.active === true){
+
+            const tmpobj = tmp.dirSync();
+        
+            let folder_path = tmpobj.name //'reports';//
+
+            
+            let subsection_count = 1; //1 for front cover
+
+
+            let file_data = {
+                folder_path: folder_path,
+                files_needed: subsection_count
+            }
+            
+            let creation_list = []
+            creation_list.push(
+            {
+                model: "SubscriptionActivity",
+                params: [
+                    {
+                        path: folder_path,
+                        files_expected: file_data.files_needed,
+                        subscriptionId: subscription.id
+                    }
+                ]
+            }) 
+    
+            let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
+
+
+            let filepath = '';
+            let filename = '';
+            let outputname = '';
+            let parameter_object = JSON.parse(subscription.parameters);
+            let contents_page = '';
+
+            //CREATE THE CONTENT PAGE TEXT
+            if(report.sections){
+
+                let subsection_total = 0
+
+                //FORMAT THE CONTENTS PAGE
+                report.sections.forEach((section) => {
+
+                    contents_page += section.order + ". " + section.name + "\n"
+
+                    section.subsections.forEach((subsection) => {
+                        if (subsection.name !== "front" && subsection.type !== 'appendix'){
+
+                            let subsection_name = subsection.name
+                            if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
+                                subsection_name = subsection.sectionsubsections.name
+                            }
+
+                            contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection_name + "\n"
+                        }
+                        subsection_total++      
+                    })
+                })
+
+                // console.log(contents_page)
+                contents_page = contents_page.substring(0,1000)
+
+
+
+                //ADD FRONT PAGE
+                filepath = "/99 - Test Reports/Service Report/_Front Cover"
+                subsection_param_object = 
+                {
+                    "report_name":report.name, 
+                    "company_filter": subscription.name,
+                    "contents_page": contents_page
+                }
+                outputname = "000000000"
+                let output_file = path.join(folder_path,outputname);
+                exports.runDelay(((subsection_total*4) * subscription_number), filepath, subsection_param_object, folder_path, output_file)
+
+
+            }
+
+        }
+
+    }
+    catch(err){
+        console.log(err)
+    }
+
+}
+
 
 exports.run = async(subscription_number, report, subscription) => {
 
@@ -32,6 +126,7 @@ exports.run = async(subscription_number, report, subscription) => {
 
             
             let subsection_count = 1; //1 for front cover
+            // let subsection_count = 0; //1 for front cover
             if(report.sections){
                 report.sections.forEach((section) => {
 
@@ -106,6 +201,8 @@ exports.run = async(subscription_number, report, subscription) => {
                     })
                 })
 
+                contents_page = "REPLACE"
+
                 //ADD FRONT PAGE
                 filepath = "/99 - Test Reports/Service Report/_Front Cover"
                 subsection_param_object = 
@@ -139,11 +236,14 @@ exports.run = async(subscription_number, report, subscription) => {
                             let report_param_object = {}
                             if (subsection.parameters){
                                 subsection.parameters.forEach( async(parameter) => {
-                                    if(parameter.in_report === false || parameter.visible === false){
-                                        report_param_object[parameter.name] = parameter_object[parameter.name];
-                                    }
-                                    else{
-                                        subsection_param_object[parameter.name] = parameter_object[parameter.name];
+                                    if(parameter_object[parameter.name] && parameter_object[parameter.name] !== ""){
+                                        if(parameter.in_report === false || parameter.visible === false){
+                                            report_param_object[parameter.name] = parameter_object[parameter.name];
+                                        }
+                                        else{
+                                            subsection_param_object[parameter.name] = parameter_object[parameter.name];
+                                        }
+     
                                     }
                                 })
                             }
@@ -285,6 +385,7 @@ exports.runReport = async(filepath, parameters, output_path, output_file) => {
         await fs.writeFileSync(output_file+'.'+file_extension, report, "base64");
         checkOutputsUtil.checkFiles(output_path)
         /**/
+
     } catch (err) {
         console.log("ERROR RUNNING REPORT")
 

@@ -6,58 +6,102 @@
 		Create a New Subscription
 	</h1>
 
-	<div class="row">
+	<div class="row">		
+	
+        <form action="/reports/<%= report.id %>/subscriptions" method="POST">
+
+
+			<!-- SETUP THE MAIN SUBSCRIPTION ELEMENTS  -->
+			<div class="row">
+
+				<div class="col-xs-12">
+					<h3>Subscription</h3>
+				</div>
+
+				<div class="col-xs-12">
+                    <div class="form-group">
+                        <p>Subscription Name:</p>
+                        <input class="form-control" type="text" name="params[name]" placeholder="name" required>
+                    </div>		
+				</div>
+				<div class="col-xs-4">
+                    <div class="form-group">	
+                        <p>Frequency:</p>				
+                        <select id="frequency-select" class="form-control" name="params[frequencyId]" required>
+                            <option value="">--Frequency--</option>
+                            <% frequencies.forEach(function (frequency){ %>
+                                <option value="<%= frequency.id %>"><%= frequency.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>		
+				</div>
+				
+				<div class="col-xs-4">
+                    <div class="form-group">
+                        <p>Start Date:</p>
+                        <input class="form-control" type="date" name="params[start_date]" required>
+                    </div>					
+				</div>
+
+				<div class="col-xs-4">
+                    <div class="form-group">
+                        <p>Time:</p>
+                        <input class="form-control" type="time" name="params[time]" required>
+                    </div>				
+				</div>
+
+				<div class="col-xs-12">
+                    <div class="form-group">
+                        <p>Email To:</p>
+                        <input class="form-control" type="text" name="params[email_to]" placeholder="email to">
+                    </div>		
+				</div>
+
+				<div class="col-xs-12">
+                    <div class="form-group">
+                        <p>Email Subject:</p>
+                        <input class="form-control" type="text" name="params[subject]" placeholder="email subject">
+                    </div>		
+				</div>
+
+				<div class="col-xs-12">
+                    <div class="form-group">
+                        <p>Email Body:</p>
+                        <input class="form-control" type="text" name="params[body]" placeholder="email body">
+                    </div>				
+				</div>
+
+			</div>
+	
+
+	
+
+		<!-- SETUP THE UNIVERSAL PARAMETERS -->
 		
-		<div style="width:30%; margin:30px auto; ">			
-			<form action="/reports/<%= report.id %>/subscriptions" method="POST">
-				<div class="form-group">
-					<p>Subscription Name:</p>
-					<input class="form-control" type="text" name="params[name]" placeholder="name" required>
-				</div>
-				<div class="form-group">	
-					<p>Frequency:</p>				
-					<select id="frequency-select" class="form-control" name="params[frequencyId]" required>
-						<option value="">--Frequency--</option>
-						<% frequencies.forEach(function (frequency){ %>
-							<option value="<%= frequency.id %>"><%= frequency.name %></option>
-						<% }) %>
-					</select>
-				</div>
 
-				<div class="form-group">
-					<p>Email To:</p>
-					<input class="form-control" type="text" name="params[email_to]" placeholder="email to">
-				</div>
+		<% let saved_group = ""; %>
+		<% parameter_values.forEach(function (parameter_value, index){ %>
 
-				<div class="form-group">
-					<p>Email Subject:</p>
-					<input class="form-control" type="text" name="params[subject]" placeholder="email subject">
-				</div>
+			<% let parameter = parameters[index]; %>
 
-				<div class="form-group">
-					<p>Email Body:</p>
-					<input class="form-control" type="text" name="params[body]" placeholder="email body">
-				</div>		
+			<% if (parameter.visible === true ) { %>
 
-				<div class="form-group">
-					<p>Start Date:</p>
-					<input class="form-control" type="date" name="params[start_date]" required>
-				</div>				
+				<% if (parameter.group !== saved_group ) { %>
+					<div class="col-xs-12">
+						<h3><%= parameter.group %></h3>
+					</div>
+					
+					<div class="row">
+				<% 
+					saved_group = parameter.group
+					} 
+				%>
 
-				<div class="form-group">
-					<p>Time:</p>
-					<input class="form-control" type="time" name="params[time]" required>
-				</div>	
-								
-
-				<% parameter_values.forEach(function (parameter_value, index){ %>
-					<% let parameter = parameters[index]; %>
-
-					<% if (parameter.visible === true ) { %>
-
+				<div class="col-xs-4">
 					<div class="form-group">	
+						
 						<p><%= parameter.name %>:</p>
-
+						
 						<% if(parameter_value.recordset){ %>
 							<select id="<%= parameter.name %>-select" class="form-control" name="parameters[]" required>
 		
@@ -76,22 +120,28 @@
 							</select>
 						<% }else{ %>
 							<input value="<%= parameter.name %>" id="<%= parameter.name %>-hidden" class="form-control" type="hidden" name="input_parameter_names[]">
-							<input id="<%= parameter.name %>-select" class="form-control" type="text" name="input_parameters[]" placeholder="" required>
-						<% } %>
+							<input id="<%= parameter.name %>-select" class="form-control" type="<%= parameter.field_type %>" name="input_parameters[]" placeholder="">
+						<% } %>					
 					</div>
-				<% } %>					
-				<% }) %>
+				</div>
+
+				<% if (parameter.group !== saved_group ) { %>
+					</div>
+				<% } %>
+
+			<% } %>	
+		<% }) %>
 
 
-				<div class="form-group">					
-					<button class="btn btn-lg btn-primary btn-block">
-						Submit
-					</button>						
-				</div>				
+			<div class="form-group">					
+				<button class="btn btn-lg btn-primary btn-block">
+					Submit
+				</button>						
+			</div>				
 
-			</form>
-			<a href="/reports/<%= report.id %>/subscriptions">Go Back</a>
-		</div>
+		</form>
+		<a href="/reports/<%= report.id %>/subscriptions">Go Back</a>
+
 		
 	</div>
 	
