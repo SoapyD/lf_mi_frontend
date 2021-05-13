@@ -850,7 +850,6 @@ exports.create = async() => {
             group: 'SLA - Incident Resolution'
         },
  
-
         {
             order: 4.01923,
             name: "successful_changes_target",       
@@ -858,6 +857,116 @@ exports.create = async() => {
             parameter_type: 'sla',
             group: 'SLA - Change'
         },   
+
+
+        // {
+        //     order: 5.0,
+        //     name: "selected_slas",       
+        //     query: 
+        //     `
+        //     SELECT
+        //     'Telephones answered within 20 seconds'AS name,
+        //     'a' AS value
+        //     UNION All
+        //     SELECT
+        //     'Telephones answered within 30 seconds'AS name,
+        //     'o' AS value
+        //     UNION All
+        //     SELECT
+        //     'Telephones answered within 40 seconds'AS name,
+        //     'p' AS value
+        //     UNION All
+        //     SELECT
+        //     'Telephone and LF Live FCR rate'AS name,
+        //     'b' AS value
+        //     UNION All
+        //     SELECT
+        //     'Availability of any of the Service Desk channels'AS name,
+        //     'c' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 1 Incident Response'AS name,
+        //     'd' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 2 Incident Response'AS name,
+        //     'e' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 3 Incident Response'AS name,
+        //     'f' AS value
+        //     UNION All
+        //     SELECT
+        //     'Combined Incident Response'AS name,
+        //     'g' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 1 Incident Resolution'AS name,
+        //     'h' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 2 Incident Resolution'AS name,
+        //     'i' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 3 Incident Resolution'AS name,
+        //     'j' AS value
+        //     UNION All
+        //     SELECT
+        //     'Combined Incident Resolution'AS name,
+        //     'k' AS value
+        //     UNION All
+        //     SELECT
+        //     'p3-p5 Incident Resolution'AS name,
+        //     'n' AS value
+        //     UNION All
+        //     SELECT
+        //     'Incidents older than 1 month'AS name,
+        //     'l' AS value
+        //     UNION All
+        //     SELECT
+        //     'Changes implemented successfully at first attempt'AS name,
+        //     'm' AS value
+        //     UNION All
+        //     SELECT
+        //     'Volume of Incidents Re-opened'AS name,
+        //     'q' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 1 Incident Response (No Monitoring)'AS name,
+        //     'r' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 2 Incident Response (No Monitoring)'AS name,
+        //     's' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 1 Incident Resolution (No Monitoring)'AS name,
+        //     't' AS value
+        //     UNION All
+        //     SELECT
+        //     'Priority 2 Incident Resolution (No Monitoring)'AS name,
+        //     'u' AS value
+        //     UNION All
+        //     SELECT
+        //     'Combined Incident Resolution (No Monitoring)'AS name,
+        //     'v' AS value
+        //     UNION All
+        //     SELECT
+        //     'Incidents older than 1 month (No Monitoring)'AS name,
+        //     'w' AS value
+        //     UNION All
+        //     SELECT
+        //     'Incidents older than 1 month (No P4s)'AS name,
+        //     'x' AS value            
+        //     `,
+        //     parameter_type: 'sla',
+        //     group: 'SLA - Selected SLAs',
+        //     field_type: "multiple"
+        // },   
+
+
+
 
 
         ]

@@ -293,6 +293,32 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 	let subscription_id = req.params.subscriptionid;
 
 	try{
+
+		//CONCATINATE MULTIPLE SELECTIONS INTO ONE FIELD
+		// let parameter_list = req.body.parameters;
+		// let new_parameter_list = []
+		// let saved_param = "";
+		// let saved_values = "";
+		// let saved_string = "";
+		// parameter_list.forEach((parameter, index) => {
+		// 	let values = parameter.split(' : ')
+		// 	if(values[0] === saved_param){
+		// 		if(saved_values){
+		// 			saved_values += "&"
+		// 		}
+		// 		saved_values += values[0].replaceAll('"','') +'='+values[1].replaceAll('"','')
+		// 	}
+		// 	else{
+		// 		saved_string += saved_param + ": "+saved_values;
+		// 		saved_values = values[1];
+		// 	}
+		// 	saved_param = values[0];
+			
+		// 	if(index + 1 === parameter_list.length){
+		// 		saved_string += saved_param + ": "+saved_values;
+		// 	}
+		// })
+
 		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
 		let parameters = "{"
 
@@ -345,7 +371,7 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 			]
 		}) 
 
-		let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptions[0], update_list)	
+		// let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptions[0], update_list)	
 
 		res.redirect("/reports/" +req.params.reportid+"/subscriptions");
     }
