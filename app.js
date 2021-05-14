@@ -1,4 +1,5 @@
-// require('dotenv').config()
+//NEEDS REMOVING WHEN A LIVE UPLOAD IS NEEDED
+//require('dotenv').config()
 
 const express = require("express");
 const app = express();

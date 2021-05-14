@@ -558,14 +558,14 @@ exports.create = async() => {
         {
             order: 0.2,
             name: "source_table",
-            query: "",
+            query: "SELECT 'LF_'+REPLACE(dim_orgunit_cleaned,' ','') AS value FROM DIMENSION_orgunit ORDER BY dim_orgunit_cleaned",
             parameter_type: 'all',
             group: 'Dataset'
         },
         {
             order: 0.3,
             name: "ddi_filter",       
-            query: "",
+            query: "SELECT dim_orgunit_cleaned AS value FROM DIMENSION_orgunit ORDER BY dim_orgunit_cleaned",
             parameter_type: 'sla',
             group: 'Dataset'
         },    
