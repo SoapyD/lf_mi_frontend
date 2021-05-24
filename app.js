@@ -1,5 +1,8 @@
-//NEEDS REMOVING WHEN A LIVE UPLOAD IS NEEDED
-// require('dotenv').config()
+if(!process.env.INSTANCE_TYPE){
+  //NEEDS REMOVING WHEN A LIVE UPLOAD IS NEEDED
+  require('dotenv').config()
+	console.log("dev env variables loaded")	  
+}
 
 const express = require("express");
 const app = express();
@@ -87,11 +90,13 @@ passport.deserializeUser((user, done) => {
 	done(null, user);
 });
 
+
 passport.use(new SamlStrategy(
     {
       entryPoint: process.env.SAML_ENTRY_POINT,
       issuer: process.env.SAML_ISSUER,
       callbackUrl: process.env.SAML_CALLBACK,
+      disableRequestedAuthnContext: true
     },
     function (profile, done) {
       // console.log(profile)
