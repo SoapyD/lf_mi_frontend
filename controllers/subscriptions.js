@@ -371,7 +371,7 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 			]
 		}) 
 
-		// let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptions[0], update_list)	
+		let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptions[0], update_list)	
 
 		res.redirect("/reports/" +req.params.reportid+"/subscriptions");
     }

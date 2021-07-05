@@ -137,7 +137,8 @@
 							<input id="<%= parameter.name %>-select" class="form-control" type="<%= parameter.field_type %>" name="input_parameters[]" placeholder="" 
 							
 							<% if(parameter_obj[parameter.name]){ %> 
-							value="<%-parameter_obj[parameter.name]%>" required
+							value="<%-parameter_obj[parameter.name]%>" 
+				
 							<% } %>
 							>
 						<% } %>							
