@@ -377,7 +377,7 @@ exports.runReport = async(filepath, parameters, output_path, output_file) => {
             domain: null // optional
           };
         // This part errors on the server
-        console.log("running report... "+reportPath)
+        console.log("running report... ",reportPath," | output file:",output_file)
         report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
 
         
