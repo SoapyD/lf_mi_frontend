@@ -14,7 +14,7 @@ const SubscriptionActivity = database.sequelize.define('NODE_REPORT_subscription
    ,files_current: {type:Sequelize.INTEGER, defaultValue: 0}
    ,errors: {type:Sequelize.INTEGER, defaultValue: 0}
    ,log: {type:Sequelize.TEXT, defaultValue: ''}
-//    ,subscription_id: Sequelize.INTEGER
+   ,contents_page: Sequelize.TEXT
 });
 
 

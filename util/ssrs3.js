@@ -19,99 +19,95 @@ const username = process.env.SSRS_USER;
 const password = process.env.SSRS_PASS;
 var serverUrl = process.env.SSRS_URL; ///ReportServer2010
 
-exports.run_TEST = async(subscription_number, report, subscription) => {
+// exports.run_TEST = async(subscription_number, report, subscription) => {
 
-    try{
+//     try{
 
-        if (subscription.active === true){
+//         if (subscription.active === true){
 
-            const tmpobj = tmp.dirSync();
+//             const tmpobj = tmp.dirSync();
         
-            let folder_path = tmpobj.name //'reports';//
+//             let folder_path = tmpobj.name //'reports';//
 
             
-            let subsection_count = 1; //1 for front cover
+//             let subsection_count = 1; //1 for front cover
 
 
-            let file_data = {
-                folder_path: folder_path,
-                files_needed: subsection_count
-            }
+//             let file_data = {
+//                 folder_path: folder_path,
+//                 files_needed: subsection_count
+//             }
             
-            let creation_list = []
-            creation_list.push(
-            {
-                model: "SubscriptionActivity",
-                params: [
-                    {
-                        path: folder_path,
-                        files_expected: file_data.files_needed,
-                        subscriptionId: subscription.id
-                    }
-                ]
-            }) 
+
+//             let filepath = '';
+//             let filename = '';
+//             let outputname = '';
+//             let parameter_object = JSON.parse(subscription.parameters);
+//             let contents_page = '';
+
+//             //CREATE THE CONTENT PAGE TEXT
+//             if(report.sections){
+
+//                 let subsection_total = 0
+
+//                 //FORMAT THE CONTENTS PAGE
+//                 report.sections.forEach((section) => {
+
+//                     contents_page += section.order + ". " + section.name + "\n"
+
+//                     section.subsections.forEach((subsection) => {
+//                         if (subsection.name !== "front" && subsection.type !== 'appendix'){
+
+//                             let subsection_name = subsection.name
+//                             if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
+//                                 subsection_name = subsection.sectionsubsections.name
+//                             }
+
+//                             contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection_name + "\n"
+//                         }
+//                         subsection_total++      
+//                     })
+//                 })
+//             }
+
+//             let creation_list = []
+//             creation_list.push(
+//             {
+//                 model: "SubscriptionActivity",
+//                 params: [
+//                     {
+//                         path: folder_path,
+//                         files_expected: file_data.files_needed,
+//                         subscriptionId: subscription.id,
+//                         contents_page: contents_page
+//                     }
+//                 ]
+//             }) 
     
-            let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
+//             let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
 
 
-            let filepath = '';
-            let filename = '';
-            let outputname = '';
-            let parameter_object = JSON.parse(subscription.parameters);
-            let contents_page = '';
-
-            //CREATE THE CONTENT PAGE TEXT
-            if(report.sections){
-
-                let subsection_total = 0
-
-                //FORMAT THE CONTENTS PAGE
-                report.sections.forEach((section) => {
-
-                    contents_page += section.order + ". " + section.name + "\n"
-
-                    section.subsections.forEach((subsection) => {
-                        if (subsection.name !== "front" && subsection.type !== 'appendix'){
-
-                            let subsection_name = subsection.name
-                            if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
-                                subsection_name = subsection.sectionsubsections.name
-                            }
-
-                            contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection_name + "\n"
-                        }
-                        subsection_total++      
-                    })
-                })
-
-                // console.log(contents_page)
-                contents_page = contents_page.substring(0,1000)
+//             //ADD FRONT PAGE
+//             filepath = "/99 - Test Reports/Service Report/_Front Cover"
+//             subsection_param_object = 
+//             {
+//                 "report_name":report.name, 
+//                 "company_filter": subscription.name,
+//                 "contents_page": contents_page
+//             }
+//             outputname = "000000000"
+//             let output_file = path.join(folder_path,outputname);
+//             exports.runDelay(((subsection_total*4) * subscription_number), filepath, subsection_param_object, folder_path, output_file)
 
 
+//         }
 
-                //ADD FRONT PAGE
-                filepath = "/99 - Test Reports/Service Report/_Front Cover"
-                subsection_param_object = 
-                {
-                    "report_name":report.name, 
-                    "company_filter": subscription.name,
-                    "contents_page": contents_page
-                }
-                outputname = "000000000"
-                let output_file = path.join(folder_path,outputname);
-                exports.runDelay(((subsection_total*4) * subscription_number), filepath, subsection_param_object, folder_path, output_file)
+//     }
+//     catch(err){
+//         console.log(err)
+//     }
 
-
-            }
-
-        }
-
-    }
-    catch(err){
-        console.log(err)
-    }
-
-}
+// }
 
 
 exports.run = async(subscription_number, report, subscription) => {
@@ -155,21 +151,6 @@ exports.run = async(subscription_number, report, subscription) => {
                 files_needed: subsection_count
             }
             
-            let creation_list = []
-            creation_list.push(
-            {
-                model: "SubscriptionActivity",
-                params: [
-                    {
-                        path: folder_path,
-                        files_expected: file_data.files_needed,
-                        subscriptionId: subscription.id
-                    }
-                ]
-            }) 
-    
-            let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
-
 
             let filepath = '';
             let filename = '';
@@ -200,8 +181,57 @@ exports.run = async(subscription_number, report, subscription) => {
                         subsection_total++      
                     })
                 })
+            }
 
-                contents_page = "REPLACE"
+
+            let creation_list = []
+            creation_list.push(
+            {
+                model: "SubscriptionActivity",
+                params: [
+                    {
+                        path: folder_path,
+                        files_expected: file_data.files_needed,
+                        subscriptionId: subscription.id,
+                        contents_page: contents_page
+                    }
+                ]
+            }) 
+    
+            let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
+
+
+            // let filepath = '';
+            // let filename = '';
+            // let outputname = '';
+            // let parameter_object = JSON.parse(subscription.parameters);
+            // let contents_page = '';
+
+            //CREATE THE CONTENT PAGE TEXT
+            if(report.sections){
+
+                let subsection_total = 0
+
+                //FORMAT THE CONTENTS PAGE
+                // report.sections.forEach((section) => {
+
+                //     contents_page += section.order + ". " + section.name + "\n"
+
+                //     section.subsections.forEach((subsection) => {
+                //         if (subsection.name !== "front" && subsection.type !== 'appendix'){
+
+                //             let subsection_name = subsection.name
+                //             if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
+                //                 subsection_name = subsection.sectionsubsections.name
+                //             }
+
+                //             contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection_name + "\n"
+                //         }
+                //         subsection_total++      
+                //     })
+                // })
+
+                // contents_page = "REPLACE"
 
                 //ADD FRONT PAGE
                 filepath = "/99 - Test Reports/Service Report/_Front Cover"
@@ -209,7 +239,7 @@ exports.run = async(subscription_number, report, subscription) => {
                 {
                     "report_name":report.name, 
                     "company_filter": subscription.name,
-                    "contents_page": contents_page
+                    "sub_activity_id": subscriptionactivities[0].id
                 }
                 outputname = "000000000"
                 let output_file = path.join(folder_path,outputname);

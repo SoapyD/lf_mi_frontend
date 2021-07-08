@@ -118,6 +118,21 @@ exports.checkIncompleteSubActivity = async() => {
             }
             else{
                 console.log("folder doesn't exist")
+
+                //DEACTIVEATE THE SUBSCRIPTION RUN SO THIS MESSAGE DOESN'T OCCUR AGAIN
+                update_list.push(
+                    {
+                        model: "SubscriptionActivity",
+                        params: [
+                            {
+                                running: 0
+                            }
+                        ]
+                    }) 
+
+                //CORRECT NUMEBR OF FILES
+                let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptionactivity, update_list)
+
             }
         })
     }
