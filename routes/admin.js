@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const adminController = require('../controllers/admin');
+const controllers = require('../controllers');
 const middleware = require("../middleware");
 
-router.get("/", middleware.isLoggedIn, middleware.isAdmin, adminController.getAllOptions);
+router.get("/", middleware.admin_access, controllers.admin.getAllOptions);
 
-router.get("/:item", middleware.isLoggedIn, middleware.isAdmin, adminController.getItems);
+router.get("/:item", middleware.admin_access, controllers.admin.getItems);
 
-router.get("/:item/new", middleware.isLoggedIn, middleware.isAdmin, adminController.getFormCreateItem);
+router.get("/:item/new", middleware.admin_access, controllers.admin.getFormCreateItem);
 
-router.post("/:item", middleware.isLoggedIn, middleware.isAdmin, adminController.createItem);
+router.post("/:item", middleware.admin_access, controllers.admin.createItem);
 
-router.get("/:item/:id/edit", middleware.isLoggedIn, middleware.isAdmin, adminController.getEditItems);
+router.get("/:item/:id/edit", middleware.admin_access, controllers.admin.getEditItems);
 
-router.put("/:item/:id", middleware.isLoggedIn, middleware.isAdmin, adminController.updateItem)
+router.put("/:item/:id", middleware.admin_access, controllers.admin.updateItem)
 
-router.delete("/:item/:id", middleware.isLoggedIn, middleware.isAdmin, adminController.deleteItem)
+router.delete("/:item/:id", middleware.admin_access, controllers.admin.deleteItem)
 
 module.exports = router;

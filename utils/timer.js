@@ -1,6 +1,6 @@
-const emailUtil = require('../util/email');
-const databaseQueriesUtil = require('../util/database_queries2');
-const checkOutputsUtil = require('../util/check_output_files');
+const emailUtil = require('../utils/email');
+const databaseQueriesUtil = require('../utils/database_queries2');
+const checkOutputsUtil = require('../utils/check_output_files');
 
 const fs = require('fs');
 

@@ -1,8 +1,9 @@
 const Sequelize = require("sequelize");
-const database = require('../util/database')
+const utils = require('../utils')
 
 
-const Section = database.sequelize.define('NODE_REPORT_section', {
+
+const Section = utils.database.sequelize.define('NODE_REPORT_section', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

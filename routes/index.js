@@ -1,37 +1,31 @@
-const express = require("express");
-const router = express.Router();
-const bodyParser = require("body-parser");
-const passport = require("passport");
-// const ssrsController = require('../controllers/ssrs');
 
-router.get("/", function(req, res) {
-    // res.send("hi there you!");
-    res.render("landing")
-});
-
-router.post(
-    "/",
-    bodyParser.urlencoded({ extended: false }),
-    passport.authenticate("saml", { failureRedirect: "/", failureFlash: true }),
-    function (req, res) {
-        // let test = req.session.passport.user
-        res.redirect("/");
-    }
-);
-
-router.get('/login',
-passport.authenticate('saml',
-  {
-    successRedirect: '/',
-    failureRedirect: '/login'
-  })
-);
-
-router.get('/logout', function (req, res) {
-  req.logout();
-  // TODO: invalidate session on IP
-  res.redirect('/');
-});
+// const routes = {};
 
 
-module.exports = router;
+exports.login = require("./login");
+exports.login.path = '/'
+
+
+exports.admin = require("./admin");
+exports.admin.path = '/admin'
+
+
+exports.reports = require("./reports");
+exports.reports.path = '/reports'
+
+exports.subscriptions = require("./subscriptions");
+exports.subscriptions.path = "/reports/:reportid/subscriptions"
+
+exports.tests = require("./tests");
+exports.tests.path = '/tests'
+
+
+// module.exports = routes
+
+
+
+// app.use(IndexRoutes);
+// app.use("/test",TestRoutes);
+// app.use("/admin",AdminRoutes);
+// app.use("/reports",ReportsRoutes);
+// app.use("/reports/:reportid/subscriptions",SubscriptionsRoutes);

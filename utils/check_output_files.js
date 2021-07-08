@@ -1,6 +1,6 @@
-const emailUtil = require('../util/email');
-const databaseQueriesUtil = require('../util/database_queries2');
-const mergeDocumentUtil = require('../util/merge_document');
+const emailUtil = require('../utils/email');
+const databaseQueriesUtil = require('../utils/database_queries2');
+const mergeDocumentUtil = require('../utils/merge_document');
 
 const fs = require('fs');
 const path = require('path');

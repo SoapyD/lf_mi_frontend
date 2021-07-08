@@ -1,7 +1,8 @@
 const Sequelize = require("sequelize");
-const database = require('../util/database')
+const utils = require('../utils')
 
-const Frequency = database.sequelize.define('NODE_REPORT_frequency', {
+
+const Frequency = utils.database.sequelize.define('NODE_REPORT_frequency', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

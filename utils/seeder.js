@@ -1,6 +1,6 @@
 const models = require("../models");
-const database = require('../util/database')
-const databaseQueriesUtil = require('../util/database_queries2');
+const database = require('../utils/database')
+const databaseQueriesUtil = require('../utils/database_queries2');
 
 
 exports.reset = async() => {
@@ -1008,11 +1008,11 @@ exports.create = async() => {
             ,description: "A template for the regularly used SSRS Service Report"
             ,owner: "93e16e04-771c-4137-b169-748d2dc103c3"
         },               
-        {
-            name: "Fusion - Service Report"
-            ,description: "A template for the regularly used SSRS Service Report"
-            ,owner: "93e16e04-771c-4137-b169-748d2dc103c3"
-        },      
+        // {
+        //     name: "Fusion - Service Report"
+        //     ,description: "A template for the regularly used SSRS Service Report"
+        //     ,owner: "93e16e04-771c-4137-b169-748d2dc103c3"
+        // },      
               
         ]
     },    
@@ -1115,63 +1115,63 @@ exports.create = async() => {
     
     let sections = await databaseQueriesUtil.createData2(creation_list)
 
-    //FUSION REPORT
-    creation_list = []
-    creation_list.push(
-    {
-        model: "Section",
-        params: [    
-            {
-                name: "Executive Summary",
-                order: 1,
-                reportId: reports[1].id
-            },  
-            {
-                name: "Service Desk",
-                order: 2,
-                reportId: reports[1].id
-            },   
-            {
-                name: "Incident Management",
-                order: 3,
-                reportId: reports[1].id
-            },              
-            {
-                name: "Requests",
-                order: 4,
-                reportId: reports[1].id
-            },        
-            {
-                name: "Problem Management",
-                order: 5,
-                reportId: reports[1].id
-            },                  
-            {
-                name: "Service Review Meetings Actions Register",
-                order: 6,
-                reportId: reports[1].id
-            },    
-            {
-                name: "Appendix A - Positive Customer Feedback",
-                order: 7,
-                reportId: reports[1].id
-            },    
-            {
-                name: "Appendix B - Trended Volumes for Reference",
-                order: 8,
-                reportId: reports[1].id
-            },   
-            {
-                name: "Appendix C - Category Trends - Within Top 15 Category Types",
-                order: 9,
-                reportId: reports[1].id
-            },   
+    // //FUSION REPORT
+    // creation_list = []
+    // creation_list.push(
+    // {
+    //     model: "Section",
+    //     params: [    
+    //         {
+    //             name: "Executive Summary",
+    //             order: 1,
+    //             reportId: reports[1].id
+    //         },  
+    //         {
+    //             name: "Service Desk",
+    //             order: 2,
+    //             reportId: reports[1].id
+    //         },   
+    //         {
+    //             name: "Incident Management",
+    //             order: 3,
+    //             reportId: reports[1].id
+    //         },              
+    //         {
+    //             name: "Requests",
+    //             order: 4,
+    //             reportId: reports[1].id
+    //         },        
+    //         {
+    //             name: "Problem Management",
+    //             order: 5,
+    //             reportId: reports[1].id
+    //         },                  
+    //         {
+    //             name: "Service Review Meetings Actions Register",
+    //             order: 6,
+    //             reportId: reports[1].id
+    //         },    
+    //         {
+    //             name: "Appendix A - Positive Customer Feedback",
+    //             order: 7,
+    //             reportId: reports[1].id
+    //         },    
+    //         {
+    //             name: "Appendix B - Trended Volumes for Reference",
+    //             order: 8,
+    //             reportId: reports[1].id
+    //         },   
+    //         {
+    //             name: "Appendix C - Category Trends - Within Top 15 Category Types",
+    //             order: 9,
+    //             reportId: reports[1].id
+    //         },   
             
 
-        ]
-    })
+    //     ]
+    // })
     
-    sections = await databaseQueriesUtil.createData2(creation_list)
+    // sections = await databaseQueriesUtil.createData2(creation_list)
 
 
 
@@ -1238,8 +1238,8 @@ exports.create = async() => {
             email_to: "thomas.cassady@littlefish.co.uk",
             subject: "Test Service Report",
             body: "please find attached your copy of the service report",
-            start_date: "2020-10-27",
-            time: "16:01",     
+            start_date: "2021-07-08",
+            time: "16:02",     
             parameters: `
             {
                 "database": "warehouse", 
@@ -1289,118 +1289,118 @@ exports.create = async() => {
             }`,              
         },       
 
-        {
-            reportId: reports[0].id,
-            frequencyId: frequencies[0].id,
-            name: "Snapshot Fusion Test",
-            email_to: "thomas.cassady@littlefish.co.uk",
-            subject: "Test Service Report",
-            body: "please find attached your copy of the service report",
-            start_date: "2020-10-27",
-            time: "16:01",     
-            parameters: `
-            {
-                "database": "snapshot", 
-                "report_name": "Service Report", 
-                "company_filter": "Fusion Lifestyle", 
-                "source_table": "LF_FusionLifestyle", 
-                "period_type": "8",
-                "date_start": "01/01/2000", 
-                "date_end": "01/01/2000",
-                "period_type_sp": "1",
-                "date_start_sp": "01/01/2000", 
-                "date_end_sp": "01/01/2000",
+        // {
+        //     reportId: reports[0].id,
+        //     frequencyId: frequencies[0].id,
+        //     name: "Snapshot Fusion Test",
+        //     email_to: "thomas.cassady@littlefish.co.uk",
+        //     subject: "Test Service Report",
+        //     body: "please find attached your copy of the service report",
+        //     start_date: "2020-10-27",
+        //     time: "16:01",     
+        //     parameters: `
+        //     {
+        //         "database": "snapshot", 
+        //         "report_name": "Service Report", 
+        //         "company_filter": "Fusion Lifestyle", 
+        //         "source_table": "LF_FusionLifestyle", 
+        //         "period_type": "8",
+        //         "date_start": "01/01/2000", 
+        //         "date_end": "01/01/2000",
+        //         "period_type_sp": "1",
+        //         "date_start_sp": "01/01/2000", 
+        //         "date_end_sp": "01/01/2000",
 
-                "aged_tickets_days": "30",
+        //         "aged_tickets_days": "30",
 
-                "core_hours_start": "8",
-                "core_hours_end": "18",
-                "customer_filter": "_No Teams",
-                "third_party_filter": "SAM Team",
+        //         "core_hours_start": "8",
+        //         "core_hours_end": "18",
+        //         "customer_filter": "_No Teams",
+        //         "third_party_filter": "SAM Team",
             
-                "telephony_sla_target": "0.85",
-                "ddi_filter": "Fusion Lifestyle",
-                "telephony_20second_target": "0.85",
-                "telephony_30second_target": "0.9",
-                "telephony_40second_target": "0.99",
-                "fcr_target": "0.7",
-                "old_incidents_target": "0.015",
-                "successful_changes_target": "0.95",
-                "p1_response_time": "15 minutes",
-                "p2_response_time": "30 minutes",
-                "p3_response_time": "2 hours",
-                "p1_response_target": "0.9",
-                "p2_response_target": "0.9",
-                "p3_response_target": "0.9",
-                "priority1_hours": "4 hours",
-                "priority2_hours": "8 hours",
-                "priority3_hours": "72 hours",
-                "priority1_target": "0.9",
-                "priority2_target": "0.9",
-                "priority3_target": "0.9",
-                "P3toP5_resolution_target": "0.95",
-                "combined_response_target": "0.95",
-                "combined_SLA_target": "0.95",
-                "aged_tickets_days": "30",
-                "reopened_tickets_target": "0.02"                
-            }`       
-        },
-        {
-            reportId: reports[0].id,
-            frequencyId: frequencies[0].id,
-            name: "Fusion Lifestyle",
-            email_to: "Ashley.Grantham@littlefish.co.uk",
-            subject: "Service Report",
-            body: "please find attached your copy of the service report for Fusion Lifestyle",
-            start_date: "2020-10-27",
-            time: "16:01",     
-            parameters: `
-            {
-                "database": "snapshot", 
-                "report_name": "Service Report", 
-                "company_filter": "Fusion Lifestyle", 
-                "source_table": "LF_FusionLifestyle", 
-                "period_type": "8",
-                "date_start": "01/01/2000", 
-                "date_end": "01/01/2000",
-                "period_type_sp": "1",
-                "date_start_sp": "01/01/2000", 
-                "date_end_sp": "01/01/2000",
+        //         "telephony_sla_target": "0.85",
+        //         "ddi_filter": "Fusion Lifestyle",
+        //         "telephony_20second_target": "0.85",
+        //         "telephony_30second_target": "0.9",
+        //         "telephony_40second_target": "0.99",
+        //         "fcr_target": "0.7",
+        //         "old_incidents_target": "0.015",
+        //         "successful_changes_target": "0.95",
+        //         "p1_response_time": "15 minutes",
+        //         "p2_response_time": "30 minutes",
+        //         "p3_response_time": "2 hours",
+        //         "p1_response_target": "0.9",
+        //         "p2_response_target": "0.9",
+        //         "p3_response_target": "0.9",
+        //         "priority1_hours": "4 hours",
+        //         "priority2_hours": "8 hours",
+        //         "priority3_hours": "72 hours",
+        //         "priority1_target": "0.9",
+        //         "priority2_target": "0.9",
+        //         "priority3_target": "0.9",
+        //         "P3toP5_resolution_target": "0.95",
+        //         "combined_response_target": "0.95",
+        //         "combined_SLA_target": "0.95",
+        //         "aged_tickets_days": "30",
+        //         "reopened_tickets_target": "0.02"                
+        //     }`       
+        // },
+        // {
+        //     reportId: reports[0].id,
+        //     frequencyId: frequencies[0].id,
+        //     name: "Fusion Lifestyle",
+        //     email_to: "Ashley.Grantham@littlefish.co.uk",
+        //     subject: "Service Report",
+        //     body: "please find attached your copy of the service report for Fusion Lifestyle",
+        //     start_date: "2020-10-27",
+        //     time: "16:01",     
+        //     parameters: `
+        //     {
+        //         "database": "snapshot", 
+        //         "report_name": "Service Report", 
+        //         "company_filter": "Fusion Lifestyle", 
+        //         "source_table": "LF_FusionLifestyle", 
+        //         "period_type": "8",
+        //         "date_start": "01/01/2000", 
+        //         "date_end": "01/01/2000",
+        //         "period_type_sp": "1",
+        //         "date_start_sp": "01/01/2000", 
+        //         "date_end_sp": "01/01/2000",
 
-                "aged_tickets_days": "30",
+        //         "aged_tickets_days": "30",
 
-                "core_hours_start": "8",
-                "core_hours_end": "18",
-                "customer_filter": "_No Teams",
-                "third_party_filter": "SAM Team",
+        //         "core_hours_start": "8",
+        //         "core_hours_end": "18",
+        //         "customer_filter": "_No Teams",
+        //         "third_party_filter": "SAM Team",
             
-                "telephony_sla_target": "0.85",
-                "ddi_filter": "Fusion Lifestyle",
-                "telephony_20second_target": "0.85",
-                "telephony_30second_target": "0.9",
-                "telephony_40second_target": "0.99",
-                "fcr_target": "0.7",
-                "old_incidents_target": "0.015",
-                "successful_changes_target": "0.95",
-                "p1_response_time": "15 minutes",
-                "p2_response_time": "30 minutes",
-                "p3_response_time": "2 hours",
-                "p1_response_target": "0.9",
-                "p2_response_target": "0.9",
-                "p3_response_target": "0.9",
-                "priority1_hours": "4 hours",
-                "priority2_hours": "8 hours",
-                "priority3_hours": "72 hours",
-                "priority1_target": "0.9",
-                "priority2_target": "0.9",
-                "priority3_target": "0.9",
-                "P3toP5_resolution_target": "0.95",
-                "combined_response_target": "0.95",
-                "combined_SLA_target": "0.95",
-                "aged_tickets_days": "30",
-                "reopened_tickets_target": "0.02"                
-            }`,                    
-        },     
+        //         "telephony_sla_target": "0.85",
+        //         "ddi_filter": "Fusion Lifestyle",
+        //         "telephony_20second_target": "0.85",
+        //         "telephony_30second_target": "0.9",
+        //         "telephony_40second_target": "0.99",
+        //         "fcr_target": "0.7",
+        //         "old_incidents_target": "0.015",
+        //         "successful_changes_target": "0.95",
+        //         "p1_response_time": "15 minutes",
+        //         "p2_response_time": "30 minutes",
+        //         "p3_response_time": "2 hours",
+        //         "p1_response_target": "0.9",
+        //         "p2_response_target": "0.9",
+        //         "p3_response_target": "0.9",
+        //         "priority1_hours": "4 hours",
+        //         "priority2_hours": "8 hours",
+        //         "priority3_hours": "72 hours",
+        //         "priority1_target": "0.9",
+        //         "priority2_target": "0.9",
+        //         "priority3_target": "0.9",
+        //         "P3toP5_resolution_target": "0.95",
+        //         "combined_response_target": "0.95",
+        //         "combined_SLA_target": "0.95",
+        //         "aged_tickets_days": "30",
+        //         "reopened_tickets_target": "0.02"                
+        //     }`,                    
+        // },     
 
 //                "selected_slas": "a,b,c,d,e,f,g,h,i,j,k,l,m",
 

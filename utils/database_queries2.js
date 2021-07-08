@@ -1,5 +1,5 @@
 const models = require("../models");
-const databaseUtil = require('../util/database')
+const databaseUtil = require('../utils/database')
 
 
 exports.searchType = {

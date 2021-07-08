@@ -2,9 +2,9 @@
 var fs = require('fs');
 var path = require('path');
 // const DocxMerger = require('docx-merger');
-const DocxMerger = require('../util/docx-merger/index.js');
+const DocxMerger = require('../utils/docx-merger/index.js');
 
-const storageUtil = require('../util/storage');
+const storageUtil = require('../utils/storage');
 
 
 // exports.mergeDocument = async(filepath, file_list, filename) => {

@@ -1,10 +1,6 @@
-const Report = require("../models/report");
-// const Fusion = require("../models/fusion");
-// const SubSection = require("../models/subsection");
-const databaseQueriesUtil = require('../util/database_queries2');
-const functionsUtil = require('../util/functions');
-// const errorController = require('../controllers/error');
-// const Subscription = require("../models/subscription");
+
+const utils = require("../utils");
+
 
 exports.getAllReports = async(req,res) => {
 	
@@ -16,7 +12,7 @@ exports.getAllReports = async(req,res) => {
     }) 
 
     try{
-        let reports = await databaseQueriesUtil.findData(find_list)
+        let reports = await utils.queries.findData(find_list)
         res.render("reports/index", {reports:reports[0]});
     }
     catch(err){
@@ -43,15 +39,15 @@ exports.getReport = async(req, res) => {
 				where: {
 					id: id,
 				},
-				include: databaseQueriesUtil.searchType['Full Report'].include			
+				include: utils.queries.searchType['Full Report'].include			
 			}]
 		}) 
 
 		//GET ALL REPORT DATA
-		let reports = await databaseQueriesUtil.findData(find_list)		
+		let reports = await utils.queries.findData(find_list)		
 
 		//SORT THE REPORT SUBSECTIONS BY ORDER
-		let report = functionsUtil.sortReport(reports[0])
+		let report = utils.functions.sortReport(reports[0])
 
 		//GET ALL SUBSECTION DATA
 		find_list = []
@@ -61,9 +57,9 @@ exports.getReport = async(req, res) => {
 			search_type: "findAll"
 		}) 
 	
-		let subsections = await databaseQueriesUtil.findData(find_list)
+		let subsections = await utils.queries.findData(find_list)
 		if(subsections[0]){
-			subsections[0] = subsections[0].sort(functionsUtil.compareOrder)
+			subsections[0] = subsections[0].sort(utils.functions.compareOrder)
 		}
 
 
@@ -101,7 +97,7 @@ exports.createReport = async(req,res) => {
 			]
 		}) 
 
-		let reports = await databaseQueriesUtil.createData2(creation_list)	
+		let reports = await utils.queries.createData2(creation_list)	
 		if(reports[0]){
 			res.redirect("/reports/" +reports[0].id);
 		}
@@ -139,7 +135,7 @@ exports.getEditReport = async(req,res) => {
         })
 
         //GET THE EDITABLE ITEM, INCLUDING ANY JOINS
-		let reports = await databaseQueriesUtil.findData(findlist)
+		let reports = await utils.queries.findData(findlist)
 
 		res.render("reports/edit", {report:reports[0]});
 	}
@@ -170,7 +166,7 @@ exports.updateReport = async(req,res) => {
 		})
 
 		//GET THE EDITABLE ITEM, INCLUDING ANY JOINS
-		let reports = await databaseQueriesUtil.findData(findlist)
+		let reports = await utils.queries.findData(findlist)
 
 
 		let updatelist = []
@@ -181,7 +177,7 @@ exports.updateReport = async(req,res) => {
 		})    
 
 		//UPDATE THE RECORD
-		let data = await databaseQueriesUtil.updateData(reports[0], updatelist)
+		let data = await utils.queries.updateData(reports[0], updatelist)
 		res.redirect("/reports/" +id)
 	}	
 	catch(err){
@@ -206,12 +202,12 @@ exports.updateJoinReport = async(req,res) => {
 				where: {
 					id: id,
 				},
-				include: databaseQueriesUtil.searchType['Full Report'].include			
+				include: utils.queries.searchType['Full Report'].include			
 			}]
 		}) 
 
 	    //GET FULL REPORT
-		let reports = await databaseQueriesUtil.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
         let report = reports[0]
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,10 +229,10 @@ exports.updateJoinReport = async(req,res) => {
 		// 	]
 		// }
 		//GET FULL REPORT DATA
-		// let reports = await databaseQueriesUtil.findData(destroylist)
+		// let reports = await utils.queries.findData(destroylist)
 		//THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
 		// console.log("test")
-		// let deletions = await databaseQueriesUtil.destroyData(report_destroylist)
+		// let deletions = await utils.queries.destroyData(report_destroylist)
 
 		//DELETE ALL OF THE JOINS TOO
 		destroylist = []
@@ -271,11 +267,11 @@ exports.updateJoinReport = async(req,res) => {
 		}
 		destroylist.push(sectionsubsection_deletions)
 		// destroylist.push(section_deletions)
-		deletions = await databaseQueriesUtil.destroyData(destroylist)
+		deletions = await utils.queries.destroyData(destroylist)
 
 		destroylist = []
 		destroylist.push(section_deletions)
-		deletions = await databaseQueriesUtil.destroyData(destroylist)
+		deletions = await utils.queries.destroyData(destroylist)
 
 
 
@@ -309,7 +305,7 @@ exports.updateJoinReport = async(req,res) => {
             params["reportId"] = report.id
             create_sections["params"].push(params)
             creation_list.push(create_sections)
-            let created_section = await databaseQueriesUtil.createData2(creation_list)
+            let created_section = await utils.queries.createData2(creation_list)
 			created_section_LIST.push(created_section[0])
 
 			if (created_section[0])
@@ -350,7 +346,7 @@ exports.updateJoinReport = async(req,res) => {
 				creation_list.push(create_sections)
 
 				if(creation_list.length > 0){
-					let created_sectionsubsections = await databaseQueriesUtil.createData2(creation_list)
+					let created_sectionsubsections = await utils.queries.createData2(creation_list)
 					created_sectionsubsections_LIST.push(created_sectionsubsections[0])
 				}
 				//CREATE SUBSECTIONS
@@ -387,12 +383,12 @@ exports.updateCopyReport = async(req,res) => {
 				where: {
 					id: id,
 				},
-				include: databaseQueriesUtil.searchType['Full Report'].include			
+				include: utils.queries.searchType['Full Report'].include			
 			}]
 		}) 
 
 		//GET ALL REPORT DATA
-		let reports = await databaseQueriesUtil.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
 		let report = reports[0]
 
 		let creation_list = []
@@ -411,7 +407,7 @@ exports.updateCopyReport = async(req,res) => {
 		search_criteria["params"].push(params)
 
 		creation_list.push(search_criteria)
-		let copied_report = await databaseQueriesUtil.createData2(creation_list)
+		let copied_report = await utils.queries.createData2(creation_list)
 		
 		if (report.sections){
 			report.sections.forEach( async(section) => {
@@ -429,7 +425,7 @@ exports.updateCopyReport = async(req,res) => {
 				}
 				create_sections["params"].push(params)
 				creation_list.push(create_sections)
-				let copied_section = await databaseQueriesUtil.createData2(creation_list)
+				let copied_section = await utils.queries.createData2(creation_list)
 
 				if(copied_section[0]){
 					if (section.subsections){
@@ -454,7 +450,7 @@ exports.updateCopyReport = async(req,res) => {
 						})
 	
 						creation_list.push(create_sectionsubsections)	
-						let copied_sectionsubsections = await databaseQueriesUtil.createData2(creation_list)
+						let copied_sectionsubsections = await utils.queries.createData2(creation_list)
 					}
 				}
 
@@ -490,15 +486,15 @@ exports.deleteReport = async(req,res) => { //, middleware.isCampGroundOwnership
 					where: {
 						id: id
 					},
-					include: databaseQueriesUtil.searchType['Full Report'].include
+					include: utils.queries.searchType['Full Report'].include
 				}
 			]
 		})
 		//GET FULL REPORT DATA
-		let reports = await databaseQueriesUtil.findData(destroylist)
+		let reports = await utils.queries.findData(destroylist)
 		//THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
 		// console.log("test")
-		let deletions = await databaseQueriesUtil.destroyData(destroylist)
+		let deletions = await utils.queries.destroyData(destroylist)
 
 		//DELETE ALL OF THE JOINS TOO
 		destroylist = []
@@ -533,7 +529,7 @@ exports.deleteReport = async(req,res) => { //, middleware.isCampGroundOwnership
 		}
 		destroylist.push(sectionsubsection_deletions)
 		destroylist.push(section_deletions)
-		deletions = await databaseQueriesUtil.destroyData(destroylist)
+		deletions = await utils.queries.destroyData(destroylist)
 
 		res.redirect("/reports/")
 	}	

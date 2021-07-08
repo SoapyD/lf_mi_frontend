@@ -1,9 +1,5 @@
-// const Report = require("../models/report");
-// const Subscription = require("../models/subscription");
-const databaseQueriesUtil = require('../util/database_queries2');
-const functionsUtil = require('../util/functions');
-// const errorController = require('../controllers/error');
-const ssrsUtil = require('../util/ssrs3');
+const utils = require("../utils");
+
 
 exports.getSubscriptions = async(req,res) => { //, middleware.isLoggedIn
 
@@ -19,19 +15,19 @@ exports.getSubscriptions = async(req,res) => { //, middleware.isLoggedIn
 				where: {
 					id: id,
 				},
-				include: databaseQueriesUtil.searchType['Full Report'].include			
+				include: utils.queries.searchType['Full Report'].include			
 			}]
 		}) 
 
 		//GET ALL REPORT DATA
-		let reports = await databaseQueriesUtil.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
 		let subscriptions = []
 		if (reports[0].subscriptions)
 		{
 			subscriptions = reports[0].subscriptions
 
 			if(subscriptions){
-			    subscriptions = subscriptions.sort(functionsUtil.compareOrder)
+			    subscriptions = subscriptions.sort(utils.functions.compareOrder)
 			}
 		}
 
@@ -59,12 +55,12 @@ exports.getFormCreateSubscription = async(req,res) => {
 				where: {
 					id: id,
 				},
-				include: databaseQueriesUtil.searchType['Full Report'].include			
+				include: utils.queries.searchType['Full Report'].include			
 			}]
 		}) 
 
 		//GET ALL REPORT DATA
-		let reports = await databaseQueriesUtil.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
 		let report = reports[0]
 
 		let parameter_ids = []
@@ -84,7 +80,7 @@ exports.getFormCreateSubscription = async(req,res) => {
 			})
 		}
 
-		parameter_ids = parameter_ids.filter(functionsUtil.onlyUnique);
+		parameter_ids = parameter_ids.filter(utils.functions.onlyUnique);
 
 		find_list = []
 		find_list.push(
@@ -99,13 +95,13 @@ exports.getFormCreateSubscription = async(req,res) => {
 		}) 
 
 		//GET ALL REPORT DATA
-		let parameters = await databaseQueriesUtil.findData(find_list)
+		let parameters = await utils.queries.findData(find_list)
 
 		if(parameters[0]){
-			parameters[0] = parameters[0].sort(functionsUtil.compareOrder)
+			parameters[0] = parameters[0].sort(utils.functions.compareOrder)
 		}
 
-		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters[0])
+		let parameter_values = await utils.queries.runDBQueries(parameters[0])
 
 		find_list = []
 		find_list.push(
@@ -114,7 +110,7 @@ exports.getFormCreateSubscription = async(req,res) => {
 			search_type: "findAll"
 		}) 
 
-		let frequencies = await databaseQueriesUtil.findData(find_list)		
+		let frequencies = await utils.queries.findData(find_list)		
 
 		// res.render("subscriptions/index", {report:reports[0], subscriptions:subscriptions});
 		res.render("subscriptions/new", {report:report, frequencies:frequencies[0], 
@@ -169,7 +165,9 @@ exports.createSubscription = async(req,res) => { //, middleware.isLoggedIn
 			]
 		}) 
 
-		let subscriptions = await databaseQueriesUtil.createData2(creation_list)	
+		let subscriptions = await utils.queries.createData2(creation_list)
+		
+		utils.scheduler.updateScheduler();
 
 		res.redirect("/reports/"+req.params.reportid+"/subscriptions");
 
@@ -198,12 +196,12 @@ exports.getEditSubscription = async(req,res) => {
 				where: {
 					id: id,
 				},
-				include: databaseQueriesUtil.searchType['Full Report'].include				
+				include: utils.queries.searchType['Full Report'].include				
 			}]
 		}) 
 
 		//GET REPORT DATA
-		let reports = await databaseQueriesUtil.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
 		
 
 		find_list = []
@@ -218,7 +216,7 @@ exports.getEditSubscription = async(req,res) => {
 			}]
 		})		
 		//GET SUBSCRIPTION DATA
-		let subscriptions = await databaseQueriesUtil.findData(find_list)		
+		let subscriptions = await utils.queries.findData(find_list)		
 
 		let report = reports[0]
 
@@ -238,7 +236,7 @@ exports.getEditSubscription = async(req,res) => {
 			})
 		}
 
-		parameter_ids = parameter_ids.filter(functionsUtil.onlyUnique);
+		parameter_ids = parameter_ids.filter(utils.functions.onlyUnique);
 
 		find_list = []
 		find_list.push(
@@ -253,13 +251,13 @@ exports.getEditSubscription = async(req,res) => {
 		}) 
 
 		//GET ALL REPORT DATA
-		let parameters = await databaseQueriesUtil.findData(find_list)
+		let parameters = await utils.queries.findData(find_list)
 
 		if(parameters[0]){
-			parameters[0] = parameters[0].sort(functionsUtil.compareOrder)
+			parameters[0] = parameters[0].sort(utils.functions.compareOrder)
 		}
 
-		let parameter_values = await databaseQueriesUtil.runDBQueries(parameters[0])
+		let parameter_values = await utils.queries.runDBQueries(parameters[0])
 
 
 		find_list = []
@@ -269,7 +267,7 @@ exports.getEditSubscription = async(req,res) => {
 			search_type: "findAll"
 		}) 
 
-		let frequencies = await databaseQueriesUtil.findData(find_list)		
+		let frequencies = await utils.queries.findData(find_list)		
 		let parameter_obj = JSON.parse(subscriptions[0].parameters);
 		
 		res.render("subscriptions/edit", 
@@ -355,7 +353,7 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 			}]
 		})		
 		//GET SUBSCRIPTION DATA
-		let subscriptions = await databaseQueriesUtil.findData(find_list)		
+		let subscriptions = await utils.queries.findData(find_list)		
 
 
 		let params = req.body.params;
@@ -371,7 +369,10 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 			]
 		}) 
 
-		let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptions[0], update_list)	
+		let subscriptions_updated = await utils.queries.updateData(subscriptions[0], update_list)
+
+
+		utils.scheduler.updateScheduler();
 
 		res.redirect("/reports/" +req.params.reportid+"/subscriptions");
     }
@@ -414,10 +415,10 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 				}]
 			})		
 			//GET SUBSCRIPTION DATA
-			let subscriptions = await databaseQueriesUtil.findData(find_list)		
+			let subscriptions = await utils.queries.findData(find_list)		
 
 
-			// databaseQueriesUtil.getSubscriptions(req.params.reportid, subscriptions)
+			// utils.queries.getSubscriptions(req.params.reportid, subscriptions)
 			// .then((subscriptions) => {
 			if(subscriptions[0]) {
 				// let subscription_ids = []
@@ -433,12 +434,12 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 						where: {
 							id: id,
 						},
-						include: databaseQueriesUtil.searchType['Full Report'].include			
+						include: utils.queries.searchType['Full Report'].include			
 					}]
 				}) 				
-				let reports = await databaseQueriesUtil.findData(list)
+				let reports = await utils.queries.findData(list)
 
-				let report = functionsUtil.sortReport(reports[0])
+				let report = utils.functions.sortReport(reports[0])
 				// let delay_i = 0
 
 				subscriptions[0].forEach( async(subscription, i) => {
@@ -448,7 +449,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 					case "run":
 						
 						//RUN THE REPORT SUBSCRIPTIONS
-						ssrsUtil.run(i, report, subscription);
+						utils.ssrs.run(i, report, subscription);
 						req.flash("success", 'Running Selected Active Subscriptions');
 			
 						break;
@@ -462,7 +463,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 							})    
 					
 							//UPDATE THE RECORD
-							await databaseQueriesUtil.updateData(subscription, list)
+							await utils.queries.updateData(subscription, list)
 
 						break;
 						case "disable":
@@ -475,7 +476,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 							})    
 					
 							//UPDATE THE RECORD
-							await databaseQueriesUtil.updateData(subscription, list)
+							await utils.queries.updateData(subscription, list)
 
 						break;
 						case "delete":
@@ -493,7 +494,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 							})
 					
 							//DESTROY THE RECORD
-							await databaseQueriesUtil.destroyData(list)
+							await utils.queries.destroyData(list)
 
 						break;									
 						default:

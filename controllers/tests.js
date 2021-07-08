@@ -1,5 +1,5 @@
 
-const DocxMerger = require('../util/docx-merger/index.js');
+const DocxMerger = require('../utils/docx-merger/index.js');
 var fs = require('fs');
 var path = require('path');
 

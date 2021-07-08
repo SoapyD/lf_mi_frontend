@@ -1,8 +1,9 @@
 const Sequelize = require("sequelize");
-const database = require('../util/database')
-// const Report = require("../models/report");
+// const database = require('../util/database')
+const utils = require('../utils')
 
-const SubSection = database.sequelize.define('NODE_REPORT_subsection', {
+
+const SubSection = utils.database.sequelize.define('NODE_REPORT_subsection', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

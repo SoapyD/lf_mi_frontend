@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
 
-const database = require('../util/database')
+const utils = require('../utils')
 
-const SubSectionParameter = database.sequelize.define('NODE_REPORT_subsectionparameters', {
+const SubSectionParameter = utils.database.sequelize.define('NODE_REPORT_subsectionparameters', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

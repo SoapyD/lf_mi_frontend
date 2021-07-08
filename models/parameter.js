@@ -1,10 +1,11 @@
 const Sequelize = require("sequelize");
 // const moment = require("moment");
-const database = require('../util/database')
+const utils = require('../utils')
+
 
 // const Section = require("./section");
 
-const Parameter = database.sequelize.define('NODE_REPORT_parameter', {
+const Parameter = utils.database.sequelize.define('NODE_REPORT_parameter', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

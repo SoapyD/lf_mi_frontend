@@ -1,7 +1,8 @@
 const Sequelize = require("sequelize");
-const database = require('../util/database')
+const utils = require('../utils')
 
-const SubscriptionActivity = database.sequelize.define('NODE_REPORT_subscriptionactivity', {
+
+const SubscriptionActivity = utils.database.sequelize.define('NODE_REPORT_subscriptionactivity', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,
