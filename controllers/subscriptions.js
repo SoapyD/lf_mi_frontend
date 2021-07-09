@@ -476,7 +476,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 							})    
 					
 							//UPDATE THE RECORD
-							await utils.queries.updateData(subscription, list)
+							let updates = await utils.queries.updateData(subscription, list)
 
 						break;
 						case "delete":
@@ -500,6 +500,8 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 						default:
 					}
 				})
+
+				utils.scheduler.updateScheduler();
 				
 				res.redirect("/reports/" +req.params.reportid+"/subscriptions");
 			}
