@@ -78,7 +78,7 @@ exports.setupApp = async(app) => {
     .sync()
     .then(result => {
       if(process.env._PROCESS_TYPE === 'Dev'){
-        utils.seeder.create()
+        // utils.seeder.create()
         // seeds.test()
       }
     })

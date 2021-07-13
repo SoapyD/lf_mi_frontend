@@ -38,20 +38,23 @@ exports.run = async(subscription_number, report, subscription) => {
                 report.sections.forEach((section) => {
 
                     if(section.subsections){
-                        if(section.subsections.length > 0){
-                            subsection_count += 1 //1 for every section
-                        }
-                        subsection_count += (section.subsections.length * 3) //3 parts for each subsection, header/subsection/analysis
 
-                        section.subsections.forEach((subsection) => {
-                            if (subsection.type === "template"){
-                                subsection_count -= 1
-                            }
+                        subsection_count += section.subsections.length
 
-                            if (subsection.type === "appendix" || subsection.type === "appendix template"){
-                                subsection_count -= 2
-                            }
-                        })
+                        // if(section.subsections.length > 0){
+                        //     subsection_count += 1 //1 for every section
+                        // }
+                        // subsection_count += (section.subsections.length * 3) //3 parts for each subsection, header/subsection/analysis
+
+                        // section.subsections.forEach((subsection) => {
+                        //     if (subsection.type === "template"){
+                        //         subsection_count -= 1
+                        //     }
+
+                        //     if (subsection.type === "appendix" || subsection.type === "appendix template"){
+                        //         subsection_count -= 2
+                        //     }
+                        // })
                     }
                 })
             }
@@ -152,7 +155,7 @@ exports.run = async(subscription_number, report, subscription) => {
                     "company_filter": subscription.name,
                     "sub_activity_id": subscriptionactivities[0].id
                 }
-                outputname = "000000000"
+                outputname = "0000000000"
                 let output_file = path.join(folder_path,outputname);
                 exports.runDelay(((subsection_total*4) * subscription_number), filepath, subsection_param_object, folder_path, output_file)
 
@@ -190,7 +193,7 @@ exports.run = async(subscription_number, report, subscription) => {
                             }
 
 
-                            let delay_timer_value = (((subsection_total*4) * subscription_number) + (subsection_count*4)) + 1 //+1 for front cover
+                            let delay_timer_value = (((subsection_total*1) * subscription_number) + (subsection_count*1)) + 1 //+1 for front cover
                             let size = 10
                             let file_number = (section.order * 1000) + delay_timer_value // + subsection.sectionsubsections.order
 
@@ -206,39 +209,61 @@ exports.run = async(subscription_number, report, subscription) => {
                             }
                             
                             report_param_object['Subsection_Name'] = section.order + "." + subsection.sectionsubsections.order+ ". "+subsection_name;
-                            report_param_object['Add_Analysis_Box'] = "Y"
+                            // report_param_object['Add_Analysis_Box'] = "Y"
+                            report_param_object['Hide_Analysis'] = "false"
 
 
-                            if(subsection_number === 0)
-                            {
-                                //ADD SECTION NAME
-                                filepath = "/99 - Test Reports/Service Report/_Section_Header"
-                                let temp_param_object = 
-                                {
-                                    "Section_Name":report_param_object['Section_Name'], 
-                                }
-                                outputname = "000000000" + (file_number-2);
-                                outputname = outputname.substr(outputname.length-size);
-                                let output_file = path.join(folder_path,outputname);
-                                exports.runDelay(delay_timer_value, filepath, temp_param_object, folder_path, output_file)    
-                            }
+                            // if(subsection_number === 0)
+                            // {
+                            //     //ADD SECTION NAME
+                            //     filepath = "/99 - Test Reports/Service Report/_Section_Header"
+                            //     let temp_param_object = 
+                            //     {
+                            //         "Section_Name":report_param_object['Section_Name'], 
+                            //     }
+                            //     outputname = "000000000" + (file_number-2);
+                            //     outputname = outputname.substr(outputname.length-size);
+                            //     let output_file = path.join(folder_path,outputname);
+                            //     exports.runDelay(delay_timer_value, filepath, temp_param_object, folder_path, output_file)    
+                            // }
                         
                             
 
 
                             //ADD SUBSECTION NAME
-                            if (subsection.type !== "appendix" && subsection.type !== 'appendix template'){
-                                filepath = "/99 - Test Reports/Service Report/_Subsection_Header"
-                                let temp_param_object = 
-                                {
-                                    "Subsection_Name":report_param_object['Subsection_Name'], 
-                                }
-                                outputname = "000000000" + (file_number-1);
-                                outputname = outputname.substr(outputname.length-size);
-                                let output_file = path.join(folder_path,outputname);
-                                exports.runDelay(delay_timer_value+1, filepath, temp_param_object, folder_path, output_file)
+                            // if (subsection.type !== "appendix" && subsection.type !== 'appendix template'){
+                            //     filepath = "/99 - Test Reports/Service Report/_Subsection_Header"
+                            //     let temp_param_object = 
+                            //     {
+                            //         "Subsection_Name":report_param_object['Subsection_Name'], 
+                            //     }
+                            //     outputname = "000000000" + (file_number-1);
+                            //     outputname = outputname.substr(outputname.length-size);
+                            //     let output_file = path.join(folder_path,outputname);
+                            //     exports.runDelay(delay_timer_value+1, filepath, temp_param_object, folder_path, output_file)
+                            // }
+
+                            if(subsection_number === 0){
+                                subsection_param_object.Section_Name = report_param_object['Section_Name']
                             }
 
+                            switch(subsection.type){
+                                case "template":
+                                case "appendix template":
+                                    subsection_param_object.Subsection_Name = report_param_object['Subsection_Name'],
+                                    subsection_param_object.Hide_PageBreak = "false"                                    
+                                break;
+                                case "normal":
+                                    subsection_param_object.Subsection_Name = report_param_object['Subsection_Name'],
+                                    subsection_param_object.Hide_Analysis = "false"
+                                break;  
+                                case "appendix":
+                                    // subsection_param_object.Subsection_Name = report_param_object['Subsection_Name'],
+                                    subsection_param_object.Hide_PageBreak = "false"
+                                break;                                                                
+                                default:
+
+                            }
                             
                             //ADD SUBSECTION
                             outputname = "000000000" + file_number;
@@ -247,24 +272,24 @@ exports.run = async(subscription_number, report, subscription) => {
                             output_file = path.join(folder_path,outputname); 
 
                             if(report_param_object.database === "snapshot"){
-                                exports.runDelay(delay_timer_value+2, subsection.path_snapshot, subsection_param_object, folder_path, output_file)
+                                exports.runDelay(delay_timer_value, subsection.path_snapshot, subsection_param_object, folder_path, output_file)
                             }
                             if(report_param_object.database === "warehouse"){
-                                exports.runDelay(delay_timer_value+2, subsection.path_warehouse, subsection_param_object, folder_path, output_file)
+                                exports.runDelay(delay_timer_value, subsection.path_warehouse, subsection_param_object, folder_path, output_file)
                             }
 
 
-                            if(subsection.type !== 'appendix' && subsection.type !== 'template' && subsection.type !== 'appendix template'){
-                                //ADD ANALYSIS BOX
-                                filepath = "/99 - Test Reports/Service Report/_Subsection_Analysis"
-                                temp_param_object = 
-                                {
-                                }
-                                outputname = "000000000" + (file_number+1);
-                                outputname = outputname.substr(outputname.length-size);
-                                output_file = path.join(folder_path,outputname);
-                                exports.runDelay(delay_timer_value+3, filepath, temp_param_object, folder_path, output_file)
-                            }
+                            // if(subsection.type !== 'appendix' && subsection.type !== 'template' && subsection.type !== 'appendix template'){
+                            //     //ADD ANALYSIS BOX
+                            //     filepath = "/99 - Test Reports/Service Report/_Subsection_Analysis"
+                            //     temp_param_object = 
+                            //     {
+                            //     }
+                            //     outputname = "000000000" + (file_number+1);
+                            //     outputname = outputname.substr(outputname.length-size);
+                            //     output_file = path.join(folder_path,outputname);
+                            //     exports.runDelay(delay_timer_value+3, filepath, temp_param_object, folder_path, output_file)
+                            // }
 
 
                             subsection_count++

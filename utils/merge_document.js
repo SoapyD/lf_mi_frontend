@@ -18,7 +18,7 @@ exports.mergeDocument = async(output_name, filepath) => {
         await imported_files.push(fs.readFileSync(path.join(filepath,item), 'binary'))
     })
     
-    await imported_files.push(fs.readFileSync('out.docx', 'binary'))
+
 
     var docx = new DocxMerger({pageBreak: false},imported_files);
     //SAVING THE DOCX FILE
@@ -35,3 +35,5 @@ exports.mergeDocument = async(output_name, filepath) => {
     /**/    
 
 }
+
+

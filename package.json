@@ -12,6 +12,7 @@
     "@azure/identity": "^1.1.0",
     "@azure/storage-blob": "^12.2.1",
     "body-parser": "^1.19.0",
+    "cloudmersive-convert-api-client": "^2.6.7",
     "connect-flash": "^0.1.1",
     "docx": "^5.5.0",
     "docx-builder": "^1.0.7",
@@ -34,6 +35,7 @@
     "tmp": "^0.2.1"
   },
   "devDependencies": {
+    "cloudmersive-validate-api-client": "^1.4.6",
     "dotenv": "^8.2.0"
   }
 }

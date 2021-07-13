@@ -9,7 +9,9 @@ const middleware = require("../middleware");
 
 // router.get("/", middleware.admin_access, controllers.tests.mergeDocument);
 
-router.get("/", middleware.admin_access, controllers.tests.draw);
+// router.get("/", middleware.admin_access, controllers.tests.draw);
+
+router.get("/", middleware.admin_access, controllers.tests.merge);
 
 
 module.exports = router;
