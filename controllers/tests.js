@@ -120,8 +120,11 @@ exports.merge = (req, res) => {
     var apiInstance = new CloudmersiveConvertApiClient.MergeDocumentApi();
 
     
-    var inputFile1 = Buffer.from(fs.readFileSync("./out.docx").buffer); // File | First input file to perform the operation on.
-    var inputFile2 = Buffer.from(fs.readFileSync("./out.docx").buffer); // File | Second input file to perform the operation on (more than 2 can be supplied).
+    // var inputFile1 = Buffer.from(fs.readFileSync("./out.docx").buffer); // File | First input file to perform the operation on.
+    // var inputFile2 = Buffer.from(fs.readFileSync("./out.docx").buffer); // File | Second input file to perform the operation on (more than 2 can be supplied).
+
+    var inputFile1 = Buffer.from(fs.readFileSync("C:\\Users\\thomas.cassady\\AppData\\Local\\Temp\\tmp-12232-D0WH139eIvBp\\0000002009.docx").buffer); // File | First input file to perform the operation on.
+    var inputFile2 = Buffer.from(fs.readFileSync("C:\\Users\\thomas.cassady\\AppData\\Local\\Temp\\tmp-12232-D0WH139eIvBp\\0000002011.docx").buffer); // File | Second input file to perform the operation on (more than 2 can be supplied).    
       
     var callback = function(error, data, response) {
     if (error) {
