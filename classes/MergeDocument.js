@@ -67,7 +67,7 @@ const MergeDocument = class {
                     await utils.email.email(this.subscription, this.output_name+".docx",output_fullname)
                     
                     //DELETE FILES AND TEMPORARY FOLDER
-                    exports.deleteTemp(this.file_path)                   
+                    this.deleteTemp(this.file_path)                   
                 });                
             }
             else{
@@ -76,6 +76,14 @@ const MergeDocument = class {
             }
         }
     }
+
+    deleteTemp = (output_path) => {
+
+        if(output_path.includes('tmp')){
+            console.log("Deleting temp folder: "+output_path)
+            fs.rmdirSync(output_path, { recursive: true });
+        }
+    }    
 }
 
 
