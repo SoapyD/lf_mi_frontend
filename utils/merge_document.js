@@ -5,10 +5,12 @@ var path = require('path');
 const DocxMerger = require('../utils/docx-merger/index.js');
 
 const storageUtil = require('../utils/storage');
+// const classes = require('../classes');
 
 
 // exports.mergeDocument = async(filepath, file_list, filename) => {
 exports.mergeDocument = async(output_name, filepath) => {
+
 
     //UPLOAD THE REPORT FILES GENERATED
     var file_list = fs.readdirSync(filepath); 
@@ -32,7 +34,6 @@ exports.mergeDocument = async(output_name, filepath) => {
         let filename = output_name+"_"+Date.now()+".docx"
         storageUtil.saveBlob(data, filename);
     });   
-    /**/    
 
 }
 

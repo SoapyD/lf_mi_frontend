@@ -1,6 +1,7 @@
 const emailUtil = require('../utils/email');
 const databaseQueriesUtil = require('../utils/database_queries2');
 const mergeDocumentUtil = require('../utils/merge_document');
+const classes = require('../classes');
 
 const fs = require('fs');
 const path = require('path');
@@ -117,13 +118,25 @@ exports.checkFileNumber = async(subscription_activity) => {
                 //MERGE REPORT AND SEND
                 // let output_name = report.name+"_"+report.id+"_"+subscription.name+"_"+subscription.id
                 let output_name = report.name+"_"+subscription.name
+
+                /*
+                //MERGE DOCUMENT
                 await mergeDocumentUtil.mergeDocument(output_name, subscription_activity.path)
-                
-
+                //SAVE DOCUMENT TO STORAGE
                 await emailUtil.email(subscription, output_name+".docx",path.join(subscription_activity.path,output_name+".docx"))
-
                 //DELETE FILES AND TEMPORARY FOLDER
                 exports.deleteTemp(subscription_activity.path)
+                */
+
+                let options = {
+                    subscription: subscription,
+                    file_path: subscription_activity.path,
+                    output_name: output_name
+               }
+               const mergeInstance = new classes.MergeDocument(options)
+               mergeInstance.runMerge()
+
+
             }
             //ELSE EMAIL THE ERROR TO THE USER
             else{
