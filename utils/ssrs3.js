@@ -258,7 +258,6 @@ exports.run = async(subscription_number, report, subscription) => {
                                     // ,subsection_param_object.Hide_Analysis = "false"
                                 break;  
                                 case "appendix":
-                                    // subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
                                     // ,subsection_param_object.Hide_PageBreak = "false"
                                 break;                                                                
                                 default:

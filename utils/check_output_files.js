@@ -119,22 +119,22 @@ exports.checkFileNumber = async(subscription_activity) => {
                 // let output_name = report.name+"_"+report.id+"_"+subscription.name+"_"+subscription.id
                 let output_name = report.name+"_"+subscription.name
 
-                /*
+                
                 //MERGE DOCUMENT
                 await mergeDocumentUtil.mergeDocument(output_name, subscription_activity.path)
                 //SAVE DOCUMENT TO STORAGE
                 await emailUtil.email(subscription, output_name+".docx",path.join(subscription_activity.path,output_name+".docx"))
                 //DELETE FILES AND TEMPORARY FOLDER
                 exports.deleteTemp(subscription_activity.path)
-                */
+                /**/
 
-                let options = {
-                    subscription: subscription,
-                    file_path: subscription_activity.path,
-                    output_name: output_name
-               }
-               const mergeInstance = new classes.MergeDocument(options)
-               mergeInstance.runMerge()
+            //     let options = {
+            //         subscription: subscription,
+            //         file_path: subscription_activity.path,
+            //         output_name: output_name
+            //    }
+            //    const mergeInstance = new classes.MergeDocument(options)
+            //    mergeInstance.runMerge()
 
 
             }
