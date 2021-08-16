@@ -2,6 +2,23 @@
 const utils = require("../utils");
 
 
+exports.getSubscriptionJobs = (req,res) => {
+    
+    try{
+        const jobs = utils.scheduler.getJobs()
+
+        res.render("admin/subscriptions", {jobs: jobs})	
+
+    }catch(error){
+        req.flash("error", "Cannot find live jobs list");
+        res.redirect("/")      
+    }
+
+}
+
+
+
+
 exports.getRouteInfo = () => {
 
     let route_info;
@@ -42,14 +59,14 @@ exports.getItems = async(req,res) => {
     
     let type_info = route_info[type];
 
-    let find_list = []
-    find_list.push(
-    {
-        model: type_info.type,
-        search_type: "findAll"
-    }) 
-
     try{
+        let find_list = []
+        find_list.push(
+        {
+            model: type_info.type,
+            search_type: "findAll"
+        }) 
+
         let data = await utils.queries.findData(find_list)
 
         if(data[0]){

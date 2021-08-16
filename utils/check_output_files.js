@@ -121,21 +121,24 @@ exports.checkFileNumber = async(subscription_activity) => {
 
                 
                 //MERGE DOCUMENT
-                await mergeDocumentUtil.mergeDocument(output_name, subscription_activity.path)
-                //SAVE DOCUMENT TO STORAGE
-                await emailUtil.email(subscription, output_name+".docx",path.join(subscription_activity.path,output_name+".docx"))
-                //DELETE FILES AND TEMPORARY FOLDER
-                exports.deleteTemp(subscription_activity.path)
-                /**/
+                if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
+                    await mergeDocumentUtil.mergeDocument(output_name, subscription_activity.path)
+                    //SAVE DOCUMENT TO STORAGE
+                    await emailUtil.email(subscription, output_name+".docx",path.join(subscription_activity.path,output_name+".docx"))
+                    //DELETE FILES AND TEMPORARY FOLDER
+                    exports.deleteTemp(subscription_activity.path)
+                    /**/
+                }
 
-            //     let options = {
-            //         subscription: subscription,
-            //         file_path: subscription_activity.path,
-            //         output_name: output_name
-            //    }
-            //    const mergeInstance = new classes.MergeDocument(options)
-            //    mergeInstance.runMerge()
-
+                if(process.env.MERGE_METHOD == 'CLOUDMERSIVE'){
+                    let options = {
+                        subscription: subscription,
+                        file_path: subscription_activity.path,
+                        output_name: output_name
+                    }
+                    const mergeInstance = new classes.MergeDocument(options)
+                    mergeInstance.runMerge()                
+                }
 
             }
             //ELSE EMAIL THE ERROR TO THE USER

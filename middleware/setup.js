@@ -87,5 +87,8 @@ exports.setupApp = async(app) => {
     })
 
 
+    //RESET AND UPDATE THE SCHEDULER
+    utils.scheduler.updateScheduler();
+
     // utils.seeder.populate();
 }

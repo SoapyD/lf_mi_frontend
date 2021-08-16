@@ -11,8 +11,9 @@ const SubSection = utils.database.sequelize.define('NODE_REPORT_subsection', {
        primaryKey: true
    },
    order: Sequelize.FLOAT,
-   path_warehouse: Sequelize.STRING,
-   path_snapshot: Sequelize.STRING,   
+   path: Sequelize.STRING,
+//    path_warehouse: Sequelize.STRING,
+//    path_snapshot: Sequelize.STRING,   
    name: Sequelize.STRING, 
    description: Sequelize.STRING,
    period_type: {type: Sequelize.STRING, defaultValue: "full"},

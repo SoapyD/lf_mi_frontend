@@ -1,0 +1,100 @@
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+<header class="jumbotron">
+    <div class="container">
+        
+        <h1>
+            Jobs List
+        </h1>
+
+    </div>
+</header>
+
+
+<% 
+var date = new Date();
+
+let date_string = date.getDate() + '/' + String(date.getMonth()+1) + '/' + date.getFullYear()
+let time_string = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+
+
+%>
+
+<%= date_string + ' ' + time_string %>
+
+<div class="row">
+			
+    <div class="col-md-12 top-padding">
+        
+        <table id="sort">
+            
+            <colgroup>
+                <col span="1" style="width: 25%;">
+                <col span="1" style="width: 35%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">						
+                <col span="1" style="width: 10%;">
+            </colgroup>
+
+            <thead>
+                <tr>
+                    <th class="text"><span class="text">Report</span></th>
+                    <th><span class="text">Subscription</span></th>
+                    <th class="center-text"><span class="text">Frequency</span></th>
+                    <th class="center-text"><span class="text">Start Date</span></th>	
+                    <th class="center-text"><span class="text">Time</span></th>
+                    <th class="center-text"><span class="text">Time String</span></th>									
+                </tr>
+            </thead>
+
+            <tbody>	
+
+                <% jobs.forEach(job => { %>
+
+                    <tr>
+                        <td>
+                            <%= job.report.name %>
+                        </td>
+
+                        <td>
+                            <%= job.subscription.name %>
+                        </td>
+
+                        <td>
+                            <%= job.subscription.frequency.name %>
+                        </td>
+
+                        <td>
+                            <%= job.subscription.start_date %>
+                        </td>                        
+
+                        <td>
+                            <%= job.subscription.time %>
+                        </td>     
+
+                        <td>
+                            <%= job.time_string %>
+                        </td>     
+
+                    </tr>
+
+                    
+                
+                <% }) %>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+</div>
+
+<%- include("../partials/footer") %>

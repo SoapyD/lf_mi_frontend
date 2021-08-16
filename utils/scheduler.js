@@ -5,7 +5,12 @@ const databaseQueriesUtil = require('../utils/database_queries2');
 const ssrsUtil = require('../utils/ssrs3');
 
 const jobs = [];
+const jobs_List = [];
 
+
+exports.getJobs = () => {
+    return jobs_List
+}
 
 exports.resetScheduler = () => {
     jobs.forEach((job) => {
@@ -14,6 +19,7 @@ exports.resetScheduler = () => {
     })
 
     jobs.length = 0;
+    jobs_List.length = 0;
 }
 
 exports.addSchedule = (options) => {
@@ -26,6 +32,9 @@ exports.addSchedule = (options) => {
     })
 
     jobs.push(job)
+
+    options.time_string = time_string
+    jobs_List.push(options)
 }
 
 exports.updateScheduler = async() => {

@@ -33,28 +33,12 @@ exports.run = async(subscription_number, report, subscription) => {
 
             
             let subsection_count = 1; //1 for front cover
-            // let subsection_count = 0; //1 for front cover
             if(report.sections){
                 report.sections.forEach((section) => {
 
                     if(section.subsections){
 
                         subsection_count += section.subsections.length
-
-                        // if(section.subsections.length > 0){
-                        //     subsection_count += 1 //1 for every section
-                        // }
-                        // subsection_count += (section.subsections.length * 3) //3 parts for each subsection, header/subsection/analysis
-
-                        // section.subsections.forEach((subsection) => {
-                        //     if (subsection.type === "template"){
-                        //         subsection_count -= 1
-                        //     }
-
-                        //     if (subsection.type === "appendix" || subsection.type === "appendix template"){
-                        //         subsection_count -= 2
-                        //     }
-                        // })
                     }
                 })
             }
@@ -115,37 +99,12 @@ exports.run = async(subscription_number, report, subscription) => {
             let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
 
 
-            // let filepath = '';
-            // let filename = '';
-            // let outputname = '';
-            // let parameter_object = JSON.parse(subscription.parameters);
-            // let contents_page = '';
 
             //CREATE THE CONTENT PAGE TEXT
             if(report.sections){
 
                 let subsection_total = 0
 
-                //FORMAT THE CONTENTS PAGE
-                // report.sections.forEach((section) => {
-
-                //     contents_page += section.order + ". " + section.name + "\n"
-
-                //     section.subsections.forEach((subsection) => {
-                //         if (subsection.name !== "front" && subsection.type !== 'appendix'){
-
-                //             let subsection_name = subsection.name
-                //             if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
-                //                 subsection_name = subsection.sectionsubsections.name
-                //             }
-
-                //             contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection_name + "\n"
-                //         }
-                //         subsection_total++      
-                //     })
-                // })
-
-                // contents_page = "REPLACE"
 
                 //ADD FRONT PAGE
                 filepath = "/99 - Test Reports/Service Report/_Front Cover"
@@ -213,36 +172,6 @@ exports.run = async(subscription_number, report, subscription) => {
                             report_param_object['Hide_Analysis'] = "false"
 
 
-                            // if(subsection_number === 0)
-                            // {
-                            //     //ADD SECTION NAME
-                            //     filepath = "/99 - Test Reports/Service Report/_Section_Header"
-                            //     let temp_param_object = 
-                            //     {
-                            //         "Section_Name":report_param_object['Section_Name'], 
-                            //     }
-                            //     outputname = "000000000" + (file_number-2);
-                            //     outputname = outputname.substr(outputname.length-size);
-                            //     let output_file = path.join(folder_path,outputname);
-                            //     exports.runDelay(delay_timer_value, filepath, temp_param_object, folder_path, output_file)    
-                            // }
-                        
-                            
-
-
-                            //ADD SUBSECTION NAME
-                            // if (subsection.type !== "appendix" && subsection.type !== 'appendix template'){
-                            //     filepath = "/99 - Test Reports/Service Report/_Subsection_Header"
-                            //     let temp_param_object = 
-                            //     {
-                            //         "Subsection_Name":report_param_object['Subsection_Name'], 
-                            //     }
-                            //     outputname = "000000000" + (file_number-1);
-                            //     outputname = outputname.substr(outputname.length-size);
-                            //     let output_file = path.join(folder_path,outputname);
-                            //     exports.runDelay(delay_timer_value+1, filepath, temp_param_object, folder_path, output_file)
-                            // }
-
                             if(subsection_number === 0){
                                 subsection_param_object.Section_Name = report_param_object['Section_Name']
                             }
@@ -251,14 +180,19 @@ exports.run = async(subscription_number, report, subscription) => {
                                 case "template":
                                 case "appendix template":
                                     subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
-                                    // ,subsection_param_object.Hide_PageBreak = "false"                                    
+
+                                    if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
+                                        subsection_param_object.Hide_PageBreak = "false"  
+                                    }
                                 break;
                                 case "normal":
                                     subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
-                                    // ,subsection_param_object.Hide_Analysis = "false"
+                                    ,subsection_param_object.Hide_Analysis = "false"
                                 break;  
                                 case "appendix":
-                                    // ,subsection_param_object.Hide_PageBreak = "false"
+                                    if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
+                                        subsection_param_object.Hide_PageBreak = "false"  
+                                    }
                                 break;                                                                
                                 default:
 
@@ -270,24 +204,14 @@ exports.run = async(subscription_number, report, subscription) => {
         
                             output_file = path.join(folder_path,outputname); 
 
-                            if(report_param_object.database === "snapshot"){
-                                exports.runDelay(delay_timer_value, subsection.path_snapshot, subsection_param_object, folder_path, output_file)
-                            }
-                            if(report_param_object.database === "warehouse"){
-                                exports.runDelay(delay_timer_value, subsection.path_warehouse, subsection_param_object, folder_path, output_file)
-                            }
 
+                            exports.runDelay(delay_timer_value, subsection.path, subsection_param_object, folder_path, output_file)
 
-                            // if(subsection.type !== 'appendix' && subsection.type !== 'template' && subsection.type !== 'appendix template'){
-                            //     //ADD ANALYSIS BOX
-                            //     filepath = "/99 - Test Reports/Service Report/_Subsection_Analysis"
-                            //     temp_param_object = 
-                            //     {
-                            //     }
-                            //     outputname = "000000000" + (file_number+1);
-                            //     outputname = outputname.substr(outputname.length-size);
-                            //     output_file = path.join(folder_path,outputname);
-                            //     exports.runDelay(delay_timer_value+3, filepath, temp_param_object, folder_path, output_file)
+                            // if(report_param_object.database === "snapshot"){
+                            //     exports.runDelay(delay_timer_value, subsection.path_snapshot, subsection_param_object, folder_path, output_file)
+                            // }
+                            // if(report_param_object.database === "warehouse"){
+                            //     exports.runDelay(delay_timer_value, subsection.path_warehouse, subsection_param_object, folder_path, output_file)
                             // }
 
 

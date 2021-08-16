@@ -347,7 +347,10 @@ exports.updateJoinReport = async(req,res) => {
 
 				if(creation_list.length > 0){
 					let created_sectionsubsections = await utils.queries.createData2(creation_list)
-					created_sectionsubsections_LIST.push(created_sectionsubsections[0])
+					if(created_sectionsubsections[0]){
+						created_sectionsubsections_LIST.push(created_sectionsubsections[0])
+					}
+
 				}
 				//CREATE SUBSECTIONS
 				section_order++;

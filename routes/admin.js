@@ -5,6 +5,8 @@ const middleware = require("../middleware");
 
 router.get("/", middleware.admin_access, controllers.admin.getAllOptions);
 
+router.get("/subscriptionjobs", middleware.admin_access, controllers.admin.getSubscriptionJobs);
+
 router.get("/:item", middleware.admin_access, controllers.admin.getItems);
 
 router.get("/:item/new", middleware.admin_access, controllers.admin.getFormCreateItem);

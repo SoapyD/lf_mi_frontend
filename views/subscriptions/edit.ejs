@@ -85,9 +85,11 @@
 		<!-- SETUP THE UNIVERSAL PARAMETERS -->
 		
 
+		<!-- loop through each parameter value set -->
 		<% let saved_group = ""; %>
 		<% parameter_values.forEach(function (parameter_value, index){ %>
 
+			<!-- get the associated parameter -->
 			<% let parameter = parameters[index]; %>
 
 			<% if (parameter.visible === true ) { %>
@@ -108,6 +110,7 @@
 						
 						<p><%= parameter.name %>:</p>
 						
+						<!-- if the parameter value has records associated with it -->
 						<% if(parameter_value.recordset){ %>						
 							<select 
 							
