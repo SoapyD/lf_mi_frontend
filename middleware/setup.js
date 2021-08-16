@@ -77,9 +77,9 @@ exports.setupApp = async(app) => {
     utils.database.sequelize
     .sync()
     .then(result => {
-      utils.seeder.create()
+      // utils.seeder.create()
       if(process.env._PROCESS_TYPE === 'Dev'){
-        // utils.seeder.create()
+        utils.seeder.create()
         // seeds.test()
       }
     })
