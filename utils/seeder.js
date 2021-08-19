@@ -89,7 +89,7 @@ exports.create = async() => {
             order: 1.000,
             name: "Support Requests - Total Volume Flow Diagram - single period",
             path: subsection_root+"Support Requests - Total Volume Flow Diagram - single period_WH02",
-            period_type: "single"
+            period_type: "both"
         },   
 
         {
@@ -120,7 +120,7 @@ exports.create = async() => {
         {
             order: 1.005,
             name: "Support Requests - Top 10 VIP Users Raising Tickets - single period",
-            path: "/99 - Test Reports/Service Report/Live/Support Requests - Top 10 VIP Users Raising Tickets - single period_WH02",
+            path: subsection_root+"Support Requests - Top 10 VIP Users Raising Tickets - single period_WH02",
             period_type: 'single'
         },    
         {
@@ -137,9 +137,24 @@ exports.create = async() => {
 
         {
             order: 1.008,
-            name: "Support Requests - Opened and Resolved per resolver group - full period",
-            path: subsection_root+"Support Requests - Opened and Resolved per resolver group - full period_WH02",
+            name: "Support Requests - Trending per Month per Resolver Team - full period",
+            path: subsection_root+"Support Requests - Trending per Month per Resolver Team - full period_WH02",
         },    
+
+        {
+            order: 1.009,
+            name: "Support Requests - Registered Resolved and Open Summary - single period",
+            path: subsection_root+"Support Requests - Registered Resolved and Open Summary - single period_WH02",
+            period_type: 'single'
+        },   
+        
+        {
+            order: 1.010,
+            name: "Support Requests - Resolved and Open by Ownerteam - single period",
+            path: subsection_root+"Support Requests - Resolved and Open by Ownerteam - single period_WH02",
+            period_type: 'single'
+        },           
+
 
         //--------------------------------------------------------INCIDENTS
 
@@ -216,16 +231,28 @@ exports.create = async() => {
             path: subsection_root+"Incidents - Top 10 Users Raising Incidents - single period_WH02",
             period_type: 'single',            
         },
-
+        {
+            order: 2.009,
+            name: "Incidents - Master vs Child Incidents - full period",
+            path: subsection_root+"Incidents - Master vs Child Incidents - full period_WH02",
+            period_type: 'full',            
+        },
 
 
 
 
         //--------------------------------------------------------REQUESTS
 
+        
         {
             order: 3,
-            name: "Requests - Top 5 Categories with Subcategory - single period",
+            name: "Requests - Top 5 Category Trends - full period",
+            path: subsection_root+"Requests - Top 5 Category Trends - full period_WH02",
+        },    
+
+        {
+            order: 3.0009,
+            name: "Requests - Top 5 Categories with Subcategory breakdown - single period",
             path: subsection_root+"Requests - Top 5 Categories - single period_WH02",
             period_type: 'single'
         },    
@@ -408,8 +435,8 @@ exports.create = async() => {
 
         {
             order: 10.008,
-            name: "Appendix - Change - Status - single period",
-            path: subsection_root+"Appendix - Change - Status - single period_WH02",
+            name: "Appendix - Changes - Status - single period",
+            path: subsection_root+"Appendix - Changes - Status - single period_WH02",
             period_type: 'single',            
             type: 'appendix'
         },    

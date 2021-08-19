@@ -73,20 +73,20 @@ AND p.name IN ('database')
 
 
 
-INSERT INTO [NODE_REPORT_sectionsubsections]
-SELECT 
-1 as [Order]
-,'Executive Summary' AS name
-,s.id AS [sectionId]
-,sb.id AS [subsectionId]
-FROM 
-[dbo].[NODE_REPORT_reports] r
-LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
-[dbo].[NODE_REPORT_subsections] sb
-WHERE
-r.name = 'Fusion - Service Report'
-AND s.name = 'Executive Summary'
-AND sb.name IN ('Template - Executive Summary')
+-- INSERT INTO [NODE_REPORT_sectionsubsections]
+-- SELECT 
+-- 1 as [Order]
+-- ,'Executive Summary' AS name
+-- ,s.id AS [sectionId]
+-- ,sb.id AS [subsectionId]
+-- FROM 
+-- [dbo].[NODE_REPORT_reports] r
+-- LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+-- [dbo].[NODE_REPORT_subsections] sb
+-- WHERE
+-- r.name = 'Fusion - Service Report'
+-- AND s.name = 'Executive Summary'
+-- AND sb.name IN ('Template - Executive Summary')
 
 -- INSERT INTO [NODE_REPORT_sectionsubsections]
 -- SELECT 
@@ -561,7 +561,24 @@ LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
 WHERE
 r.name = 'Service Report'
 AND s.name = 'Service Desk'
+AND sb.name IN ('Support Requests - Time of Day - full period')
+
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+3.5 as [Order]
+,'Heatmaps for Total Registered Tickets' AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Service Desk'
 AND sb.name IN ('Support Requests - Heatmaps for Total Registered Tickets - single and full period')
+
+
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
@@ -636,7 +653,7 @@ LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
 WHERE
 r.name = 'Service Report'
 AND s.name = 'Service Desk'
-AND sb.name IN ('CSAT - Service Feedback Summary - single period')
+AND sb.name IN ('CSAT - CSAT Feedback - single period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
@@ -651,7 +668,7 @@ LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
 WHERE
 r.name = 'Service Report'
 AND s.name = 'Service Desk'
-AND sb.name IN ('CSAT - NPS Feedback Summary - full period')
+AND sb.name IN ('CSAT - NPS Summary - full period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
@@ -699,20 +716,20 @@ AND s.name = 'Service Desk'
 AND sb.name IN ('Support Requests - Top 10 VIPs Raising Requests - single period')
 
 
--- INSERT INTO [NODE_REPORT_sectionsubsections]
--- SELECT 
--- 12 as [Order]
--- ,NULL AS name
--- ,s.id AS [sectionId]
--- ,sb.id AS [subsectionId]
--- FROM 
--- [dbo].[NODE_REPORT_reports] r
--- LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
--- [dbo].[NODE_REPORT_subsections] sb
--- WHERE
--- r.name = 'Service Report'
--- AND s.name = 'Service Desk'
--- AND sb.name IN ('Support Requests - Opened and Resolved per resolver group - full period')
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+13 as [Order]
+,NULL AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Service Desk'
+AND sb.name IN ('Support Requests - Top 10 VIP Users Raising Tickets - single period')
 
 ------------------------------------------------------------------------------------------------------INCIDENT MANAGEMENT
 
@@ -809,7 +826,7 @@ AND sb.name IN ('Incidents - Opened and Resolved - full period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-1 as [Order]
+7 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -824,7 +841,7 @@ AND sb.name IN ('Incidents - Closed by Littlefish - full period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-1 as [Order]
+8 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -839,7 +856,7 @@ AND sb.name IN ('Incidents - Closed by Non LF Resolvers - full period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-7 as [Order]
+9 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -854,7 +871,7 @@ AND sb.name IN ('Incidents - Tail by Resolver Group - single period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-8 as [Order]
+10 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -870,7 +887,7 @@ AND sb.name IN ('Incidents - Top 5 Category Trends - full period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-9 as [Order]
+11 as [Order]
 ,'Top 5 Incidents by Categories' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -881,11 +898,11 @@ LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
 WHERE
 r.name = 'Service Report'
 AND s.name = 'Incident Management'
-AND sb.name IN ('Incidents - Top 5 Categories - single period')
+AND sb.name IN ('Incidents - Top 5 Categories with Subcategory breakdown - single period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-10 as [Order]
+12 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -917,7 +934,7 @@ AND sb.name IN ('Requests - Priority - full period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-1 as [Order]
+2 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -932,7 +949,7 @@ AND sb.name IN ('Requests - Customer Experience Mean Time to Resolution by Prior
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-2 as [Order]
+3 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -947,7 +964,7 @@ AND sb.name IN ('Requests - SLA Clock Mean Time to Resolution by Priority - full
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-3 as [Order]
+4 as [Order]
 ,'Top 5 Requests by Categories' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -958,11 +975,11 @@ LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
 WHERE
 r.name = 'Service Report'
 AND s.name = 'Requests'
-AND sb.name IN ('Requests - Top 5 Categories - single period')
+AND sb.name IN ('Requests - Top 5 Categories with Subcategory breakdown - single period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
-4 as [Order]
+5 as [Order]
 ,NULL AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
@@ -977,20 +994,20 @@ AND sb.name IN ('Requests - Resolution Performance - full period')
 
 ------------------------------------------------------------------------------------------------------PROBLEM MANAGEMENT
 
--- INSERT INTO [NODE_REPORT_sectionsubsections]
--- SELECT 
--- 1 as [Order]
--- ,'Active and Closed Problems Summary' AS name
--- ,s.id AS [sectionId]
--- ,sb.id AS [subsectionId]
--- FROM 
--- [dbo].[NODE_REPORT_reports] r
--- LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
--- [dbo].[NODE_REPORT_subsections] sb
--- WHERE
--- r.name = 'Service Report'
--- AND s.name = 'Problem Management'
--- AND sb.name IN ('Problems - Open and Closed - single period')
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+1 as [Order]
+,'Active and Closed Problems Summary' AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Problem Management'
+AND sb.name IN ('Problems - Open and Closed - single period')
 
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
@@ -1009,20 +1026,20 @@ AND sb.name IN ('Problems - Opened and Closed - full period')
 
 ------------------------------------------------------------------------------------------------------KNOWLEDGE
 
-INSERT INTO [NODE_REPORT_sectionsubsections]
-SELECT 
-1 as [Order]
-,NULL AS name
-,s.id AS [sectionId]
-,sb.id AS [subsectionId]
-FROM 
-[dbo].[NODE_REPORT_reports] r
-LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
-[dbo].[NODE_REPORT_subsections] sb
-WHERE
-r.name = 'Service Report'
-AND s.name = 'Knowledge'
-AND sb.name IN ('Knowledge - Base Growth - full period')
+-- INSERT INTO [NODE_REPORT_sectionsubsections]
+-- SELECT 
+-- 1 as [Order]
+-- ,NULL AS name
+-- ,s.id AS [sectionId]
+-- ,sb.id AS [subsectionId]
+-- FROM 
+-- [dbo].[NODE_REPORT_reports] r
+-- LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+-- [dbo].[NODE_REPORT_subsections] sb
+-- WHERE
+-- r.name = 'Service Report'
+-- AND s.name = 'Knowledge'
+-- AND sb.name IN ('Knowledge - Base Growth - full period')
 
 ------------------------------------------------------------------------------------------------------CHANGE
 
@@ -1211,20 +1228,20 @@ AND sb.name IN ('Appendix - Support Requests - VIP Raised Tickets - single perio
 
 -----------------------------------------------------------------------------------------------------Appendix F - RFCs Raised and Reviewed this period
 
--- INSERT INTO [NODE_REPORT_sectionsubsections]
--- SELECT 
--- 1 as [Order]
--- ,NULL AS name
--- ,s.id AS [sectionId]
--- ,sb.id AS [subsectionId]
--- FROM 
--- [dbo].[NODE_REPORT_reports] r
--- LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
--- [dbo].[NODE_REPORT_subsections] sb
--- WHERE
--- r.name = 'Service Report'
--- AND s.name = 'Appendix F - RFCs Raised and Reviewed this period'
--- AND sb.name IN ('Appendix - Change - Status - single period')
+INSERT INTO [NODE_REPORT_sectionsubsections]
+SELECT 
+1 as [Order]
+,NULL AS name
+,s.id AS [sectionId]
+,sb.id AS [subsectionId]
+FROM 
+[dbo].[NODE_REPORT_reports] r
+LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
+[dbo].[NODE_REPORT_subsections] sb
+WHERE
+r.name = 'Service Report'
+AND s.name = 'Appendix F - RFCs Raised and Reviewed this period'
+AND sb.name IN ('Appendix - Changes - Status - single period')
 
 ------------------------------------------------------------------------------------------------------Appendix G - Category Trends - Within Top 15 Category Types
 

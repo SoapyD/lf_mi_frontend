@@ -47,7 +47,7 @@ exports.email = async(subscription, filename, filepath) => {
        
 
         // let info = await transporter.sendMail(email_data);
-        // console.log("email sent")
+        console.log("email sent")
         promises.push(transporter.sendMail(email_data))
 
         return Promise.all(promises)
