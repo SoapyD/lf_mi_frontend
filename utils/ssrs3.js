@@ -188,6 +188,9 @@ exports.run = async(subscription_number, report, subscription) => {
                                 case "normal":
                                     subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
                                     ,subsection_param_object.Hide_Analysis = "false"
+                                    if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
+                                        subsection_param_object.Hide_PageBreak = "false"  
+                                    }                                    
                                 break;  
                                 case "appendix":
                                     if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
@@ -281,7 +284,6 @@ exports.runReport = async(filepath, parameters, output_path, output_file) => {
         checkOutputsUtil.checkFiles(output_path, reportPath, err)
     }
 }
-
 
 
 

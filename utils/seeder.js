@@ -103,6 +103,11 @@ exports.create = async() => {
             name: "Support Requests - Location - full period",
             path: subsection_root+"Support Requests - Location - full period_WH02"
         },   
+        {
+            order: 1.00201,
+            name: "Support Requests - Business Unit - full period",
+            path: subsection_root+"Support Requests - Business Unit - full period_WH02"
+        },           
 
         {
             order: 1.003,
@@ -155,6 +160,18 @@ exports.create = async() => {
             period_type: 'single'
         },           
 
+        {
+            order: 1.02,
+            name: "Support Requests - Customer Experience Mean Elapsed Time by Location - full period",
+            path: subsection_root+"Support Requests - Customer Experience Mean Elapsed Time by Location - full period_WH02",
+        },
+        {
+            order: 1.0201,
+            name: "Support Requests - Customer Experience Mean Elapsed Time by VIP Status - full period",
+            path: subsection_root+"Support Requests - Customer Experience Mean Elapsed Time by VIP Status - full period_WH02",
+        },
+
+
 
         //--------------------------------------------------------INCIDENTS
 
@@ -200,8 +217,12 @@ exports.create = async() => {
             name: "Incidents - Closed by Non LF Resolvers - full period",
             path: subsection_root+"Incidents - Closed by Non LF Resolvers - full period_WH02",
         },
+        {
+            order: 2.032,
+            name: "Incidents - Closed by All Resolver Groups - full period",
+            path: subsection_root+"Incidents - Closed by All Resolver Groups - full period_WH02",
+        },
 
-        
         {
             order: 2.004,
             name: "Incidents - Priority - full period",
