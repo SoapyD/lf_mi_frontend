@@ -110,8 +110,10 @@ exports.run = async(subscription_number, report, subscription) => {
                 filepath = "/99 - Test Reports/Service Report/_Front Cover"
                 subsection_param_object = 
                 {
+                    // "report_name":report.name, 
+                    // "company_filter": parameter_object.Client,
                     "report_name":report.name, 
-                    "company_filter": parameter_object.Client,
+                    "company_filter": subscription.name,                    
                     "sub_activity_id": subscriptionactivities[0].id,
                     "period_type": parameter_object.Date_Range
                 }
