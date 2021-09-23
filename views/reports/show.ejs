@@ -213,15 +213,13 @@
                 <input class="form-control subsection-name" type="text" name="Report[`+parent_span+`][`+text_number+`][params][name]" placeholder="name" >
             </div>
 
-            <div class="box hide-element">
-                <span>Options</span>
-                <select name="Report[`+parent_span+`][`+text_number+`][params][options]" type="number" class="full-width form-control subsection-dropdown" multiple size="3">
-                    <option value="graph" selected>graph</option>
-                    <option value="table" selected>table</option>
-                    <option value="comments" selected>comments</option>
-                    <option value="test4">test4</option>
-                    <option value="test5">test5</option>
+            <div class="box">
+                <span>Show Analysis Box</span>
+                <select name="Report[`+parent_span+`][`+text_number+`][params][show_analysis_box]" type="number" class="full-width form-control subsection-dropdown" multiple size="1">
+                    <option value="1">Y</option>
                 </select>
+
+                
             </div>
 
             <ul class="sortable sortable-paragraphs">
@@ -299,6 +297,7 @@
  
     let subsection;
     let subsection_element;
+    let subsection_elements;
 
     
 
@@ -334,7 +333,29 @@
                         {
                             subsection_element.val('<%- subsection.sectionsubsections.name %>');
                         }
+
+                        //TOGGLE THE ANALYSIS BOX USAGE
+                        //FIRST PULL OUT ALL SELECTION HTML ELEMENTS
+                        subsection_elements = subsection_chunk.find('select')                    
                           
+                        if (subsection_elements.length > 0)
+                        {
+                            for(let i=0; i<subsection_elements.length; i++)
+                            {
+                                let element = subsection_elements[i];
+                                if(element.name.includes('show_analysis_box')){
+
+                                    if('<%- subsection.sectionsubsections.show_analysis_box %>'==='true'){
+                                        element.options[0].selected = true
+                                    }
+                                    else{
+                                        element.options[0].selected = false
+                                    }
+
+                                }
+                            }
+                        }  
+
                     <% } %>
 
 

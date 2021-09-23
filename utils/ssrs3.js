@@ -54,6 +54,13 @@ exports.run = async(subscription_number, report, subscription) => {
             let filename = '';
             let outputname = '';
             let parameter_object = JSON.parse(subscription.parameters);
+
+            //  ██████  ██████  ███    ██ ████████ ███████ ███    ██ ████████ ███████       ███████ ████████ ██████  ██ ███    ██  ██████  
+            // ██      ██    ██ ████   ██    ██    ██      ████   ██    ██    ██            ██         ██    ██   ██ ██ ████   ██ ██       
+            // ██      ██    ██ ██ ██  ██    ██    █████   ██ ██  ██    ██    ███████ █████ ███████    ██    ██████  ██ ██ ██  ██ ██   ███ 
+            // ██      ██    ██ ██  ██ ██    ██    ██      ██  ██ ██    ██         ██            ██    ██    ██   ██ ██ ██  ██ ██ ██    ██ 
+            //  ██████  ██████  ██   ████    ██    ███████ ██   ████    ██    ███████       ███████    ██    ██   ██ ██ ██   ████  ██████              
+
             let contents_page = '';
 
             //CREATE THE CONTENT PAGE TEXT
@@ -100,10 +107,18 @@ exports.run = async(subscription_number, report, subscription) => {
 
 
 
+                                                                                                                    
+
             //CREATE THE CONTENT PAGE TEXT
             if(report.sections){
 
                 let subsection_total = 0
+
+                // ███████ ██████   ██████  ███    ██ ████████        ██████  ██████  ██    ██ ███████ ██████  
+                // ██      ██   ██ ██    ██ ████   ██    ██          ██      ██    ██ ██    ██ ██      ██   ██ 
+                // █████   ██████  ██    ██ ██ ██  ██    ██    █████ ██      ██    ██ ██    ██ █████   ██████  
+                // ██      ██   ██ ██    ██ ██  ██ ██    ██          ██      ██    ██  ██  ██  ██      ██   ██ 
+                // ██      ██   ██  ██████  ██   ████    ██           ██████  ██████    ████   ███████ ██   ██ 
 
 
                 //ADD FRONT PAGE
@@ -112,14 +127,23 @@ exports.run = async(subscription_number, report, subscription) => {
                 {
                     // "report_name":report.name, 
                     // "company_filter": parameter_object.Client,
-                    "report_name":report.name, 
-                    "company_filter": subscription.name,                    
+                    "report_name":report.report_name, 
+                    "company_filter": subscription.reprot_sub_name,                    
                     "sub_activity_id": subscriptionactivities[0].id,
                     "period_type": parameter_object.Date_Range
                 }
                 outputname = "0000000000"
                 let output_file = path.join(folder_path,outputname);
                 exports.runDelay(((subsection_total*4) * subscription_number), filepath, subsection_param_object, folder_path, output_file)
+
+
+
+
+                // ██████  ██    ██ ███    ██       ███████ ███████  ██████ ████████ ██  ██████  ███    ██ ███████ 
+                // ██   ██ ██    ██ ████   ██       ██      ██      ██         ██    ██ ██    ██ ████   ██ ██      
+                // ██████  ██    ██ ██ ██  ██ █████ ███████ █████   ██         ██    ██ ██    ██ ██ ██  ██ ███████ 
+                // ██   ██ ██    ██ ██  ██ ██            ██ ██      ██         ██    ██ ██    ██ ██  ██ ██      ██ 
+                // ██   ██  ██████  ██   ████       ███████ ███████  ██████    ██    ██  ██████  ██   ████ ███████ 
 
 
                 //START THE DELAY VALUE AS THE SUBSCRIPTION NUMBER
@@ -135,6 +159,13 @@ exports.run = async(subscription_number, report, subscription) => {
 
                             // setTimeout(() => {
 
+                                // ███████ ██    ██ ██████  ███████ ███████  ██████ ████████ ██  ██████  ███    ██       ██████   █████  ██████   █████  ███    ███ ███████ 
+                                // ██      ██    ██ ██   ██ ██      ██      ██         ██    ██ ██    ██ ████   ██       ██   ██ ██   ██ ██   ██ ██   ██ ████  ████ ██      
+                                // ███████ ██    ██ ██████  ███████ █████   ██         ██    ██ ██    ██ ██ ██  ██ █████ ██████  ███████ ██████  ███████ ██ ████ ██ ███████ 
+                                //      ██ ██    ██ ██   ██      ██ ██      ██         ██    ██ ██    ██ ██  ██ ██       ██      ██   ██ ██   ██ ██   ██ ██  ██  ██      ██ 
+                                // ███████  ██████  ██████  ███████ ███████  ██████    ██    ██  ██████  ██   ████       ██      ██   ██ ██   ██ ██   ██ ██      ██ ███████ 
+                                                                                                                                                                                                         
+
                             //GET SUBSECTION
                             //GET PARAMETER SUBSECTIONS
                             //PULL OUT ANY PARAMETERS SAID SUBSECTION NEEDS FROM OVERALL PARAMETER OBJECT
@@ -149,7 +180,6 @@ exports.run = async(subscription_number, report, subscription) => {
                                         else{
                                             subsection_param_object[parameter.name] = parameter_object[parameter.name];
                                         }
-     
                                     }
                                 })
                             }
@@ -171,8 +201,19 @@ exports.run = async(subscription_number, report, subscription) => {
                             }
                             
                             report_param_object['Subsection_Name'] = section.order + "." + subsection.sectionsubsections.order+ ". "+subsection_name;
-                            // report_param_object['Add_Analysis_Box'] = "Y"
+
+
+                            //  █████  ███    ██  █████  ██      ██    ██ ███████ ██ ███████     ██ ██████  ██████  ███████  █████  ██   ██ ███████ 
+                            // ██   ██ ████   ██ ██   ██ ██       ██  ██  ██      ██ ██         ██  ██   ██ ██   ██ ██      ██   ██ ██  ██  ██      
+                            // ███████ ██ ██  ██ ███████ ██        ████   ███████ ██ ███████   ██   ██████  ██████  █████   ███████ █████   ███████ 
+                            // ██   ██ ██  ██ ██ ██   ██ ██         ██         ██ ██      ██  ██    ██   ██ ██   ██ ██      ██   ██ ██  ██       ██ 
+                            // ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ██ ███████ ██     ██████  ██   ██ ███████ ██   ██ ██   ██ ███████ 
+
+
                             report_param_object['Hide_Analysis'] = "false"
+                            if(subsection.sectionsubsections.show_analysis_box === false){
+                                report_param_object['Hide_Analysis'] = "true"
+                            }
 
 
                             if(subsection_number === 0){
@@ -212,14 +253,6 @@ exports.run = async(subscription_number, report, subscription) => {
 
 
                             exports.runDelay(delay_timer_value, subsection.path, subsection_param_object, folder_path, output_file)
-
-                            // if(report_param_object.database === "snapshot"){
-                            //     exports.runDelay(delay_timer_value, subsection.path_snapshot, subsection_param_object, folder_path, output_file)
-                            // }
-                            // if(report_param_object.database === "warehouse"){
-                            //     exports.runDelay(delay_timer_value, subsection.path_warehouse, subsection_param_object, folder_path, output_file)
-                            // }
-
 
                             subsection_count++
 

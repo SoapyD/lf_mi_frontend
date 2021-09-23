@@ -15,6 +15,10 @@ const Subscription = utils.database.sequelize.define('NODE_REPORT_subscription',
         primaryKey: true
     },
     name: Sequelize.STRING,
+
+    report_name: Sequelize.STRING,
+    report_sub_name: Sequelize.STRING,
+
     start_date: {
         type: Sequelize.DATE,
         get: function() {

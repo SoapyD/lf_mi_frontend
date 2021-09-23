@@ -333,6 +333,11 @@ exports.updateJoinReport = async(req,res) => {
 							{
 								params["name"] = subsection["params"]["name"]
 							}
+							params["show_analysis_box"] = '0'
+							if(subsection["params"]["show_analysis_box"])
+							{
+								params["show_analysis_box"] = subsection["params"]["show_analysis_box"]
+							}							
 							params["order"] = subsection_order
 							params["sectionId"] = created_section[0].id
 							params["subsectionId"] = Number(subsection["params"]["id"])

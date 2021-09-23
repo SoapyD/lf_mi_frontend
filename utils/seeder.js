@@ -1251,6 +1251,8 @@ exports.create = async() => {
             reportId: reports[0].id,
             frequencyId: frequencies[0].id,
             name: "Warehouse Cafcass Test",
+            report_name: "Service Report",
+            report_sub_name: "Cafcass", 
             email_to: "thomas.cassady@littlefish.co.uk",
             subject: "Service Report",
             body: "please find attached your copy of the service report",

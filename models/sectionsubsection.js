@@ -13,7 +13,8 @@ const Fusion = utils.database.sequelize.define('NODE_REPORT_sectionsubsections',
    },
 
    order: Sequelize.INTEGER
-   ,name: Sequelize.STRING    
+   ,name: Sequelize.STRING
+   ,show_analysis_box: {type:Sequelize.BOOLEAN, defaultValue: 1}
 }, {
    timestamps: false,
 });
