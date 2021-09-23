@@ -127,7 +127,7 @@ exports.run = async(subscription_number, report, subscription) => {
                 {
                     // "report_name":report.name, 
                     // "company_filter": parameter_object.Client,
-                    "report_name":report.report_name, 
+                    "report_name":subscription.report_name, 
                     "company_filter": subscription.report_sub_name,                    
                     "sub_activity_id": subscriptionactivities[0].id,
                     "period_type": parameter_object.Date_Range
