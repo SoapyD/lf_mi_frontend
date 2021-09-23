@@ -231,7 +231,7 @@ exports.run = async(subscription_number, report, subscription) => {
                                 break;
                                 case "normal":
                                     subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
-                                    ,subsection_param_object.Hide_Analysis = "false"
+                                    ,subsection_param_object.Hide_Analysis = report_param_object['Hide_Analysis']
                                     if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
                                         subsection_param_object.Hide_PageBreak = "false"  
                                     }                                    

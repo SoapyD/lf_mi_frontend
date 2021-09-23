@@ -451,6 +451,7 @@ exports.updateCopyReport = async(req,res) => {
 							params = {							
 								order: sectionsubsection.order,
 								name: sectionsubsection.name,
+								show_analysis_box: sectionsubsection.show_analysis_box, 
 								sectionId: copied_section[0].id,
 								subsectionId: sectionsubsection.subsectionId
 							}		
