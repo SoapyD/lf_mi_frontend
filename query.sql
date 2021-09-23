@@ -534,7 +534,7 @@ AND sb.name IN ('Telephony - Summary - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 2 as [Order]
-,NULL AS name
+,'Abandoned Calls Heatmaps' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -613,7 +613,7 @@ AND sb.name IN ('Support Requests - Location - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 6 as [Order]
-,NULL AS name
+,'Support Requests by Type' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -643,7 +643,7 @@ AND sb.name IN ('CSAT - CSAT Summary - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 8 as [Order]
-,'Service Feedback Summary' AS name
+,'CSAT Feedback Summary' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -658,7 +658,7 @@ AND sb.name IN ('CSAT - CSAT Feedback - single period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 9 as [Order]
-,NULL AS name
+,'NPS Feedback' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -673,7 +673,7 @@ AND sb.name IN ('CSAT - NPS Summary - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 10 as [Order]
-,NULL AS name
+,'NPS Feedback Summary' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -688,7 +688,7 @@ AND sb.name IN ('CSAT - NPS Feedback - single period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 11 as [Order]
-,NULL AS name
+,'VIP Support Requests' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -703,7 +703,7 @@ AND sb.name IN ('Support Requests - VIP - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 12 as [Order]
-,NULL AS name
+,'VIP Support Requests List' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -719,7 +719,7 @@ AND sb.name IN ('Support Requests - Top 10 VIPs Raising Requests - single period
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 13 as [Order]
-,NULL AS name
+,'Support Requests Opened and Resolved per Month per Resolver Group' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -729,7 +729,7 @@ LEFT JOIN [dbo].[NODE_REPORT_sections] s ON (s.reportId = r.id),
 WHERE
 r.name = 'Service Report'
 AND s.name = 'Service Desk'
-AND sb.name IN ('Support Requests - Top 10 VIP Users Raising Tickets - single period')
+AND sb.name IN ('Support Requests - Trending per Month per Resolver Team - full period')
 
 ------------------------------------------------------------------------------------------------------INCIDENT MANAGEMENT
 
@@ -782,7 +782,7 @@ AND sb.name IN ('Incidents - Priority - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 4 as [Order]
-,NULL AS name
+,'Customer Experience Mean Time to Resolution by Priority' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -797,7 +797,7 @@ AND sb.name IN ('Incidents - Customer Experience Mean Time to Resolution by Prio
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 5 as [Order]
-,NULL AS name
+,'SLA Clock Mean Time to Resolution by Priority' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -812,7 +812,7 @@ AND sb.name IN ('Incidents - SLA Clock Mean Time to Resolution by Priority - ful
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 6 as [Order]
-,NULL AS name
+,'Incidents Opened and Resolved per Month' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -827,7 +827,7 @@ AND sb.name IN ('Incidents - Opened and Resolved - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 7 as [Order]
-,NULL AS name
+,'Incidents Closed by Littlefish' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -842,7 +842,7 @@ AND sb.name IN ('Incidents - Closed by Littlefish - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 8 as [Order]
-,NULL AS name
+,'Customer and Third-Party Incidents Closed by Resolver Group' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -857,7 +857,7 @@ AND sb.name IN ('Incidents - Closed by Non LF Resolvers - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 9 as [Order]
-,NULL AS name
+,'Incidents Tail by Resolver Group' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -872,7 +872,7 @@ AND sb.name IN ('Incidents - Tail by Resolver Group - single period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 10 as [Order]
-,NULL AS name
+,'Top 5 Category Volume Trend' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -903,7 +903,7 @@ AND sb.name IN ('Incidents - Top 5 Categories with Subcategory breakdown - singl
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 12 as [Order]
-,NULL AS name
+,'Top 10 Users Raising Incidents' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -920,7 +920,7 @@ AND sb.name IN ('Incidents - Top 10 Users Raising Incidents - single period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 1 as [Order]
-,NULL AS name
+,'Volume of Requests by Priority' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -935,7 +935,7 @@ AND sb.name IN ('Requests - Priority - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 2 as [Order]
-,NULL AS name
+,'Customer Experience Mean Time to Resolution by Priority' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -950,7 +950,7 @@ AND sb.name IN ('Requests - Customer Experience Mean Time to Resolution by Prior
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 3 as [Order]
-,NULL AS name
+,'SLA Clock Mean Time to Resolution by Priority' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -980,7 +980,7 @@ AND sb.name IN ('Requests - Top 5 Categories with Subcategory breakdown - single
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 5 as [Order]
-,NULL AS name
+,'Request Resolution Performance' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -1046,7 +1046,7 @@ AND sb.name IN ('Problems - Opened and Closed - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 1 as [Order]
-,NULL AS name
+,'RFCs Raised, Reviewed and Outcomes' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -1061,7 +1061,7 @@ AND sb.name IN ('Change - Status - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 2 as [Order]
-,NULL AS name
+,'RFCs by Type of Change' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -1076,7 +1076,7 @@ AND sb.name IN ('Change - Type of Change - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 3 as [Order]
-,NULL AS name
+,'RFC Implementation' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 
@@ -1091,7 +1091,7 @@ AND sb.name IN ('Change - Implementation - full period')
 INSERT INTO [NODE_REPORT_sectionsubsections]
 SELECT 
 4 as [Order]
-,NULL AS name
+,'RFC Implementation Results' AS name
 ,s.id AS [sectionId]
 ,sb.id AS [subsectionId]
 FROM 

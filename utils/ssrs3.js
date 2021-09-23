@@ -111,8 +111,9 @@ exports.run = async(subscription_number, report, subscription) => {
                 subsection_param_object = 
                 {
                     "report_name":report.name, 
-                    "company_filter": subscription.name,
-                    "sub_activity_id": subscriptionactivities[0].id
+                    "company_filter": parameter_object.Client,
+                    "sub_activity_id": subscriptionactivities[0].id,
+                    "period_type": parameter_object.Date_Range
                 }
                 outputname = "0000000000"
                 let output_file = path.join(folder_path,outputname);
