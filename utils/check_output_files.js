@@ -117,7 +117,7 @@ exports.checkFileNumber = async(subscription_activity) => {
             if(subscription_activity.errors === 0){
                 //MERGE REPORT AND SEND
                 // let output_name = report.name+"_"+report.id+"_"+subscription.name+"_"+subscription.id
-                let output_name = report.name+"_"+subscription.name
+                let output_name = subscription.report_name+"_"+subscription.report_sub_name
 
                 
                 //MERGE DOCUMENT
