@@ -35,8 +35,13 @@
 
 
 
-    <title>Title</title>
+	<title>
+		<% if(typeof title !== 'undefined') { %>
+			<%= title %>
+		<% }%>
+	</title>
 </head>
+
 <body>
 	
 <nav class="navbar navbar-custom">
@@ -61,7 +66,11 @@
 				<% } %>
 				<% if(user) { %>
 					<li><a href="/reports">Reports</a></li>
+					<!-- <li><a href="/orgunit_data">OrgUnit Data</a></li>	
+					<li><a href="/orgunit_slas">OrgUnit SLAs</a></li>
+					<li><a href="/usernames">Usernames</a></li>					 -->
 				<% } %>
+
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<% if(!user) { %>

@@ -6,7 +6,7 @@ const passport = require("passport");
 
 router.get("/", function(req, res) {
     // res.send("hi there you!");
-    res.render("landing")
+    res.render("landing",{title: "landing"})
 });
 
 router.post(
