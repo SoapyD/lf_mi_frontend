@@ -30,7 +30,7 @@ exports.getRouteInfo = () => {
         }
         ,subsection: {
             type: "SubSection"
-            ,edit_fields: ['name','path_snapshot','path_warehouse', 'description', 'period_type']
+            ,edit_fields: ['name', 'order', 'path', 'description', 'period_type']
             ,join_from: ["Parameter"]
         }       
         
