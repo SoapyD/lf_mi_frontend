@@ -1,0 +1,104 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+
+    <header class="jumbotron">
+
+    
+        <div class="container">
+            
+            <h1>
+                Ownerteam Data
+            </h1>
+    
+            <p>
+                List of ownerteams for <%= orgunit.name %>
+            </p>
+            
+
+            <p>
+    
+            </p>
+    
+        </div>
+    </header>    
+
+</div>
+
+
+<div class="container top-padding">	
+
+	<form action="/orgunit_data/<%= orgunit.id %>/ownerteams/?_method=PUT" method="POST">
+		
+		<div class="row">
+			
+			<div class="col-md-12 top-padding">
+				
+				<table id="sort">
+					
+					<colgroup>
+						<col span="1" style="width: 50%;">
+						<col span="1" style="width: 20%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 20%;">
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<th><span class="text">Ownerteam</span></th>
+							<th><span class="text">Type</span></th>
+                            <th><span class="text">LF_Resolver</span></th>
+                            <th><span class="text">Finance_ID</span></th>								
+						</tr>
+					</thead>
+
+					<tbody>	
+						<% orgunit.ownerteams.forEach(function (ownerteam){ %>
+							
+							<tr>
+								
+								<td><%= ownerteam.ownerteam %></td>
+                                <td class="center-text">	
+                                <select id="frequency-select" class="form-control" name="params[frequencyId]">
+                                    <option value=""></option>
+                                    <option value="">Customer</option>
+                                    <option value="">Third Party</option>
+                                    <option value="">LF Service Desk</option>
+                                    <option value="">LF Onsite</option>
+                                    <option value="">LF OPS</option>
+                                    <option value="">LF SMO</option>
+                                    <option value="">LF Sys Admin</option>
+                                    <option value="">LF Infrastructure</option>
+                                    <option value="">LF Cyber</option>
+                                    <option value="">LF PS</option>                                                                                                                                                                                                                                                                                                                                    
+                                    <option value="">LF Other</option>
+                                </select>
+                                </td>
+
+                                <td class="center-text"><input class="form-control" type="text" name="[params][squads]" readonly="readonly"></td>
+                                
+                                <td class="center-text"><input class="form-control" type="text" name="[params][squads]" readonly="readonly"></td>
+							</tr>
+							
+						<% }) %>					
+					</tbody>
+				</table>
+			</div>
+		</div>
+            
+        <button class="btn btn-primary right-button" name="action" type="submit">
+            Save
+        </button>							        
+
+	</form>		
+	
+	<a href="/reports">Go Back</a>
+
+</div>
+
+
+
+
+
+
+<%- include("../partials/footer") %>

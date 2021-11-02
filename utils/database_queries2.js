@@ -53,6 +53,14 @@ exports.searchType = {
                 }
             }
         ]        
+    },
+    "OrgUnit": {
+        include: [
+            {
+                model: models.Data_Ownerteam, 
+                as: "ownerteams",
+            }
+        ]  
     }
 }
 

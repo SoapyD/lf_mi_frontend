@@ -22,6 +22,9 @@ exports.orgunit_slas.path = '/orgunit_slas'
 exports.orgunit_data = require("./orgunit_data");
 exports.orgunit_data.path = '/orgunit_data'
 
+exports.orgunit_data = require("./ownerteam_data");
+exports.orgunit_data.path = '/ownerteam_data'
+
 exports.usernames = require("./usernames");
 exports.usernames.path = '/usernames'
 
