@@ -110,8 +110,8 @@ exports.updateScheduler = async() => {
                                     second: "",
                                     minute: M,
                                     hour: h,
-                                    day_of_month: '*', 
-                                    month: m,
+                                    day_of_month: d, 
+                                    month: '*',
                                     day_of_week: '*',
                                     report: report,
                                     subscription: subscription 
