@@ -1,0 +1,65 @@
+
+	<form action="/client_data/<%= orgunit.id %>/ownerteams/?_method=PUT" method="POST"
+        onsubmit="return confirm('Are you sure you want to save changes for this item?');">
+		
+		<div class="row">
+			
+			<div class="col-md-12 top-padding">
+				
+				<table id="ownerteam-form" class="center">
+					
+					<colgroup>
+						<col span="1" style="width: 50%;">
+						<col span="1" style="width: 20%;">
+                        <!-- <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 20%;"> -->
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<th><span class="text">Ownerteam</span></th>
+							<th><span class="text">Type</span></th>
+                            <!-- <th><span class="text">LF_Resolver</span></th>
+                            <th><span class="text">Finance_ID</span></th>								 -->
+						</tr>
+					</thead>
+
+					<tbody>	
+						<% orgunit.ownerteams.forEach(function (ownerteam){%>
+							
+							<tr>
+								<input type="hidden" name="params[<%= ownerteam.id%>][id]" value="<%= ownerteam.id %>">
+								
+								<td><%= ownerteam.ownerteam %></td>
+                                <td class="center-text">	
+                                <select class="form-control" name="params[<%= ownerteam.id%>][type]">
+                                    <option value=""></option>
+                                    <% queries.sql.definitions.forEach((query, i) => { %>
+                                        <% if(query.name === "lf_resolvers") { %>
+                                            <% queries.sql.output[i].recordset.forEach((item, i) => {%>
+                                                <option value="<%= item.dim_ownerteam_lf_resolver_types_pk %>"
+												<% if(ownerteam.type == item.dim_ownerteam_lf_resolver_types_pk )	{ %> SELECTED <% } %>
+												>	
+												<%= item.dim_ownerteam_lf_resolver_type %></option>
+                                            <% }) %>
+                                        <% } %>
+                                    <% }) %>
+
+                                </select>
+                                </td>
+
+                                <!-- <td class="center-text"><input class="form-control" type="text" name="[params][<%= ownerteam.id%>][lf_resolver]" readonly="readonly"></td>
+                                <td class="center-text"><input class="form-control" type="text" name="[params][<%=ownerteam.id%>][finance_id]" readonly="readonly"></td> -->
+							</tr>
+							
+						<% }) %>					
+					</tbody>
+				</table>
+			</div>
+		</div>
+            
+        <button class="btn btn-primary right-button" name="action" type="submit">
+            Save
+        </button>							        
+
+	</form>	

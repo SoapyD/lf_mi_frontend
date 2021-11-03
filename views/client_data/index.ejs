@@ -1,0 +1,67 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+
+    <header class="jumbotron">
+
+    
+        <div class="container">
+            
+            <h1>
+                Client Data
+            </h1>
+    
+            <!-- <p>
+                List of reports
+            </p> -->
+    
+            <p>
+    
+            </p>
+    
+        </div>
+    </header>    
+
+
+
+
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+        <h4 id="datatype_header">Client List
+            <input id="myInput" type="text" placeholder="Search..">
+        </h4>
+    </div>
+
+    <% orgunits.forEach((orgunit) =>  { %>
+
+        <div class="panel-body">
+            <a href="client_data/<%- orgunit.id %>">
+                <%- orgunit.name %>
+            </a>       
+        </div>
+
+    <% }) %>
+</div>
+
+<div class="top-padding">
+    <a href="/">Go Back</a>
+</div>
+
+</div>
+
+
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".panel-body").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
+
+
+<%- include("../partials/footer") %>

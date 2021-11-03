@@ -15,6 +15,10 @@
 
 	<link rel="stylesheet" href="/stylesheets/main.css">
 	
+	<% if(typeof stylesheet !== 'undefined') { %>
+		<link rel="stylesheet" href="/stylesheets/<%= stylesheet %>.css">
+	<% } %>
+
 	
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>	
 	
@@ -66,9 +70,9 @@
 				<% } %>
 				<% if(user) { %>
 					<li><a href="/reports">Reports</a></li>
-					<li><a href="/ownerteam_data">Ownerteam Data</a></li>
+					<li><a href="/client_data">Client Data</a></li>	
 					<!-- 
-					<li><a href="/orgunit_data">OrgUnit Data</a></li>	
+					<li><a href="/ownerteam_data">Ownerteam Data</a></li>
 					<li><a href="/orgunit_slas">OrgUnit SLAs</a></li>
 					<li><a href="/usernames">Usernames</a></li>					 
 					-->

@@ -79,7 +79,7 @@ exports.setupApp = async(app) => {
     .then(result => {
       // utils.seeder.create()
       if(process.env._PROCESS_TYPE === 'Dev'){
-        utils.seeder.create()
+        // utils.seeder.create()
         // seeds.test()
       }
     })

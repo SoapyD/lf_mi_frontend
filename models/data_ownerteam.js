@@ -11,8 +11,7 @@ const Data_Ownerteam = utils.database.sequelize.define('NODE_DATA_ownerteam', {
        primaryKey: true
    },
     ownerteam: Sequelize.STRING,
-    type: Sequelize.STRING,
-    lf_resolver: Sequelize.BOOLEAN,    
+    type: Sequelize.STRING   
 });
 
 

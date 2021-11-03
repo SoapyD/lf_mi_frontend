@@ -49,6 +49,17 @@ exports.compareOrder = ( a, b ) => {
     return 0;
 }
 
+exports.compareItem = ( a, b ) => {
+    if ( a[order] < b[order] ){
+        return -1;
+    }
+    if ( a.order > b.order ){
+        return 1;
+    }
+    return 0;
+}
+
+
 
 exports.onlyUnique = (value, index, self) => {
     return self.indexOf(value) === index;

@@ -15,15 +15,8 @@ exports.reports.path = '/reports'
 exports.subscriptions = require("./subscriptions");
 exports.subscriptions.path = "/reports/:reportid/subscriptions"
 
-
-exports.orgunit_slas = require("./orgunit_slas");
-exports.orgunit_slas.path = '/orgunit_slas'
-
-exports.orgunit_data = require("./orgunit_data");
-exports.orgunit_data.path = '/orgunit_data'
-
-exports.orgunit_data = require("./ownerteam_data");
-exports.orgunit_data.path = '/ownerteam_data'
+exports.client_data = require("./client_data");
+exports.client_data.path = '/client_data'
 
 exports.usernames = require("./usernames");
 exports.usernames.path = '/usernames'

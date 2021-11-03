@@ -257,6 +257,27 @@ exports.updateData = async(item, update_list) => {
 }
 
 
+exports.updateWhere = async(list) => {
+
+    let promises = [];
+
+    list.forEach((item) => {
+
+        item.params.forEach((param) => {
+            promises.push(models[item.model].update(param.update_info,param.where_info))
+
+        })
+        
+    })  
+    
+    return Promise.all(promises)
+    .catch((err) => {
+        console.log(err)
+    })      
+}
+
+
+
 // ######  #######  #####  ####### ######  ####### #     #       ######     #    #######    #    
 // #     # #       #     #    #    #     # #     #  #   #        #     #   # #      #      # #   
 // #     # #       #          #    #     # #     #   # #         #     #  #   #     #     #   #  

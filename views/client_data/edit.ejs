@@ -1,0 +1,31 @@
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+<header class="jumbotron">
+    <div class="container">
+        
+        <h1>
+            <%- route_info.type %> Editor
+        </h1>
+
+        <p>
+            List of <%- route_info.type %> for <%= orgunit.name %>
+        </p>
+
+    </div>
+</header>
+
+<%- include(route_info.form_path) %>
+	
+
+<div class="top-padding">
+    <a href="/client_data/<%= orgunit.id %>">Go Back</a>
+</div>
+
+
+</div>
+
+
+<%- include("../partials/footer") %>

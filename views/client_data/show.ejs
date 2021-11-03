@@ -1,0 +1,54 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+
+    <header class="jumbotron">
+
+    
+        <div class="container">
+            
+            <h1>
+                <%= orgunit.name %> - Data
+            </h1>
+    
+            <!-- <p>
+                List of reports
+            </p> -->
+    
+            <p>
+    
+            </p>
+    
+        </div>
+    </header>    
+
+
+
+
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+        <h4>Data Types</h4>
+    </div>
+
+    <% for(const route_key in route_info){ %>
+
+        <div class="panel-body">
+            <a href="/client_data/<%= orgunit.id %>/<%- route_info[route_key].type.toLowerCase() %>/edit">
+                <h3><%- route_info[route_key].type %>:</h3>
+                <p><%- route_info[route_key].description %></p>
+            </a>
+        </div>
+
+    <% } %>
+</div>
+
+<div class="top-padding">
+    <a href="/client_data">Go Back</a>
+</div>
+
+</div>
+
+
+<%- include("../partials/footer") %>
