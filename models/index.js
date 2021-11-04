@@ -83,12 +83,12 @@ models.SubscriptionActivity.belongsTo(models.Subscription, {foreignKey: 'subscri
 
 
 //DATA MODELS
-models.Data_Ownerteam = require("./data_ownerteam");
-models.Data_Orgunit = require("./data_orgunit");
 
-models.Data_Orgunit.hasMany(models.Data_Ownerteam, {as: 'ownerteams', foreignKey: 'orgunitId'});
-models.Data_Ownerteam.belongsTo(models.Data_Orgunit, {foreignKey: 'orgunitId'});
+models.Dimension_Orgunit = require("./dimension_orgunit");
+models.Dimension_Ownerteam = require("./dimension_ownerteam");
 
+models.Dimension_Orgunit.hasMany(models.Dimension_Ownerteam, {as: 'ownerteams', foreignKey: 'dim_orgunit_fk'});
+models.Dimension_Ownerteam.belongsTo(models.Dimension_Orgunit, {foreignKey: 'dim_orgunit_fk'});
 
 
 module.exports = models

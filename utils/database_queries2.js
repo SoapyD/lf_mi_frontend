@@ -57,7 +57,7 @@ exports.searchType = {
     "OrgUnit": {
         include: [
             {
-                model: models.Data_Ownerteam, 
+                model: models.Dimension_Ownerteam, 
                 as: "ownerteams",
             }
         ]  

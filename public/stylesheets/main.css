@@ -271,5 +271,12 @@ input {
  }
 
  #ownerteam-form {
-	 width: 50%;
+	 width: 75%;
+ }
+
+ .rounded_borders {
+	 border-radius: 15px;
+	 border: 2px solid #FA4616;
+	 height: 60px;
+	 padding: 10px;
  }

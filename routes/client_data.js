@@ -13,7 +13,10 @@ router.get("/:clientid", middleware.user_access, controllers.client_data.getSing
 router.get("/:clientid/:item/edit", middleware.user_access, controllers.client_data.getEdit)
 
 //UPDATE REPORT
-router.put("/:clientid/:item", middleware.user_access, controllers.client_data.update)
+router.put("/:clientid", middleware.user_access, controllers.client_data.updateParent)
+
+router.put("/:clientid/:item/multiple", middleware.user_access, controllers.client_data.updateMultipleChildren)
+
 
 
 /*

@@ -8,7 +8,7 @@
         <div class="container">
             
             <h1>
-                <%= orgunit.name %> - Data
+                <%= orgunit.dim_orgunit_orgunit %> - Data
             </h1>
     
             <!-- <p>
@@ -35,7 +35,7 @@
     <% for(const route_key in route_info){ %>
 
         <div class="panel-body">
-            <a href="/client_data/<%= orgunit.id %>/<%- route_info[route_key].type.toLowerCase() %>/edit">
+            <a href="/client_data/<%= orgunit.dim_orgunit_pk %>/<%- route_info[route_key].type.toLowerCase() %>/edit">
                 <h3><%- route_info[route_key].type %>:</h3>
                 <p><%- route_info[route_key].description %></p>
             </a>
