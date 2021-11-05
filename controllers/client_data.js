@@ -10,15 +10,46 @@ exports.getRouteInfo = () => {
     route_info = [
         {type: "orgunit", sort_field: "dim_orgunit_orgunt", model: "Dimension_Orgunit", id_column: "dim_orgunit_pk", form_path: "./forms/orgunit",
         description: "Edit the core meta-data associated with the orgunit.",
+        queries: {sql: [
+            {name: "sdms", 
+            query: `
+            SELECT
+            [First Name]+' '+[Last Name] as dim_user_cleaned
+            FROM 
+            [dbo].[ADF_PeopleHR_Employee]
+            WHERE 
+            [job role] = 'SERVICE DELIVERY MANAGER'
+            AND 
+            (
+            [Final Day of Employment] >= getdate()
+            or
+            [Final Day of Employment] IS NULL
+            )
+            order by
+            dim_user_cleaned
+            `},
+            {name: "pods", 
+            query: `
+            SELECT distinct
+            [dim_Ringcentral_Teams_teamName]
+            FROM [dbo].[DIMENSION_Ringcentral_Teams]
+            WHERE 
+            dim_Ringcentral_Teams_teamName IS NOT NULL
+            AND dim_Ringcentral_Teams_teamName NOT IN 
+            ('DefaultTeam','Operations Team','Service Desk Team Leaders','SOC')
+            ORDER BY
+            [dim_Ringcentral_Teams_teamName]
+            `}            
+        ]}
         },
-        // {type: "contracts", sort_field: "", model: "", id_column: "", form_path: "./forms/contracts",
-        // description: "Edit the contract data associated with the orgunit.",
-        // },        
+        {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts",
+        description: "Edit the contract data associated with the orgunit. This data is needed for finance reporting.",
+        },        
         {type: "ownerteams", sort_field: "dim_Ownerteam_Ownerteam", model: "Dimension_Ownerteam", id_column: "dim_Ownerteam_pk", form_path: "./forms/ownerteams",
         description: "Edit the resolver type of ownerteams associated with this orgunit. This is needed to help attribute tickets to customer, third party or Littlefish resolver teams.",
         queries: {sql: [
             {name: "lf_resolvers", query: "SELECT * FROM [DIMENSION_Ownerteam_LF_Resolver_Types]"}
-        ]}
+        ]}        
         },
         // {type: "measurements", sort_field: "", model: "", id_column: "", form_path: "./forms/measurements",
         // description: "Edit the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
@@ -51,8 +82,20 @@ exports.getAll = async(req,res) => {
 
     try{
         let orgunits = await utils.queries.findData(find_list)
+        let data = orgunits[0]
+        data.sort((a, b) => {
+            if ( a['dim_orgunit_orgunit'] < b['dim_orgunit_orgunit'] ){
+                return -1;
+            }
+            if ( a['dim_orgunit_orgunit'] > b['dim_orgunit_orgunit'] ){
+                return 1;
+            }
+            return 0;
+        })
+
+
         let view = "client_data/index"
-        res.render(view, {title:"Client Data", stylesheet: view, orgunits:orgunits[0]});
+        res.render(view, {title:"Client Data", stylesheet: view, orgunits:data});
     }
     catch(err){
         console.log(err)
@@ -91,8 +134,11 @@ exports.getSingle = async(req,res) => {
 
     try{
         let orgunit = await utils.queries.findData(find_list)
+        let data = orgunit[0];
+
+
         let view = "client_data/show"
-        res.render(view, {title:orgunit.name, stylesheet: view, route_info:route_info, orgunit:orgunit[0]});
+        res.render(view, {title:orgunit.name, stylesheet: view, route_info:route_info, orgunit:data});
     }
     catch(err){
         console.log(err)
@@ -194,7 +240,51 @@ exports.getEdit = async(req,res) => {
 
 exports.updateParent = async(req,res) => { 
 
-    let id = Number(req.params.clientid)    
+    let id = Number(req.params.clientid)  
+    let params =  req.body.params;
+
+    try{
+        //NULL ALL BLANK ITEMS
+        for(const key in params){
+            if(params[key] === ''){
+                params[key] = null
+            }
+        }
+
+        let findlist = []
+        findlist.push({
+            model: "Dimension_Orgunit",
+            search_type: "findOne",
+            params: [
+                {
+                    where: {
+                        dim_orgunit_pk: id
+                    }
+                }
+            ]
+        })
+
+        //GET THE EDITABLE ITEM, INCLUDING ANY JOINS
+        let orgunits = await utils.queries.findData(findlist)
+
+
+        let updatelist = []
+        updatelist.push({
+            params: [
+                params
+            ]
+        })    
+
+        //UPDATE THE RECORD
+        let data = await utils.queries.updateData(orgunits[0], updatelist)
+        req.flash("success", "Client Data Updated"); 
+        res.redirect("/client_data/"+id+'/orgunit/edit')   
+    }	
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to update your report");
+        res.redirect("/client_data/"+id+'/orgunit/edit')        
+    }	
 
     //MAY NEED TO PASS ITEM HERE BUT IT'S NOT CRUCUAL
 
@@ -208,6 +298,17 @@ exports.updateMultipleChildren = async(req,res) => {
 
     let id = Number(req.params.clientid)    
     let item = req.params.item;
+    let params =  req.body.params;
+
+    //NULL ALL BLANK ITEMS
+    params.forEach((param, i) => {
+        for(const key in param){
+            if(params[i][key] === ''){
+                params[i][key] = null
+            }
+        }
+    })
+
 
     try{
         let route_info = exports.getRouteInfo()
@@ -229,7 +330,7 @@ exports.updateMultipleChildren = async(req,res) => {
         };
     
     
-        req.body.params.forEach((param_item) => {
+        params.forEach((param_item) => {
     
             let param = {
                 update_info: {},
@@ -257,6 +358,7 @@ exports.updateMultipleChildren = async(req,res) => {
         req.flash("success", "Client "+item+" Data Updated"); 
         res.redirect("/client_data/"+id+'/'+item+'/edit')
     }catch(error){
+        console.log(error)
         req.flash("error", "There was an error while trying to save "+item+" Data");
         res.redirect("/client_data/"+id+'/'+item+'/edit')
     }

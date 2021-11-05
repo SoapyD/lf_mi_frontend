@@ -21,39 +21,49 @@ var serverUrl = process.env.SSRS_URL; ///ReportServer2010
 
 
 
-exports.run = async(subscription_number, report, subscription) => {
+//  #####  ####### ####### #     # ######  
+// #     # #          #    #     # #     # 
+// #       #          #    #     # #     # 
+//  #####  #####      #    #     # ######  
+//       # #          #    #     # #       
+// #     # #          #    #     # #       
+//  #####  #######    #     #####  #   
+
+exports.setup = async(subscription_number, report, subscription) => {
 
     try{
 
         if (subscription.active === true){
 
-            const tmpobj = tmp.dirSync();
+            const tmpobj = tmp.dirSync(); //CREATE A TEMP FOLDER TO STORE THE FILES
         
-            let folder_path = tmpobj.name //'reports';//
+            let folder_path = tmpobj.name //GET THE FOLDER PATH
 
             
-            let subsection_count = 1; //1 for front cover
+            //COUNT THE TOTAL NUMBER OF SUBSECTIONS NEEDED
+            let subsection_total = 1; //1 for front cover
             if(report.sections){
                 report.sections.forEach((section) => {
 
                     if(section.subsections){
 
-                        subsection_count += section.subsections.length
+                        subsection_total += section.subsections.length
                     }
                 })
             }
 
-
+            //STORE THIS DATA IN AN OBJECT
             let file_data = {
                 folder_path: folder_path,
-                files_needed: subsection_count
+                files_needed: subsection_total
             }
             
 
-            let filepath = '';
-            let filename = '';
             let outputname = '';
+            let delay_timer = 0
             let parameter_object = JSON.parse(subscription.parameters);
+            let size = 10
+            let start = Date.now();
 
             //  ██████  ██████  ███    ██ ████████ ███████ ███    ██ ████████ ███████       ███████ ████████ ██████  ██ ███    ██  ██████  
             // ██      ██    ██ ████   ██    ██    ██      ████   ██    ██    ██            ██         ██    ██   ██ ██ ████   ██ ██       
@@ -62,18 +72,56 @@ exports.run = async(subscription_number, report, subscription) => {
             //  ██████  ██████  ██   ████    ██    ███████ ██   ████    ██    ███████       ███████    ██    ██   ██ ██ ██   ████  ██████              
 
             let contents_page = '';
+            let subsection_activity = {};
 
             //CREATE THE CONTENT PAGE TEXT
             if(report.sections){
 
-                let subsection_total = 0
+                let subsection_count = 0;
 
-                //FORMAT THE CONTENTS PAGE
+                // let subsection_total = 0
+
+                // ███████ ██████   ██████  ███    ██ ████████        ██████  ██████  ██    ██ ███████ ██████  
+                // ██      ██   ██ ██    ██ ████   ██    ██          ██      ██    ██ ██    ██ ██      ██   ██ 
+                // █████   ██████  ██    ██ ██ ██  ██    ██    █████ ██      ██    ██ ██    ██ █████   ██████  
+                // ██      ██   ██ ██    ██ ██  ██ ██    ██          ██      ██    ██  ██  ██  ██      ██   ██ 
+                // ██      ██   ██  ██████  ██   ████    ██           ██████  ██████    ████   ███████ ██   ██                 
+                //ADD THE FRONT COVER TO SUBSECTION ACTIVITIES
+                outputname = "000000000" + subsection_count;
+                outputname = outputname.substr(outputname.length-size);
+                delay_timer = 3000 * ((file_data.files_needed * subscription_number) + subsection_count);
+
+                let activity = {
+                    number: subsection_count,
+                    running: true,
+                    tries: 3,
+                    path: "/99 - Test Reports/Service Report/_Front Cover",
+                    output_path: path.join(folder_path,outputname),
+                    parameters:                 
+                    {
+                        "report_name":subscription.report_name, 
+                        "company_filter": subscription.report_sub_name,
+                        "period_type": parameter_object.Date_Range
+                    },
+                    delay_timer: delay_timer,
+                    start: start + delay_timer,
+                    last_updated: start + delay_timer
+                }
+                subsection_activity[outputname] = activity;
+
+
+
+                // ██████  ██    ██ ███    ██       ███████ ███████  ██████ ████████ ██  ██████  ███    ██ ███████ 
+                // ██   ██ ██    ██ ████   ██       ██      ██      ██         ██    ██ ██    ██ ████   ██ ██      
+                // ██████  ██    ██ ██ ██  ██ █████ ███████ █████   ██         ██    ██ ██    ██ ██ ██  ██ ███████ 
+                // ██   ██ ██    ██ ██  ██ ██            ██ ██      ██         ██    ██ ██    ██ ██  ██ ██      ██ 
+                // ██   ██  ██████  ██   ████       ███████ ███████  ██████    ██    ██  ██████  ██   ████ ███████ 
+
                 report.sections.forEach((section) => {
 
                     contents_page += section.order + ". " + section.name + "\n"
 
-                    section.subsections.forEach((subsection) => {
+                    section.subsections.forEach((subsection, subsection_number) => {
                         if (subsection.name !== "front" && subsection.type !== 'appendix'){
 
                             let subsection_name = subsection.name
@@ -83,11 +131,56 @@ exports.run = async(subscription_number, report, subscription) => {
 
                             contents_page += "      "+section.order + "." +subsection.sectionsubsections.order+ ". "+subsection_name + "\n"
                         }
-                        subsection_total++      
+
+                        subsection_count++      
+
+
+                        // ███████ ██    ██ ██████  ███████ ███████  ██████ ████████ ██  ██████  ███    ██       ██████   █████  ██████   █████  ███    ███ ███████ 
+                        // ██      ██    ██ ██   ██ ██      ██      ██         ██    ██ ██    ██ ████   ██       ██   ██ ██   ██ ██   ██ ██   ██ ████  ████ ██      
+                        // ███████ ██    ██ ██████  ███████ █████   ██         ██    ██ ██    ██ ██ ██  ██ █████ ██████  ███████ ██████  ███████ ██ ████ ██ ███████ 
+                        //      ██ ██    ██ ██   ██      ██ ██      ██         ██    ██ ██    ██ ██  ██ ██       ██      ██   ██ ██   ██ ██   ██ ██  ██  ██      ██ 
+                        // ███████  ██████  ██████  ███████ ███████  ██████    ██    ██  ██████  ██   ████       ██      ██   ██ ██   ██ ██   ██ ██      ██ ███████                         
+                        //ADD THE INDIVIDUAL SEUBSECTION ACTIVITY
+                        
+                        let options = {
+                            section: section,
+                            subsection: subsection,
+                            subsection_total: subsection_total, //TOTAL SUBSECTIONS IN ENTIRE REPORT
+                            subsection_count: subsection_count, //CURRENT TOTAL SUBSECTION COUNT
+                            subsection_number: subsection_number, //CURRENT SUBSECTION COUNT, RESET PER SECTION
+                            subscription_number: subscription_number,
+                            parameter_object: parameter_object,
+                        }
+                        let subsection_parameters = exports.getSubsectionParameters(options)
+
+                        outputname = "000000000" + subsection_count;
+                        outputname = outputname.substr(outputname.length-size);
+                        delay_timer = 3000 * ((file_data.files_needed * subscription_number) + subsection_count);
+                        let test = start + delay_timer
+
+                        let activity = {
+                            number: subsection_count,
+                            running: true,
+                            tries: 3,
+                            path: subsection.path,
+                            output_path: path.join(folder_path,outputname),
+                            parameters: subsection_parameters,
+                            delay_timer: delay_timer,
+                            start: start + delay_timer,
+                            last_updated: start + delay_timer
+                        }
+                        subsection_activity[outputname] = activity;
                     })
                 })
             }
 
+            //  #####  ######  #######    #    ####### #######          #     #####  ####### ### #     # ### ####### #     # 
+            // #     # #     # #         # #      #    #               # #   #     #    #     #  #     #  #     #     #   #  
+            // #       #     # #        #   #     #    #              #   #  #          #     #  #     #  #     #      # #   
+            // #       ######  #####   #     #    #    #####   ##### #     # #          #     #  #     #  #     #       #    
+            // #       #   #   #       #######    #    #             ####### #          #     #   #   #   #     #       #    
+            // #     # #    #  #       #     #    #    #             #     # #     #    #     #    # #    #     #       #    
+            //  #####  #     # ####### #     #    #    #######       #     #  #####     #    ###    #    ###    #       #               
 
             let creation_list = []
             creation_list.push(
@@ -95,20 +188,209 @@ exports.run = async(subscription_number, report, subscription) => {
                 model: "SubscriptionActivity",
                 params: [
                     {
+                        file_type: "WORD",
+                        file_extension: "docx",                        
                         path: folder_path,
                         files_expected: file_data.files_needed,
                         subscriptionId: subscription.id,
-                        contents_page: contents_page
+                        contents_page: contents_page,
+                        subsection_activity: JSON.stringify(subsection_activity)
                     }
                 ]
             }) 
     
             let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
 
+            exports.runProcess(subscription_number, subscriptionactivities[0]) 
+        }
+
+    }
+    catch(err){
+        console.log(err)
+    }
+
+}
+
+// ███████ ██    ██ ██████  ███████ ███████  ██████ ████████ ██  ██████  ███    ██       ██████   █████  ██████   █████  ███    ███ ███████ 
+// ██      ██    ██ ██   ██ ██      ██      ██         ██    ██ ██    ██ ████   ██       ██   ██ ██   ██ ██   ██ ██   ██ ████  ████ ██      
+// ███████ ██    ██ ██████  ███████ █████   ██         ██    ██ ██    ██ ██ ██  ██ █████ ██████  ███████ ██████  ███████ ██ ████ ██ ███████ 
+//      ██ ██    ██ ██   ██      ██ ██      ██         ██    ██ ██    ██ ██  ██ ██       ██      ██   ██ ██   ██ ██   ██ ██  ██  ██      ██ 
+// ███████  ██████  ██████  ███████ ███████  ██████    ██    ██  ██████  ██   ████       ██      ██   ██ ██   ██ ██   ██ ██      ██ ███████ 
+
+exports.getSubsectionParameters = (options) => {
+    
+    // LOOP THROUGH SUBSECTION PARAMETERS AND SPLIT THEM OUT INTO TWO DISTINCT LISTS; REPORT AND SUBSECTION PARAMETERS
+    let subsection_param_object = {}
+    let report_param_object = {}
+
+    if (options.subsection.parameters){
+        options.subsection.parameters.forEach( async(parameter) => {
+            if(options.parameter_object[parameter.name] && options.parameter_object[parameter.name] !== ""){
+                if(parameter.in_report === false || parameter.visible === false){
+                    report_param_object[parameter.name] = options.parameter_object[parameter.name];
+                }
+                else{
+                    subsection_param_object[parameter.name] = options.parameter_object[parameter.name];
+                }
+            }
+        })
+    }
 
 
-                                                                                                                    
+    let delay_timer_value = (((options.subsection_total*1) * options.subscription_number) + (options.subsection_count*1)) + 1 //+1 for front cover
+    let file_number = (options.section.order * 1000) + delay_timer_value // + subsection.sectionsubsections.order
 
+
+    //SET THE SECTION AND SUBSECTION NAMES
+    report_param_object['Section_Name'] = ''
+    if(options.subsection_number === 0){
+        report_param_object['Section_Name'] = options.section.order + ". " + options.section.name;
+    }
+    let subsection_name = options.subsection.name
+    if(options.subsection.sectionsubsections.name && options.subsection.sectionsubsections.name !== ""){
+        subsection_name = options.subsection.sectionsubsections.name
+    }
+    
+    report_param_object['Subsection_Name'] = options.section.order + "." + options.subsection.sectionsubsections.order+ ". "+subsection_name;
+
+
+    //ANALYSIS & PAGE BREAKS
+
+    report_param_object['Hide_Analysis'] = "false"
+    if(options.subsection.sectionsubsections.show_analysis_box === false){
+        report_param_object['Hide_Analysis'] = "true"
+    }
+
+
+    if(options.subsection_number === 0){
+        subsection_param_object.Section_Name = report_param_object['Section_Name']
+    }
+
+    switch(options.subsection.type){
+        case "template":
+        case "appendix template":
+            subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
+
+            if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
+                subsection_param_object.Hide_PageBreak = "false"  
+            }
+        break;
+        case "normal":
+            subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
+            ,subsection_param_object.Hide_Analysis = report_param_object['Hide_Analysis']
+            if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
+                subsection_param_object.Hide_PageBreak = "false"  
+            }                                    
+        break;  
+        case "appendix":
+            if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
+                subsection_param_object.Hide_PageBreak = "false"  
+            }
+        break;                                                                
+        default:
+
+    }    
+
+    return subsection_param_object;
+}
+
+
+// ######  #     # #     #       ######  ######  #######  #####  #######  #####   #####  
+// #     # #     # ##    #       #     # #     # #     # #     # #       #     # #     # 
+// #     # #     # # #   #       #     # #     # #     # #       #       #       #       
+// ######  #     # #  #  # ##### ######  ######  #     # #       #####    #####   #####  
+// #   #   #     # #   # #       #       #   #   #     # #       #             #       # 
+// #    #  #     # #    ##       #       #    #  #     # #     # #       #     # #     # 
+// #     #  #####  #     #       #       #     # #######  #####  #######  #####   #####  
+
+exports.runProcess = (subscription_number, subscriptionactivity) => {
+
+    let subsections = JSON.parse(subscriptionactivity.subsection_activity)
+
+
+    for(const key in subsections){
+        let subsection = subsections[key];
+
+        //ADD IN SUBSCRIPTION ID IF THIS IS THE FRONT COVER SO THE CONTENTS PAGE CAN BE RETURNED
+        if(subsection.number === 0){
+            subsection.parameters.sub_activity_id = subscriptionactivity.id
+        }
+
+        // let delay_timer_value = ((subscriptionactivity.files_expected * subscription_number) + subsection.number) + 1 //+1 for front cover
+
+        let options = {
+            delay_timer: subsection.delay_timer, 
+            filepath: subsection.path, 
+            parameters: subsection.parameters, 
+            output_path: subscriptionactivity.path, 
+            output_file: subsection.output_path,
+            file_type: subscriptionactivity.file_type,
+            file_extension: subscriptionactivity.file_extension
+        }
+
+        exports.runDelay(options)
+
+    }
+
+
+
+}
+
+
+
+// ██████  ██    ██ ███    ██       ███████ ███████ ██████  ███████ 
+// ██   ██ ██    ██ ████   ██       ██      ██      ██   ██ ██      
+// ██████  ██    ██ ██ ██  ██ █████ ███████ ███████ ██████  ███████ 
+// ██   ██ ██    ██ ██  ██ ██            ██      ██ ██   ██      ██ 
+// ██   ██  ██████  ██   ████       ███████ ███████ ██   ██ ███████ 
+
+
+let count = 1
+
+//RUN THE REPORT SECTION BUT ONLY AFTER A GIVEN DELAY
+exports.runDelay = async(options) => {
+
+    await functionsUtil.delay(options.delay_timer)
+    exports.runReport(options)
+}
+
+
+exports.runReport = async(options) => {
+    
+    const reportPath = options.filepath;
+    try {
+
+        let report;
+        
+        exports.ssrs.setServerUrl(serverUrl);
+        
+        var auth = {
+            userName: username,
+            password: password,
+            workstation: null, // optional
+            domain: null // optional
+          };
+        // This part errors on the server
+        console.log("output file:",options.output_file, " ||| running report... ",reportPath)
+        report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, options.file_type, options.parameters, auth)        
+
+        
+        // Writing to local file / or send the reponse to API 
+        await fs.writeFileSync(options.output_file+'.'+options.file_extension, report, "base64");
+        // checkOutputsUtil.checkFiles(output_path)
+        /**/
+
+    } catch (err) {
+        // console.log("ERROR RUNNING REPORT")
+        // checkOutputsUtil.checkFiles(output_path, reportPath, err)
+    }
+}
+
+
+
+
+
+            /*
             //CREATE THE CONTENT PAGE TEXT
             if(report.sections){
 
@@ -125,8 +407,6 @@ exports.run = async(subscription_number, report, subscription) => {
                 filepath = "/99 - Test Reports/Service Report/_Front Cover"
                 subsection_param_object = 
                 {
-                    // "report_name":report.name, 
-                    // "company_filter": parameter_object.Client,
                     "report_name":subscription.report_name, 
                     "company_filter": subscription.report_sub_name,                    
                     "sub_activity_id": subscriptionactivities[0].id,
@@ -186,7 +466,6 @@ exports.run = async(subscription_number, report, subscription) => {
 
 
                             let delay_timer_value = (((subsection_total*1) * subscription_number) + (subsection_count*1)) + 1 //+1 for front cover
-                            let size = 10
                             let file_number = (section.order * 1000) + delay_timer_value // + subsection.sectionsubsections.order
 
 
@@ -261,74 +540,4 @@ exports.run = async(subscription_number, report, subscription) => {
 
                 })
             }
-
-        }
-
-    }
-    catch(err){
-        console.log(err)
-    }
-
-}
-
-let count = 1
-
-//RUN THE REPORT SECTION BUT ONLY AFTER A GIVEN DELAY
-exports.runDelay = async(i, filepath, parameters, output_path, output_file) => {
-    
-
-    // console.log(i + ' ||| ' + output_file + ' ||| ' + filepath + ' ||| ' + count)
-    // count++
-
-    await functionsUtil.delay(3000 * i)
-    exports.runReport(filepath, parameters, output_path, output_file)
-}
-
-
-// ██████  ██    ██ ███    ██       ███████ ███████ ██████  ███████ 
-// ██   ██ ██    ██ ████   ██       ██      ██      ██   ██ ██      
-// ██████  ██    ██ ██ ██  ██ █████ ███████ ███████ ██████  ███████ 
-// ██   ██ ██    ██ ██  ██ ██            ██      ██ ██   ██      ██ 
-// ██   ██  ██████  ██   ████       ███████ ███████ ██   ██ ███████ 
-
-exports.runReport = async(filepath, parameters, output_path, output_file) => {
-    
-    const reportPath = filepath;
-    try {
-        // console.log("running: "+filename)
-        
-        // Define parameters
-        const fileType = 'WORD';
-        const file_extension = 'docx';
-        
-        let report;
-        
-        exports.ssrs.setServerUrl(serverUrl);
-        
-        var auth = {
-            userName: username,
-            password: password,
-            workstation: null, // optional
-            domain: null // optional
-          };
-        // This part errors on the server
-        console.log("output file:",output_file, " ||| running report... ",reportPath)
-        report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, fileType, parameters, auth)        
-
-        
-        // Writing to local file / or send the reponse to API 
-        await fs.writeFileSync(output_file+'.'+file_extension, report, "base64");
-        checkOutputsUtil.checkFiles(output_path)
-        /**/
-
-    } catch (err) {
-        console.log("ERROR RUNNING REPORT")
-
-        checkOutputsUtil.checkFiles(output_path, reportPath, err)
-    }
-}
-
-
-
-
-
+            */

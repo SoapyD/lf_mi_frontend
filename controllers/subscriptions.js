@@ -449,7 +449,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 					case "run":
 						
 						//RUN THE REPORT SUBSCRIPTIONS
-						utils.ssrs.run(i, report, subscription);
+						utils.ssrs.setup(i, report, subscription);
 						req.flash("success", 'Running Selected Active Subscriptions');
 			
 						break;

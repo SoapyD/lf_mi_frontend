@@ -13,7 +13,31 @@ exports.checkTimer = async() => {
 }
 
 
+exports.checkIncompleteSubActivity = async() => {
 
+    let find_list = []
+    find_list.push(
+    {
+        model: "SubscriptionActivity",
+        search_type: "findAll",
+        params: [{
+            where: {
+                running: 1,
+            }		
+        }]
+    }) 
+
+    //GET ALL REPORT DATA
+    let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+
+    subscriptionactivities[0].forEach( async(subscriptionactivity) => {
+        checkOutputsUtil.runCheck(subscriptionactivity)
+    })
+
+}
+
+
+/*
 exports.checkIncompleteSubActivity = async() => {
     let find_list = []
     find_list.push(
@@ -58,7 +82,8 @@ exports.checkIncompleteSubActivity = async() => {
                     let subscriptions_updated = await databaseQueriesUtil.updateData(subscriptionactivity, update_list)
 
                     //RUN FILE CHECK SYSTEM
-                    checkOutputsUtil.checkFileNumber(subscriptions_updated[0])
+                    // checkOutputsUtil.checkFileNumber(subscriptions_updated[0])
+                    checkOutputsUtil.runCheck(subscriptions_updated[0])
                 }
                 else {
                     //IF ACTIVITY IS TOO OLD, END IT
@@ -137,3 +162,4 @@ exports.checkIncompleteSubActivity = async() => {
         })
     }
 }
+*/

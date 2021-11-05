@@ -25,15 +25,15 @@
 					</thead>
 
 					<tbody>	
-						<% orgunit.ownerteams.forEach(function (ownerteam){%>
+						<% orgunit.ownerteams.forEach(function (ownerteam, id){%>
 							
 							<tr>
-								<input type="hidden" name="params[<%= ownerteam.dim_Ownerteam_pk%>][dim_Ownerteam_pk]" value="<%= ownerteam.dim_Ownerteam_pk %>">
+								<input type="hidden" name="params[<%= id %>][dim_Ownerteam_pk]" value="<%= ownerteam.dim_Ownerteam_pk %>">
 								
 								<td><%= ownerteam.dim_Ownerteam_Ownerteam %></td>
 
                                 <td class="center-text">	
-                                <select class="form-control" name="[params][<%= ownerteam.dim_Ownerteam_pk%>][dim_Ownerteam_cleaned]">
+                                <select class="form-control" name="[params][<%= id %>][dim_Ownerteam_cleaned]" required>
                                     <option value=""></option>
                                     <% queries.sql.definitions.forEach((query, i) => { %>
                                         <% if(query.name === "lf_resolvers") { %>
@@ -49,8 +49,8 @@
                                 </select>
                                 </td>
 
-                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= ownerteam.dim_Ownerteam_pk%>][dim_ownerteam_lf_resolver]" readonly="readonly" value="<%ownerteam.dim_ownerteam_lf_resolver%>"></td>
-                                <td class="center-text"><input class="form-control" type="text" name="[params][<%=ownerteam.dim_Ownerteam_pk%>][dim_ownerteam_finance_id]" readonly="readonly" value="<%ownerteam.dim_ownerteam_finance_id%>"></td>
+                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_ownerteam_lf_resolver]" readonly="readonly" value="<%ownerteam.dim_ownerteam_lf_resolver%>"></td>
+                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_ownerteam_finance_id]" readonly="readonly" value="<%ownerteam.dim_ownerteam_finance_id%>"></td>
 							</tr>
 							
 						<% }) %>					

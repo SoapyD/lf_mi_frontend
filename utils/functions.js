@@ -69,3 +69,12 @@ exports.onlyUnique = (value, index, self) => {
 exports.delay = async(ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+
+exports.timeDifference = (timestamp1, timestamp2) => {
+    var difference = timestamp1 - timestamp2;
+    ///1000/60/60/24 --this for days
+    var time_difference = Math.floor(difference/1000/60);
+
+    return time_difference;
+}

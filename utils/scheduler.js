@@ -28,7 +28,8 @@ exports.addSchedule = (options) => {
 
     let job = cron.schedule(time_string, () => {
         console.log("running schedule ",time_string," for: ",options.report.name)
-        ssrsUtil.run(0, options.report, options.subscription);
+        
+        ssrsUtil.setup(0, options.report, options.subscription);
     })
 
     jobs.push(job)

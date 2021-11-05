@@ -280,3 +280,12 @@ input {
 	 height: 60px;
 	 padding: 10px;
  }
+
+ .filled_rounded_borders {
+	background: #FA4616;
+	border-radius: 15px;
+	border: 2px solid black;
+	color: white;
+	height: 60px;
+	padding: 10px;
+}

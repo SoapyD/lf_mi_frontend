@@ -59,7 +59,11 @@ exports.searchType = {
             {
                 model: models.Dimension_Ownerteam, 
                 as: "ownerteams",
-            }
+            },
+            {
+                model: models.Dimension_Orgunit_Contract, 
+                as: "contracts",
+            }            
         ]  
     }
 }
