@@ -92,9 +92,10 @@ exports.setup = async(subscription_number, report, subscription) => {
                 delay_timer = 3000 * ((file_data.files_needed * subscription_number) + subsection_count);
 
                 let activity = {
+                    name: outputname,
                     number: subsection_count,
                     running: true,
-                    tries: 3,
+                    tries: 10,
                     path: "/99 - Test Reports/Service Report/_Front Cover",
                     output_path: path.join(folder_path,outputname),
                     parameters:                 
@@ -103,6 +104,7 @@ exports.setup = async(subscription_number, report, subscription) => {
                         "company_filter": subscription.report_sub_name,
                         "period_type": parameter_object.Date_Range
                     },
+                    error: null,
                     delay_timer: delay_timer,
                     start: start + delay_timer,
                     last_updated: start + delay_timer
@@ -159,12 +161,14 @@ exports.setup = async(subscription_number, report, subscription) => {
                         let test = start + delay_timer
 
                         let activity = {
+                            name: outputname,
                             number: subsection_count,
                             running: true,
-                            tries: 3,
+                            tries: 10,
                             path: subsection.path,
                             output_path: path.join(folder_path,outputname),
                             parameters: subsection_parameters,
+                            error: null,
                             delay_timer: delay_timer,
                             start: start + delay_timer,
                             last_updated: start + delay_timer
@@ -201,7 +205,7 @@ exports.setup = async(subscription_number, report, subscription) => {
     
             let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
 
-            exports.runProcess(subscription_number, subscriptionactivities[0]) 
+            exports.runProcess(subscriptionactivities[0]) 
         }
 
     }
@@ -303,7 +307,7 @@ exports.getSubsectionParameters = (options) => {
 // #    #  #     # #    ##       #       #    #  #     # #     # #       #     # #     # 
 // #     #  #####  #     #       #       #     # #######  #####  #######  #####   #####  
 
-exports.runProcess = (subscription_number, subscriptionactivity) => {
+exports.runProcess = (subscriptionactivity) => {
 
     let subsections = JSON.parse(subscriptionactivity.subsection_activity)
 
@@ -319,21 +323,19 @@ exports.runProcess = (subscription_number, subscriptionactivity) => {
         // let delay_timer_value = ((subscriptionactivity.files_expected * subscription_number) + subsection.number) + 1 //+1 for front cover
 
         let options = {
+            name: subsection.name,
             delay_timer: subsection.delay_timer, 
             filepath: subsection.path, 
             parameters: subsection.parameters, 
             output_path: subscriptionactivity.path, 
             output_file: subsection.output_path,
+            activity_id: subscriptionactivity.id,
             file_type: subscriptionactivity.file_type,
             file_extension: subscriptionactivity.file_extension
         }
 
         exports.runDelay(options)
-
     }
-
-
-
 }
 
 
@@ -381,8 +383,36 @@ exports.runReport = async(options) => {
         /**/
 
     } catch (err) {
-        // console.log("ERROR RUNNING REPORT")
+        console.log("ERROR RUNNING REPORT")
         // checkOutputsUtil.checkFiles(output_path, reportPath, err)
+
+        let find_list = []
+        find_list.push(
+        {
+            model: "SubscriptionActivity",
+            search_type: "findOne",
+            params: [{
+                where: {
+                    id: options.activity_id,
+                }		
+            }]
+        }) 
+    
+        //GET ALL REPORT DATA
+        let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+        let subscriptionactivity = subscriptionactivities[0];
+        let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
+
+        // subsection_activity[options.name].running = false;
+        // subsection_activity[options.name].tries = 0;
+        if(err){
+            subsection_activity[options.name].error = err;
+        }else{
+            subsection_activity[options.name].error = "undefined error";            
+        }
+
+        subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)
+        subscriptionactivity.save();
     }
 }
 
