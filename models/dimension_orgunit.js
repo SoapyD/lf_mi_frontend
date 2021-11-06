@@ -39,6 +39,7 @@ const DIMENSION_Orgunit = utils.database.sequelize.define('DIMENSION_orgunit', {
     dim_orgunit_session_sla_amber: Sequelize.DECIMAL,      
 
 }, {
+    timestamps: false,
     freezeTableName: true, //PREVENTS SEQUELIZE ADDING AN 'S' ONTO TABLE NAMES
 });
 

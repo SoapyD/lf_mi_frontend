@@ -17,6 +17,7 @@ const DIMENSION_Ownerteam = utils.database.sequelize.define('DIMENSION_ownerteam
     dim_Ownerteam_lf_resolver: Sequelize.STRING,
     dim_Ownerteam_finance_id: Sequelize.STRING
 }, {
+    timestamps: false,    
     freezeTableName: true, //PREVENTS SEQUELIZE ADDING AN 'S' ONTO TABLE NAMES
 });
 

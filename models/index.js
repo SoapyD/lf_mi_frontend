@@ -78,10 +78,6 @@ models.SubscriptionActivity.belongsTo(models.Subscription, {foreignKey: 'subscri
 
 
 
-// models.Report.hasMany(models.Section, {as: 'sections', foreignKey: "reportId"});
-// models.Section.belongsTo(models.Report, {foreignKey: 'reportId'});
-
-
 //DATA MODELS
 
 models.Dimension_Orgunit = require("./dimension_orgunit");
@@ -93,6 +89,7 @@ models.Dimension_Orgunit_Contract.belongsTo(models.Dimension_Orgunit, {foreignKe
 
 models.Dimension_Orgunit.hasMany(models.Dimension_Ownerteam, {as: 'ownerteams', foreignKey: 'dim_orgunit_fk'});
 models.Dimension_Ownerteam.belongsTo(models.Dimension_Orgunit, {foreignKey: 'dim_orgunit_fk'});
+/**/
 
 
 module.exports = models

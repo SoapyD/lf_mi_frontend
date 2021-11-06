@@ -31,11 +31,8 @@ const DIMENSION_Orgunit_Contract = utils.database.sequelize.define('DIMENSION_or
     dim_orgunit_contract_hours_of_service: Sequelize.STRING,
     dim_orgunit_primary_sector: Sequelize.STRING,
     dim_orgunit_secondary_sector: Sequelize.STRING,
-
-
-
-
 }, {
+    timestamps: false,    
     freezeTableName: true, //PREVENTS SEQUELIZE ADDING AN 'S' ONTO TABLE NAMES
 });
 

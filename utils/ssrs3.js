@@ -1,23 +1,25 @@
 // const emailUtil = require('../util/email');
 // const mergeDocumentUtil = require('../utils/merge_document');
+// const checkOutputsUtil = require('../utils/check_output_files');
 const databaseQueriesUtil = require('../utils/database_queries2');
-const checkOutputsUtil = require('../utils/check_output_files');
 const functionsUtil = require('../utils/functions');
 
 var fs = require('fs');
 var path = require('path');
 const tmp = require('tmp');
+const { SubscriptionActivity } = require('../models');
 // const Subscription = require('../models/subscription');
 
 
 
+let serverUrl = process.env.SSRS_URL; ///ReportServer2010
 exports.ssrs = require('mssql-ssrs');
-// exports.files = [];
+exports.ssrs.setServerUrl(serverUrl);
+
 
 
 const username = process.env.SSRS_USER;
 const password = process.env.SSRS_PASS;
-var serverUrl = process.env.SSRS_URL; ///ReportServer2010
 
 
 
@@ -106,8 +108,8 @@ exports.setup = async(subscription_number, report, subscription) => {
                     },
                     error: null,
                     delay_timer: delay_timer,
-                    start: start + delay_timer,
-                    last_updated: start + delay_timer
+                    start: null,
+                    last_updated: null
                 }
                 subsection_activity[outputname] = activity;
 
@@ -158,7 +160,6 @@ exports.setup = async(subscription_number, report, subscription) => {
                         outputname = "000000000" + subsection_count;
                         outputname = outputname.substr(outputname.length-size);
                         delay_timer = 3000 * ((file_data.files_needed * subscription_number) + subsection_count);
-                        let test = start + delay_timer
 
                         let activity = {
                             name: outputname,
@@ -170,8 +171,8 @@ exports.setup = async(subscription_number, report, subscription) => {
                             parameters: subsection_parameters,
                             error: null,
                             delay_timer: delay_timer,
-                            start: start + delay_timer,
-                            last_updated: start + delay_timer
+                            start: null,
+                            last_updated: null
                         }
                         subsection_activity[outputname] = activity;
                     })
@@ -336,6 +337,8 @@ exports.runProcess = (subscriptionactivity) => {
 
         exports.runDelay(options)
     }
+
+    exports.checkList();
 }
 
 
@@ -347,25 +350,61 @@ exports.runProcess = (subscriptionactivity) => {
 // ██   ██  ██████  ██   ████       ███████ ███████ ██   ██ ███████ 
 
 
-let count = 1
+let report_list = [];
+let report_running = false;
 
 //RUN THE REPORT SECTION BUT ONLY AFTER A GIVEN DELAY
 exports.runDelay = async(options) => {
 
-    await functionsUtil.delay(options.delay_timer)
-    exports.runReport(options)
+    // await functionsUtil.delay(options.delay_timer)
+    // exports.runReport(options)
+    report_list.push(options);
+}
+
+exports.checkList = () =>{
+    if(report_running === false){
+        if(report_list.length > 0){
+            report_running = true;
+            let options = report_list[0];
+            exports.runReport(options);
+            report_list.shift();
+        }
+    }
 }
 
 
 exports.runReport = async(options) => {
     
+    //set the subsection activity
+    let find_list = []
+    find_list.push(
+    {
+        model: "SubscriptionActivity",
+        search_type: "findOne",
+        params: [{
+            where: {
+                id: options.activity_id,
+            }		
+        }]
+    }) 
+    //GET THE SUBSECTION DATA
+    let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+    let subscriptionactivity = subscriptionactivities[0];
+    let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
+
+
     const reportPath = options.filepath;
     try {
 
-        let report;
-        
-        exports.ssrs.setServerUrl(serverUrl);
-        
+        //UPDATE THE ACTIVITY TO SHOW THE TASK HAS STARTED
+        if(!subsection_activity[options.name].start){
+            let start = Date.now();
+            subsection_activity[options.name].start = start;
+            subsection_activity[options.name].last_updated = start;
+            subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)        
+            subscriptionactivity.save();        
+        }
+
         var auth = {
             userName: username,
             password: password,
@@ -374,37 +413,19 @@ exports.runReport = async(options) => {
           };
         // This part errors on the server
         console.log("output file:",options.output_file, " ||| running report... ",reportPath)
-        report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, options.file_type, options.parameters, auth)        
+        let report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, options.file_type, options.parameters, auth)        
 
         
         // Writing to local file / or send the reponse to API 
         await fs.writeFileSync(options.output_file+'.'+options.file_extension, report, "base64");
-        // checkOutputsUtil.checkFiles(output_path)
-        /**/
-
+        
+        //rerun the check list process
+        report_running = false;
+        exports.checkList();
     } catch (err) {
         console.log("ERROR RUNNING REPORT")
-        // checkOutputsUtil.checkFiles(output_path, reportPath, err)
 
-        let find_list = []
-        find_list.push(
-        {
-            model: "SubscriptionActivity",
-            search_type: "findOne",
-            params: [{
-                where: {
-                    id: options.activity_id,
-                }		
-            }]
-        }) 
-    
-        //GET ALL REPORT DATA
-        let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
-        let subscriptionactivity = subscriptionactivities[0];
-        let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
-
-        // subsection_activity[options.name].running = false;
-        // subsection_activity[options.name].tries = 0;
+        //SAVE THE ERROR
         if(err){
             subsection_activity[options.name].error = err;
         }else{
@@ -413,161 +434,10 @@ exports.runReport = async(options) => {
 
         subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)
         subscriptionactivity.save();
+
+        //rerun the check list process
+        report_running = false;
+        // exports.checkList();        
     }
 }
 
-
-
-
-
-            /*
-            //CREATE THE CONTENT PAGE TEXT
-            if(report.sections){
-
-                let subsection_total = 0
-
-                // ███████ ██████   ██████  ███    ██ ████████        ██████  ██████  ██    ██ ███████ ██████  
-                // ██      ██   ██ ██    ██ ████   ██    ██          ██      ██    ██ ██    ██ ██      ██   ██ 
-                // █████   ██████  ██    ██ ██ ██  ██    ██    █████ ██      ██    ██ ██    ██ █████   ██████  
-                // ██      ██   ██ ██    ██ ██  ██ ██    ██          ██      ██    ██  ██  ██  ██      ██   ██ 
-                // ██      ██   ██  ██████  ██   ████    ██           ██████  ██████    ████   ███████ ██   ██ 
-
-
-                //ADD FRONT PAGE
-                filepath = "/99 - Test Reports/Service Report/_Front Cover"
-                subsection_param_object = 
-                {
-                    "report_name":subscription.report_name, 
-                    "company_filter": subscription.report_sub_name,                    
-                    "sub_activity_id": subscriptionactivities[0].id,
-                    "period_type": parameter_object.Date_Range
-                }
-                outputname = "0000000000"
-                let output_file = path.join(folder_path,outputname);
-                exports.runDelay(((subsection_total*4) * subscription_number), filepath, subsection_param_object, folder_path, output_file)
-
-
-
-
-                // ██████  ██    ██ ███    ██       ███████ ███████  ██████ ████████ ██  ██████  ███    ██ ███████ 
-                // ██   ██ ██    ██ ████   ██       ██      ██      ██         ██    ██ ██    ██ ████   ██ ██      
-                // ██████  ██    ██ ██ ██  ██ █████ ███████ █████   ██         ██    ██ ██    ██ ██ ██  ██ ███████ 
-                // ██   ██ ██    ██ ██  ██ ██            ██ ██      ██         ██    ██ ██    ██ ██  ██ ██      ██ 
-                // ██   ██  ██████  ██   ████       ███████ ███████  ██████    ██    ██  ██████  ██   ████ ███████ 
-
-
-                //START THE DELAY VALUE AS THE SUBSCRIPTION NUMBER
-                let subsection_count = 0;
-                
-                //LOOP THROUGH EACH SECTION AND RUN THE SUBSECTIONS
-                report.sections.forEach( async(section) => {
-
-                    // setTimeout(() => {
-
-                    if(section.subsections){
-                        section.subsections.forEach( async(subsection, subsection_number) => {                       
-
-                            // setTimeout(() => {
-
-                                // ███████ ██    ██ ██████  ███████ ███████  ██████ ████████ ██  ██████  ███    ██       ██████   █████  ██████   █████  ███    ███ ███████ 
-                                // ██      ██    ██ ██   ██ ██      ██      ██         ██    ██ ██    ██ ████   ██       ██   ██ ██   ██ ██   ██ ██   ██ ████  ████ ██      
-                                // ███████ ██    ██ ██████  ███████ █████   ██         ██    ██ ██    ██ ██ ██  ██ █████ ██████  ███████ ██████  ███████ ██ ████ ██ ███████ 
-                                //      ██ ██    ██ ██   ██      ██ ██      ██         ██    ██ ██    ██ ██  ██ ██       ██      ██   ██ ██   ██ ██   ██ ██  ██  ██      ██ 
-                                // ███████  ██████  ██████  ███████ ███████  ██████    ██    ██  ██████  ██   ████       ██      ██   ██ ██   ██ ██   ██ ██      ██ ███████ 
-                                                                                                                                                                                                         
-
-                            //GET SUBSECTION
-                            //GET PARAMETER SUBSECTIONS
-                            //PULL OUT ANY PARAMETERS SAID SUBSECTION NEEDS FROM OVERALL PARAMETER OBJECT
-                            let subsection_param_object = {}
-                            let report_param_object = {}
-                            if (subsection.parameters){
-                                subsection.parameters.forEach( async(parameter) => {
-                                    if(parameter_object[parameter.name] && parameter_object[parameter.name] !== ""){
-                                        if(parameter.in_report === false || parameter.visible === false){
-                                            report_param_object[parameter.name] = parameter_object[parameter.name];
-                                        }
-                                        else{
-                                            subsection_param_object[parameter.name] = parameter_object[parameter.name];
-                                        }
-                                    }
-                                })
-                            }
-
-
-                            let delay_timer_value = (((subsection_total*1) * subscription_number) + (subsection_count*1)) + 1 //+1 for front cover
-                            let file_number = (section.order * 1000) + delay_timer_value // + subsection.sectionsubsections.order
-
-
-                            //SET THE SECTION AND SUBSECTION NAMES
-                            report_param_object['Section_Name'] = ''
-                            if(subsection_number === 0){
-                                report_param_object['Section_Name'] = section.order + ". " + section.name;
-                            }
-                            let subsection_name = subsection.name
-                            if(subsection.sectionsubsections.name && subsection.sectionsubsections.name !== ""){
-                                subsection_name = subsection.sectionsubsections.name
-                            }
-                            
-                            report_param_object['Subsection_Name'] = section.order + "." + subsection.sectionsubsections.order+ ". "+subsection_name;
-
-
-                            //  █████  ███    ██  █████  ██      ██    ██ ███████ ██ ███████     ██ ██████  ██████  ███████  █████  ██   ██ ███████ 
-                            // ██   ██ ████   ██ ██   ██ ██       ██  ██  ██      ██ ██         ██  ██   ██ ██   ██ ██      ██   ██ ██  ██  ██      
-                            // ███████ ██ ██  ██ ███████ ██        ████   ███████ ██ ███████   ██   ██████  ██████  █████   ███████ █████   ███████ 
-                            // ██   ██ ██  ██ ██ ██   ██ ██         ██         ██ ██      ██  ██    ██   ██ ██   ██ ██      ██   ██ ██  ██       ██ 
-                            // ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ██ ███████ ██     ██████  ██   ██ ███████ ██   ██ ██   ██ ███████ 
-
-
-                            report_param_object['Hide_Analysis'] = "false"
-                            if(subsection.sectionsubsections.show_analysis_box === false){
-                                report_param_object['Hide_Analysis'] = "true"
-                            }
-
-
-                            if(subsection_number === 0){
-                                subsection_param_object.Section_Name = report_param_object['Section_Name']
-                            }
-
-                            switch(subsection.type){
-                                case "template":
-                                case "appendix template":
-                                    subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
-
-                                    if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
-                                        subsection_param_object.Hide_PageBreak = "false"  
-                                    }
-                                break;
-                                case "normal":
-                                    subsection_param_object.Subsection_Name = report_param_object['Subsection_Name']
-                                    ,subsection_param_object.Hide_Analysis = report_param_object['Hide_Analysis']
-                                    if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
-                                        subsection_param_object.Hide_PageBreak = "false"  
-                                    }                                    
-                                break;  
-                                case "appendix":
-                                    if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
-                                        subsection_param_object.Hide_PageBreak = "false"  
-                                    }
-                                break;                                                                
-                                default:
-
-                            }
-                            
-                            //ADD SUBSECTION
-                            outputname = "000000000" + file_number;
-                            outputname = outputname.substr(outputname.length-size);
-        
-                            output_file = path.join(folder_path,outputname); 
-
-
-                            exports.runDelay(delay_timer_value, subsection.path, subsection_param_object, folder_path, output_file)
-
-                            subsection_count++
-
-                        })
-                    }
-
-                })
-            }
-            */
