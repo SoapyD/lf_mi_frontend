@@ -129,32 +129,32 @@ exports.createSubscription = async(req,res) => { //, middleware.isLoggedIn
 	try{
 
 		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
-		let parameters = "{"
+		// let parameters = "{"
 
-		if(req.body.parameters){
-			req.body.parameters.forEach((parameter, index)=> {
-				if (index > 0){
-					parameters += ", "
-				}
-				parameters += parameter
-			})
-		}
+		// if(req.body.parameters){
+		// 	req.body.parameters.forEach((parameter, index)=> {
+		// 		if (index > 0){
+		// 			parameters += ", "
+		// 		}
+		// 		parameters += parameter
+		// 	})
+		// }
 
-		if(req.body.input_parameters){
-			req.body.input_parameters.forEach((input_parameter, index)=> {
-				if (index > 0 || parameters !== ""){
-					parameters += ", "
-				}
-				parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
-			})
-		}
+		// if(req.body.input_parameters){
+		// 	req.body.input_parameters.forEach((input_parameter, index)=> {
+		// 		if (index > 0 ){ //|| parameters !== ""
+		// 			parameters += ", "
+		// 		}
+		// 		parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
+		// 	})
+		// }
 
-		parameters += "}"
+		// parameters += "}"
 
 
 		let params = req.body.params;
 		params['reportId'] = req.params.reportid
-		params['parameters'] = parameters
+		params['parameters'] = JSON.stringify(req.body.params)
 
 		let creation_list = []
 		creation_list.push(
@@ -165,7 +165,7 @@ exports.createSubscription = async(req,res) => { //, middleware.isLoggedIn
 			]
 		}) 
 
-		let subscriptions = await utils.queries.createData2(creation_list)
+		let subscriptions = await utils.queries.createData(creation_list,"create")
 		
 		utils.scheduler.updateScheduler();
 
@@ -292,53 +292,29 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 
 	try{
 
-		//CONCATINATE MULTIPLE SELECTIONS INTO ONE FIELD
-		// let parameter_list = req.body.parameters;
-		// let new_parameter_list = []
-		// let saved_param = "";
-		// let saved_values = "";
-		// let saved_string = "";
-		// parameter_list.forEach((parameter, index) => {
-		// 	let values = parameter.split(' : ')
-		// 	if(values[0] === saved_param){
-		// 		if(saved_values){
-		// 			saved_values += "&"
-		// 		}
-		// 		saved_values += values[0].replaceAll('"','') +'='+values[1].replaceAll('"','')
-		// 	}
-		// 	else{
-		// 		saved_string += saved_param + ": "+saved_values;
-		// 		saved_values = values[1];
-		// 	}
-		// 	saved_param = values[0];
-			
-		// 	if(index + 1 === parameter_list.length){
-		// 		saved_string += saved_param + ": "+saved_values;
-		// 	}
-		// })
 
 		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
-		let parameters = "{"
+		// let parameters = "{"
 
-		if(req.body.parameters){
-			req.body.parameters.forEach((parameter, index)=> {
-				if (index > 0){
-					parameters += ", "
-				}
-				parameters += parameter
-			})
-		}
+		// if(req.body.parameters){
+		// 	req.body.parameters.forEach((parameter, index)=> {
+		// 		if (index > 0){
+		// 			parameters += ", "
+		// 		}
+		// 		parameters += parameter
+		// 	})
+		// }
 
-		if(req.body.input_parameters){
-			req.body.input_parameters.forEach((input_parameter, index)=> {
-				if (index > 0 || parameters !== ""){
-					parameters += ", "
-				}
-				parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
-			})
-		}
+		// if(req.body.input_parameters){
+		// 	req.body.input_parameters.forEach((input_parameter, index)=> {
+		// 		if (index > 0){ //|| parameters !== ""
+		// 			parameters += ", "
+		// 		}
+		// 		parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
+		// 	})
+		// }
 
-		parameters += "}"
+		// parameters += "}"
 
 
 		let find_list = []
@@ -358,7 +334,7 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 
 		let params = req.body.params;
 		params['reportId'] = req.params.reportid
-		params['parameters'] = parameters
+		params['parameters'] = JSON.stringify(req.body.params)
 
 		let update_list = []
 		update_list.push(

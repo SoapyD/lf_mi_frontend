@@ -21,20 +21,20 @@
 				<div class="col-xs-12">
 					<div class="form-group">
 						<p>Subscription Name:</p>
-						<input class="form-control" type="text" name="params[name]" placeholder="name" value="<%= subscription.name %>">
+						<input class="form-control" type="text" name="params[name]" placeholder="name" value="<%= subscription.name %>" required>
 					</div>			
 				</div>
 
 				<div class="col-xs-6">
 					<div class="form-group">
 						<p>Report Name:</p>
-						<input class="form-control" type="text" name="params[report_name]" placeholder="report name" value="<%= subscription.report_name %>">
+						<input class="form-control" type="text" name="params[report_name]" placeholder="report name" value="<%= subscription.report_name %>" required>
 					</div>			
 				</div>
 				<div class="col-xs-6">
 					<div class="form-group">
 						<p>Report Sub Name:</p>
-						<input class="form-control" type="text" name="params[report_sub_name]" placeholder="report sub name" value="<%= subscription.report_sub_name %>">
+						<input class="form-control" type="text" name="params[report_sub_name]" placeholder="report sub name" value="<%= subscription.report_sub_name %>" required>
 					</div>			
 				</div>				
 
@@ -42,7 +42,7 @@
 				<div class="col-xs-4">
 					<div class="form-group">	
 						<p>Frequency:</p>				
-						<select id="frequency-select" class="form-control" name="params[frequencyId]">
+						<select id="frequency-select" class="form-control" name="params[frequencyId]" required>
 
 							<option value="">--Frequency--</option>
 							<% frequencies.forEach(function (frequency){ %>
@@ -60,35 +60,35 @@
 				<div class="col-xs-4">
 					<div class="form-group">
 						<p>Start Date:</p>
-						<input class="form-control" type="date" name="params[start_date]" value="<%= subscription.start_date %>">
+						<input class="form-control" type="date" name="params[start_date]" value="<%= subscription.start_date %>" required>
 					</div>				
 				</div>
 
 				<div class="col-xs-4">
 					<div class="form-group">
 						<p>Time:</p>
-						<input class="form-control" type="time" name="params[time]" value="<%= subscription.time %>">
+						<input class="form-control" type="time" name="params[time]" value="<%= subscription.time %>" required>
 					</div>				
 				</div>
 
 				<div class="col-xs-12">
 					<div class="form-group">
 						<p>Email To:</p>
-						<input class="form-control" type="text" name="params[email_to]" placeholder="email to" value="<%= subscription.email_to %>">
+						<input class="form-control" type="text" name="params[email_to]" placeholder="email to" value="<%= subscription.email_to %>" required>
 					</div>			
 				</div>
 
 				<div class="col-xs-12">
 					<div class="form-group">
 						<p>Email Subject:</p>
-						<input class="form-control" type="text" name="params[subject]" placeholder="email subject" value="<%= subscription.subject %>">
+						<input class="form-control" type="text" name="params[subject]" placeholder="email subject" value="<%= subscription.subject %>" required>
 					</div>			
 				</div>
 
 				<div class="col-xs-12">
 					<div class="form-group">
 						<p>Email Body:</p>
-						<input class="form-control" type="text" name="params[body]" placeholder="email body" value="<%= subscription.body %>" id="subject-box">
+						<input class="form-control" type="text" name="params[body]" placeholder="email body" value="<%= subscription.body %>" id="subject-box" required>
 					</div>				
 				</div>
 
@@ -131,13 +131,12 @@
 							
 							<% if(parameter.field_type === 'multiple') { %> <%= parameter.field_type %> <% } %>
 							
-							id="<%= parameter.name %>-select" class="form-control" name="parameters[]">
+							id="<%= parameter.name %>-select" class="form-control" name="params[<%= parameter.name %>]">
 		
 								<option value="">--<%= parameter.name %>--</option>
 		
 								<% parameter_value.recordset.forEach(function (record){ %>
-									<% let value = '"'+parameter.name+'" : '+'"'+record.value+'"'; %>
-									<option value="<%= value %>"
+									<option value="<%= record.value %>"
 									<% if(parameter_obj[parameter.name] == record.value){ %>
 											<%= " selected" %>
 									<% } %>	
@@ -151,8 +150,7 @@
 								
 							</select>
 						<% }else{ %>
-							<input id="<%= parameter.name %>-hidden" class="form-control" type="hidden" name="input_parameter_names[]" value="<%-parameter.name%>" >
-							<input id="<%= parameter.name %>-select" class="form-control" type="<%= parameter.field_type %>" name="input_parameters[]" placeholder="" 
+							<input id="<%= parameter.name %>-select" class="form-control" type="<%= parameter.field_type %>" name="params[<%= parameter.name %>]" placeholder="" 
 							
 							<% if(parameter_obj[parameter.name]){ %> 
 							value="<%-parameter_obj[parameter.name]%>" 
