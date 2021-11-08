@@ -1022,7 +1022,7 @@ exports.create = async() => {
         {
             name: "Service Report"
             ,description: "A template for the regularly used SSRS Service Report"
-            ,owner: "93e16e04-771c-4137-b169-748d2dc103c3"
+            ,owner: "thomas.cassady@littlefish.co.uk"
         },               
         // {
         //     name: "Fusion - Service Report"

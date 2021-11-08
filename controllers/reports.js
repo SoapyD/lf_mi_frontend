@@ -82,7 +82,7 @@ exports.createReport = async(req,res) => {
 
 	try{
 		let params = req.body.params
-		params["owner"] = req.session.passport.user.id
+		params["owner"] = req.session.passport.user.id_name
 
 		let creation_list = []
 		creation_list.push(
@@ -374,6 +374,53 @@ exports.updateJoinReport = async(req,res) => {
 		res.redirect("/reports/"+ id)        
     }	
 }
+
+
+exports.ownReport = async(req,res) => {
+	
+	let id = req.params.reportid;
+	
+	//GET FULL REPORT
+    try{
+		let find_list = []
+		find_list.push(
+		{
+			model: "Report",
+			search_type: "findOne",
+			params: [{
+				where: {
+					id: id,
+				},
+				//include: utils.queries.searchType['Full Report'].include			
+			}]
+		}) 
+
+		//GET ALL REPORT DATA
+		let reports = await utils.queries.findData(find_list)
+
+		let updatelist = []
+		updatelist.push({
+			params: [
+				{"owner": req.session.passport.user.id_name}
+			]
+		})    
+
+		//UPDATE THE RECORD
+		let data = await utils.queries.updateData(reports[0], updatelist)
+
+
+		req.flash("success", 'Sucessfully became owner of report');		
+		res.redirect("/reports/"+ id);
+
+	}
+	catch(err){
+		console.log(err)
+		req.flash("error", "There was an error trying to claim ownership of this report");
+		res.redirect("/reports/"+ id)        
+	}
+}
+
+
 
 
 exports.updateCopyReport = async(req,res) => {

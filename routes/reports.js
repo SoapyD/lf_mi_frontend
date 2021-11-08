@@ -23,6 +23,9 @@ router.put("/:reportid", middleware.user_access, controllers.reports.updateRepor
 //JOIN REPORT
 router.put("/:reportid/join", middleware.user_access, controllers.reports.updateJoinReport)
 
+//OWN REPORT
+router.put("/:reportid/own", middleware.user_access, controllers.reports.ownReport)
+
 //COPY REPORT
 router.put("/:reportid/copy", middleware.user_access, controllers.reports.updateCopyReport)
 
