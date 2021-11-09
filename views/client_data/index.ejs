@@ -43,6 +43,14 @@
         </div>
 
     <% }) %>
+
+    <% if(orgunits.length === 0) { %>
+        <div class="panel-body">
+            <a href="/">
+                No Orgunits associated with you
+            </a>
+        </div>
+    <% } %>
 </div>
 
 <div class="top-padding">

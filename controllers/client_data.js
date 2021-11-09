@@ -1,6 +1,7 @@
 
 
 const utils = require("../utils");
+const Op = require('Sequelize').Op
 
 
 exports.getRouteInfo = () => {
@@ -14,11 +15,11 @@ exports.getRouteInfo = () => {
             {name: "sdms", 
             query: `
             SELECT
-            [First Name]+' '+[Last Name] as dim_user_cleaned
+            [Work Email] as dim_user_cleaned
             FROM 
             [dbo].[ADF_PeopleHR_Employee]
             WHERE 
-            [job role] = 'SERVICE DELIVERY MANAGER'
+            [job role] = 'SERVICE DELIVERY MANAGER' AND [Work Email] IS NOT NULL
             AND 
             (
             [Final Day of Employment] >= getdate()
@@ -71,14 +72,40 @@ exports.getRouteInfo = () => {
 
 exports.getAll = async(req,res) => {
 
+    //GET PEOPLE HR DATA
+
+    let user_email = req.user.id_name
+    let user_name = user_email.split("@");
+    user_name = user_name[0].replace(".", " "); //take the left hand side of the email
+    // user_name = 'marc digby'
+
     let find_list = []
-    find_list.push(
+
+    //RETURN ALL ENTRIES IF THIS IS AN ADMIN
+    if(req.user.role.includes('Admin'))
     {
-        model: "Dimension_Orgunit",
-        search_type: "findAll",
-        params: [{		
-        }]
-    }) 
+        find_list.push(
+            {
+                model: "Dimension_Orgunit",
+                search_type: "findAll",
+                params: [{         
+                }]
+            }) 
+    }else{
+        //IF THE USER ISN'T AN ADMIN, CHECK TO SEE WHAT ORGUNITS ARE ASSOCIATED WITH THEM
+        find_list.push(
+        {
+            model: "Dimension_Orgunit",
+            search_type: "findAll",
+            params: [{
+                where: {
+                    [Op.or]: [{dim_orgunit_accountmanagername: user_name}, {dim_orgunit_servicedeliverymanager: user_name}],
+                    dim_orgunit_active: 1,
+                    dim_orgunit_client: 1,
+                },            
+            }]
+        }) 
+    }
 
     try{
         let orgunits = await utils.queries.findData(find_list)

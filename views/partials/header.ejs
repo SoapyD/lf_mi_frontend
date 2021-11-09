@@ -83,7 +83,7 @@
 				<% if(!user) { %>
 					<li><a href="/login">Login</a></li>
 				<% } else { %>
-					<li><a href='/'>Hi, <%= user.name %></a></li>
+					<li><a href='/'>Hi, <%= user.name %> (<%= user.role %>)</a></li>
 					<li><a href="/logout">Logout</a></li>
 				<% } %>
 			</ul>

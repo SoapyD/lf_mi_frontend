@@ -4,18 +4,18 @@ const controllers = require('../controllers');
 const middleware = require("../middleware");
 
 //INDEX
-router.get("/", middleware.admin_access, controllers.client_data.getAll);
+router.get("/", middleware.user_access, controllers.client_data.getAll);
 
 //SHOW
-router.get("/:clientid", middleware.admin_access, controllers.client_data.getSingle)
+router.get("/:clientid", middleware.user_access, controllers.client_data.getSingle)
 
 //EDIT REPORT
-router.get("/:clientid/:item/edit", middleware.admin_access, controllers.client_data.getEdit)
+router.get("/:clientid/:item/edit", middleware.user_access, controllers.client_data.getEdit)
 
 //UPDATE REPORT
-router.put("/:clientid", middleware.admin_access, controllers.client_data.updateParent)
+router.put("/:clientid", middleware.user_access, controllers.client_data.updateParent)
 
-router.put("/:clientid/:item/multiple", middleware.admin_access, controllers.client_data.updateMultipleChildren)
+router.put("/:clientid/:item/multiple", middleware.user_access, controllers.client_data.updateMultipleChildren)
 
 
 
