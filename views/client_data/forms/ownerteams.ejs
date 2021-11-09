@@ -88,7 +88,7 @@
 			let record = data[0].recordset.find(r => r.dim_ownerteam_lf_resolver_type === value)
 			
 			if(record){
-				$("form").find('[name="[params]['+id+'][dim_ownerteam_lf_resolver]"]').val("N/A")
+				$("form").find('[name="[params]['+id+'][dim_ownerteam_lf_resolver]"]').val(record.dim_ownerteam_lf_resolver_lf_resolver)
 				$("form").find('[name="[params]['+id+'][dim_ownerteam_finance_id]"]').val(record.dim_ownerteam_lf_resolver_finance_code)
 			}
 		}

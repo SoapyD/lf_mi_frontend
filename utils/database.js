@@ -6,7 +6,7 @@ exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proc
     host: process.env.DB_SERVER,
     dialect: process.env.DB_TYPE,
     pool: {
-      max: 5,
+      max: 100,
       min: 0,
       idle: 10000,
       idleTimeoutMillis: 60000
@@ -20,13 +20,13 @@ exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proc
         // "requestTimeout": 300000 
       }
     },
-
-    // pool: {
-    //   max: 5,
-    //   min: 0,
-    //   acquire: 60000,
-    //   idle: 40000
-    // },
+    // The retry config if Deadlock Happened
+    retry: {
+      match: [/Deadlock/i],
+      max: 3, // Maximum rety 3 times
+      backoffBase: 1000, // Initial backoff duration in ms. Default: 100,
+      backoffExponent: 1.5, // Exponent to increase backoff each try. Default: 1.1
+    },
 
     logging: false,
     
