@@ -45,6 +45,20 @@
 
 	<div class="row">
 
+		<h2 class="rounded_borders">Finance</h2>
+
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Business Central Number:</p>
+				<input class="form-control" type="text" name="params[dim_orgunit_businesscentral_number]" value="<%= orgunit.dim_orgunit_businesscentral_number %>">
+				</select>                                
+			</div>        
+		</div>    
+
+	</div>
+
+	<div class="row">
+
 		<h2 class="rounded_borders">Management</h2>
 
 		<div class="col-md-3">
@@ -67,6 +81,13 @@
 
 			</div> 
 		</div>  	
+
+		<div class="col-md-3">
+			<div class="form-group">
+				<p>Service Account Manager:</p>
+				<input class="form-control" type="text" name="params[dim_orgunit_accountmanagername]" value="<%= orgunit.dim_orgunit_accountmanagername %>"  readonly="readonly">
+			</div> 
+		</div>  
 
 		<div class="col-md-3">
 			<div class="form-group">                        
@@ -126,34 +147,14 @@
 
 	</div>
 
-	<div class="row">
-
-		<h2 class="rounded_borders">Finance</h2>
-
-		<div class="col-md-4">
-			<div class="form-group">
-				<p>Business Central ID:</p>
-				<input class="form-control" type="text" name="params[dim_orgunit_businesscentral_id]" value="<%= orgunit.dim_orgunit_businesscentral_id %>">
-			</div> 
-		</div>  	
-
-		<div class="col-md-2">
-			<div class="form-group">                        
-				<p>Business Central Number:</p>
-				<input class="form-control" type="text" name="params[dim_orgunit_businesscentral_number]" value="<%= orgunit.dim_orgunit_businesscentral_number %>">
-				</select>                                
-			</div>        
-		</div>  
-
-		<div class="col-md-2">
-			<div class="form-group">                        
-				<p>Core Hours:</p>
-				<input class="form-control" type="text" name="params[dim_orgunit_corehours]" value="<%= orgunit.dim_orgunit_corehours %>">
-				</select>                                
-			</div>        
-		</div>  
-
+	<div class="col-md-12">
+		<div class="form-group">
+			<p>Note: Service Account Manager data is stored in HEAT. Any changes that need to be applied to this field need to be applied in HEAT's orgunit table</p>
+		</div>
 	</div>
+
+
+
 
 
 	<div class="row">

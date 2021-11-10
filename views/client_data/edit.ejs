@@ -15,6 +15,14 @@
         </p>
 
     </div>
+
+    <% if(typeof route_info.form_create_path !== 'undefined') { %>
+        <p>
+            <a class="btn btn-primary btn-large" href="/client_data/<%= orgunit.dim_orgunit_pk %>/contracts/new">
+                Add New
+            </a>
+        </p>
+    <% } %>
 </header>
 
 <%- include(route_info.form_path) %>

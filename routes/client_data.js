@@ -9,24 +9,24 @@ router.get("/", middleware.user_access, controllers.client_data.getAll);
 //SHOW
 router.get("/:clientid", middleware.user_access, controllers.client_data.getSingle)
 
-//EDIT REPORT
+//EDIT
 router.get("/:clientid/:item/edit", middleware.user_access, controllers.client_data.getEdit)
 
-//UPDATE REPORT
+//UPDATE
 router.put("/:clientid", middleware.user_access, controllers.client_data.updateParent)
 
 router.put("/:clientid/:item/multiple", middleware.user_access, controllers.client_data.updateMultipleChildren)
 
+//CREATE
+router.post("/:clientid/:item", middleware.user_access, controllers.client_data.create)
+
+//NEW
+router.get("/:clientid/:item/new", middleware.user_access, controllers.client_data.getFormCreate)
+
 
 /*
-//CREATE - create new REPORT
-router.post("/", middleware.user_access, controllers.reports.createReport)
 
-//NEW - show form to create new REPORT
-router.get("/new", middleware.user_access, controllers.reports.getFormCreateReport)
 
-//UPDATE REPORT
-router.put("/:reportid", middleware.user_access, controllers.reports.updateReport)
 
 //DESTOY
 router.delete("/:reportid", middleware.user_access, controllers.reports.deleteReport)

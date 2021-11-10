@@ -17,6 +17,7 @@ const DIMENSION_Orgunit = utils.database.sequelize.define('DIMENSION_orgunit', {
     dim_orgunit_numberofusers: Sequelize.INTEGER,
 
     dim_orgunit_supporting_pod: Sequelize.STRING,
+    dim_orgunit_accountmanagername: Sequelize.STRING,
     dim_orgunit_servicedeliverymanager: Sequelize.STRING,
     dim_orgunit_smo_client: Sequelize.INTEGER,
     dim_orgunit_numberofdevices: Sequelize.INTEGER,

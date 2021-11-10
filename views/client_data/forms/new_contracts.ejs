@@ -1,0 +1,203 @@
+<form action="/client_data/<%= orgunit.dim_orgunit_pk %>/contracts" method="POST"
+    onsubmit="return confirm('Are you sure you want to create this item?');">
+    
+        
+    <div class="row">
+
+        <input type="hidden" name="params[dim_orgunit_fk]" value="<%= orgunit.dim_orgunit_pk %>">
+        <input type="hidden" name="params[dim_orgunit_contract_orgunit]" value="<%= orgunit.dim_orgunit_orgunit %>">
+
+
+        <h2 class="rounded_borders">Core Data</h2>
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Contract Name:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_name]" required></td>
+                </select>                                
+            </div>        
+        </div>       
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Start Date:</p>
+                <td class="center-text"><input class="form-control" type="date" name="[params][dim_orgunit_contract_start_date]" required></td>
+                </select>                                
+            </div>        
+        </div>                 
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Termination Date:</p>
+                <td class="center-text"><input class="form-control" type="date" name="[params][dim_orgunit_contract_termination_date]"></td>
+                </select>                                
+            </div>        
+        </div>  
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Primary Sector:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_primary_sector]"></td>
+                </select>                                
+            </div>        
+        </div> 
+                    
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Secondary Sector:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_secondary_sector]"></td>
+                </select>                                
+            </div>        
+        </div>  
+
+    </div>
+
+
+    <div class="row">
+        <h2 class="rounded_borders">Finance and Contract Data</h2>
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Business Central Code</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_orgunit_business_central_code]" value="<%=orgunit.dim_orgunit_businesscentral_number%>"  readonly="readonly"></td>
+                </select>                                
+            </div>        
+        </div>              
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Subscription Code:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_business_central_subscription_code]"></td>
+                </select>                                
+            </div>        
+        </div>                 
+    </div> 
+
+    <div class="row">                         
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Payment Terms:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_payment_terms]"></td>
+                </select>                                
+            </div>        
+        </div>  
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Billing Cycle:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_billing_cycle]"></td>
+                </select>                                
+            </div>        
+        </div>  
+        
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Contract Notice:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_notice]"></td>
+                </select>                                
+            </div>        
+        </div>  
+        
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Hours of Service:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_hours_of_service]"></td>
+                </select>                                
+            </div>        
+        </div>                  
+
+    </div> 
+
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Origin Type:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_origin_type]"></td>
+                </select>                                
+            </div>        
+        </div>     
+
+        <div class="col-md-3">
+            <div class="form-group">                        
+                <p>Contract ITSM:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_itsm]"></td>
+                </select>                                
+            </div>        
+        </div> 
+        
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Previous Supplier:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_previous_supplier]"></td>
+                </select>                                
+            </div>        
+        </div>                   
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>PDF Signed:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_pdf_signed]"></td>
+                </select>                                
+            </div>        
+        </div>   
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Contract Type:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_type]"></td>
+                </select>                                
+            </div>        
+        </div>                   
+
+    </div>
+
+    <div class="row">
+        <h2 class="rounded_borders">Renewal Data</h2>
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Contract Renewal Date:</p>
+                <td class="center-text"><input class="form-control" type="date" name="[params][dim_orgunit_contract_renewal_date]"></td>
+                </select>                                
+            </div>        
+        </div>                 
+    </div> 
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Renewal Initial Term:</p>
+                <td class="center-text"><input class="form-control" type="number" name="[params][dim_orgunit_contract_renewal_initial_term]"></td>
+                </select>                                
+            </div>        
+        </div> 
+
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Renewal Term:</p>
+                <td class="center-text"><input class="form-control" type="number" name="[params][dim_orgunit_contract_total_renewal_term]"></td>
+                </select>                                
+            </div>        
+        </div>              
+                    
+        <div class="col-md-2">
+            <div class="form-group">                        
+                <p>Renewal Term Tally:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_orgunit_contract_renewal_term]"></td>
+                </select>                                
+            </div>        
+        </div>  
+
+    </div>            
+            
+
+        
+    <button class="btn btn-primary right-button" name="action" type="submit">
+        Save
+    </button>							        
+
+</form>	

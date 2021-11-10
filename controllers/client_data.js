@@ -15,7 +15,7 @@ exports.getRouteInfo = () => {
             {name: "sdms", 
             query: `
             SELECT
-            [Work Email] as dim_user_cleaned
+            [First Name]+' '+[Last Name] as dim_user_cleaned
             FROM 
             [dbo].[ADF_PeopleHR_Employee]
             WHERE 
@@ -43,7 +43,7 @@ exports.getRouteInfo = () => {
             `}            
         ]}
         },
-        {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts",
+        {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts", form_create_path: "./forms/new_contracts",
         description: "Edit the contract data associated with the orgunit. This data is needed for finance reporting.",
         },        
         {type: "ownerteams", sort_field: "dim_Ownerteam_Ownerteam", model: "Dimension_Ownerteam", id_column: "dim_Ownerteam_pk", form_path: "./forms/ownerteams",
@@ -82,7 +82,7 @@ exports.getAll = async(req,res) => {
     let find_list = []
 
     //RETURN ALL ENTRIES IF THIS IS AN ADMIN
-    if(req.user.role.includes('Admin'))
+    if(req.user.role === "App_Admin" || req.user.role === "ClientData_Admin")
     {
         find_list.push(
             {
@@ -165,7 +165,7 @@ exports.getSingle = async(req,res) => {
 
 
         let view = "client_data/show"
-        res.render(view, {title:orgunit.name, stylesheet: view, route_info:route_info, orgunit:data});
+        res.render(view, {title:data.dim_orgunit_orgunit, stylesheet: view, route_info:route_info, orgunit:data});
     }
     catch(err){
         console.log(err)
@@ -173,6 +173,123 @@ exports.getSingle = async(req,res) => {
         res.redirect("/")        
     }
 };
+
+
+
+//  #####  ####### #######       ####### ####### ######  #     #        #####  ######  #######    #    ####### ####### 
+// #     # #          #          #       #     # #     # ##   ##       #     # #     # #         # #      #    #       
+// #       #          #          #       #     # #     # # # # #       #       #     # #        #   #     #    #       
+// #  #### #####      #    ##### #####   #     # ######  #  #  # ##### #       ######  #####   #     #    #    #####   
+// #     # #          #          #       #     # #   #   #     #       #       #   #   #       #######    #    #       
+// #     # #          #          #       #     # #    #  #     #       #     # #    #  #       #     #    #    #       
+//  #####  #######    #          #       ####### #     # #     #        #####  #     # ####### #     #    #    ####### 
+
+exports.getFormCreate = async(req,res) => { 
+
+    let id = req.params.clientid;
+    let item = req.params.item;
+    let route_info = exports.getRouteInfo();
+
+    let find_list = []
+    find_list.push(
+    {
+        model: "Dimension_Orgunit",
+        search_type: "findOne",
+        params: [{
+            where: {
+                dim_orgunit_pk: id,
+            },
+            include: utils.queries.searchType['OrgUnit'].include			
+        }]
+    }) 
+
+    try{
+        let orgunit = await utils.queries.findData(find_list)
+
+        let view = "client_data/new"
+        let type_info;
+        route_info.forEach((route) => {
+            if(route.type === item){
+                type_info = route;
+            }
+        })    
+
+        //CHECK TO SEE IF THERE'S ANY DATA THAT NEEDS QUERYING
+        let queried_data = {};
+        if(type_info.queries){
+            if(type_info.queries.sql){
+
+                let output = await utils.queries.runDBQueries(type_info.queries.sql);
+
+                queried_data["sql"] = {
+                    definitions: type_info.queries.sql,
+                    output: output
+                }
+            }
+        }
+
+
+        res.render(view, {title:type_info.type, route_info:type_info, orgunit:orgunit[0], queries: queried_data});
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to get data");
+        res.redirect("/")        
+    }    
+};
+
+//  #####  ######  #######    #    ####### ####### 
+// #     # #     # #         # #      #    #       
+// #       #     # #        #   #     #    #       
+// #       ######  #####   #     #    #    #####   
+// #       #   #   #       #######    #    #       
+// #     # #    #  #       #     #    #    #       
+//  #####  #     # ####### #     #    #    ####### 
+
+exports.create = async(req,res) => {
+	
+    let id = req.params.clientid;
+    let item = req.params.item;
+    let route_info = exports.getRouteInfo();
+    let params =  req.body.params;
+
+    //NULL ALL BLANK ITEMS
+    for(const key in params){
+        if(params[key] === ''){
+            params[key] = null
+        }
+    }
+
+    let type_info;
+    route_info.forEach((route) => {
+        if(route.type === item){
+            type_info = route;
+        }
+    })    
+    
+    try{
+        let creation_list = []
+        creation_list.push(
+        {
+            model: type_info.model, 
+            params: [
+                req.body.params
+            ]
+        }) 
+    
+        let data = await utils.queries.createData2(creation_list)	
+    
+        res.redirect("/client_data/"+id+'/'+type_info.type+'/edit')	
+    }
+    catch(err){
+        console.log(err)
+        req.flash("error", "There was an error trying to create data");
+        res.redirect("/")        
+    }
+};
+
+
+
 
 
 //  #####  ####### #######       ####### ######  ### ####### 
@@ -246,11 +363,11 @@ exports.getEdit = async(req,res) => {
         // let query = type_info.queries[0]
         // queried_data[query.name] = await utils.queries.runDBQueries(type_info.queries)
 
-        res.render(view, {title:orgunit.name, route_info:type_info, orgunit:orgunit[0], data:orgunit[0][item], queries: queried_data});
+        res.render(view, {title:type_info.type, route_info:type_info, orgunit:orgunit[0], data:orgunit[0][item], queries: queried_data});
     }
     catch(err){
         console.log(err)
-        req.flash("error", "There was an error trying to get report data");
+        req.flash("error", "There was an error trying to get data");
         res.redirect("/")        
     }
 };
@@ -309,7 +426,7 @@ exports.updateParent = async(req,res) => {
     }	
     catch(err){
         console.log(err)
-        req.flash("error", "There was an error trying to update your report");
+        req.flash("error", "There was an error trying to update your data");
         res.redirect("/client_data/"+id+'/orgunit/edit')        
     }	
 
