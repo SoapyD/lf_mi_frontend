@@ -427,7 +427,7 @@ exports.runReport = async(options) => {
 
         //SAVE THE ERROR
         if(err){
-            subsection_activity[options.name].error = err;
+            subsection_activity[options.name].error = err.body.toString();
         }else{
             subsection_activity[options.name].error = "undefined error";            
         }
@@ -437,7 +437,7 @@ exports.runReport = async(options) => {
 
         //rerun the check list process
         report_running = false;
-        // exports.checkList();        
+        exports.checkList();        
     }
 }
 
