@@ -1,0 +1,49 @@
+
+	<form action="/user_data/<%= user_data.ID %>/logins/multiple/?_method=PUT" method="POST"
+        onsubmit="return confirm('Are you sure you want to save changes for this item?');">
+		
+				
+		<div class="row">
+			
+			<div class="col-md-12 top-padding">
+				
+				<table id="ownerteam-form" class="center">
+					
+					<colgroup>
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 50%;">
+                        <col span="1" style="width: 30%;">
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<th><span class="text">LoginID</span></th>
+							<th><span class="text">System</span></th>
+                            <th><span class="text">Name</span></th>							
+						</tr>
+					</thead>
+
+					<tbody>	
+						<% user_data.agentlinks.forEach(function (link, id){ %>
+							
+							<tr>
+								<input type="hidden" name="params[<%= id %>][dim_User_pk]" value="<%= link.dim_User_pk %>">
+								
+								<td><%= link.dim_agentlink_ringcentral_login %></td>
+                                <td><%= link.dim_agentlink_system %></td>
+								<td><%= link.dim_agentlink_system_login %></td>                                
+
+							</tr>
+							
+						<% }) %>					
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+            
+        <button class="btn btn-primary right-button" name="action" type="submit">
+            Save
+        </button>							        
+
+	</form>	

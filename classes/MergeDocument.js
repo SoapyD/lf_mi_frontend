@@ -24,6 +24,7 @@ const MergeDocument = class {
 
         this.output_name = options.output_name;
         this.subscription = options.subscription;
+        this.subscriptionactivity = options.subscriptionactivity;
 
         this.setup();
     }
@@ -57,14 +58,20 @@ const MergeDocument = class {
 
                 let output_fullname = path.join(this.file_path,this.output_name)+'.docx'; 
                 fs.writeFile(output_fullname, data, async() => {
+
+                    this.subscriptionactivity.merge_complete = 1;
+
                     console.log("MERGE COMPLETE!");
 
                     //SAVE THE FILE TO STORAGE
                     let filename = this.output_name+"_"+Date.now()+".docx"
                     utils.storage.saveBlob(data, filename); 
+                    this.subscriptionactivity.document_saved = 1;
                     
                     //EMAIL THE REPORT OUT
                     await utils.email.email(this.subscription, this.output_name+".docx",output_fullname)
+                    this.subscriptionactivity.email_sent = 1;
+                    this.subscriptionactivity.save();
                     
                     //DELETE FILES AND TEMPORARY FOLDER
                     this.deleteTemp(this.file_path)                   

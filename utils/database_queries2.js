@@ -65,6 +65,14 @@ exports.searchType = {
                 as: "contracts",
             }            
         ]  
+    },
+    "PeopleHR_Employee": {
+        include: [
+            {
+                model: models.Dimension_Agentlink, 
+                as: "agentlinks",
+            },           
+        ]  
     }
 }
 

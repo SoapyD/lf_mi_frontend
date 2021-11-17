@@ -1,0 +1,39 @@
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+<header class="jumbotron">
+    <div class="container">
+        
+        <h1>
+            <%- route_info.type %> Editor
+        </h1>
+
+        <p>
+            List of <%- route_info.type %> for <%= user_data.FirstName %> <%= user_data.LastName %>
+        </p>
+
+    </div>
+
+    <% if(typeof route_info.form_create_path !== 'undefined') { %>
+        <p>
+            <a class="btn btn-primary btn-large" href="/user_data/<%= user_data.ID %>/agentlinks/new">
+                Add New
+            </a>
+        </p>
+    <% } %>
+</header>
+
+<%- include(route_info.form_path) %>
+	
+
+<div class="top-padding">
+    <a href="/user_data/<%= user_data.ID %>">Go Back</a>
+</div>
+
+
+</div>
+
+
+<%- include("../partials/footer") %>

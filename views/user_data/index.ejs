@@ -1,0 +1,75 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+
+    <header class="jumbotron">
+
+    
+        <div class="container">
+            
+            <h1>
+                User Data
+            </h1>
+    
+            <!-- <p>
+                List of reports
+            </p> -->
+    
+            <p>
+    
+            </p>
+    
+        </div>
+    </header>    
+
+
+
+
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+        <h4 id="datatype_header">User List
+            <input id="myInput" type="text" placeholder="Search..">
+        </h4>
+    </div>
+
+    <% users_data.forEach((user_data) =>  { %>
+
+        <div class="panel-body">
+            <a href="/user_data/<%- user_data.ID %>">
+                <%- user_data.FirstName %> <%- user_data.LastName %>
+            </a>       
+        </div>
+
+    <% }) %>
+
+    <% if(users_data.length === 0) { %>
+        <div class="panel-body">
+            <a href="/">
+                No Orgunits associated with you
+            </a>
+        </div>
+    <% } %>
+</div>
+
+<div class="top-padding">
+    <a href="/">Go Back</a>
+</div>
+
+</div>
+
+
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".panel-body").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
+
+
+<%- include("../partials/footer") %>

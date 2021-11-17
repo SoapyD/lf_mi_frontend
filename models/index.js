@@ -84,11 +84,20 @@ models.Dimension_Orgunit = require("./dimension_orgunit");
 models.Dimension_Orgunit_Contract = require("./dimension_orgunit_contract");
 models.Dimension_Ownerteam = require("./dimension_ownerteam");
 
+models.DETAIL_PeopleHR_Employee = require("./detail_peoplehr_employee");
+models.Dimension_Agentlink = require("./dimension_agentlink");
+
+
 models.Dimension_Orgunit.hasMany(models.Dimension_Orgunit_Contract, {as: 'contracts', foreignKey: 'dim_orgunit_fk'});
 models.Dimension_Orgunit_Contract.belongsTo(models.Dimension_Orgunit, {foreignKey: 'dim_orgunit_fk'});
 
 models.Dimension_Orgunit.hasMany(models.Dimension_Ownerteam, {as: 'ownerteams', foreignKey: 'dim_orgunit_fk'});
 models.Dimension_Ownerteam.belongsTo(models.Dimension_Orgunit, {foreignKey: 'dim_orgunit_fk'});
+
+models.DETAIL_PeopleHR_Employee.hasMany(models.Dimension_Agentlink, {as: 'agentlinks', foreignKey: 'dim_agentlink_peoplehr_employee_id'});
+models.Dimension_Agentlink.belongsTo(models.DETAIL_PeopleHR_Employee, {foreignKey: 'dim_agentlink_peoplehr_employee_id'});
+
+
 /**/
 
 

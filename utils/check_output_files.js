@@ -100,8 +100,11 @@ exports.runCheck = async(subscriptionactivity) => {
             //MERGE DOCUMENT
             if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
                 await mergeDocumentUtil.mergeDocument(output_name, subscriptionactivity.path)
+                subscriptionactivity.merge_complete = 1
+                subscriptionactivity.document_saved = 1
                 //SAVE DOCUMENT TO STORAGE
                 await emailUtil.email(subscription, output_name+".docx",path.join(subscriptionactivity.path,output_name+'.'+subscriptionactivity.file_extension))
+                subscriptionactivity.email_sent = 1
                 //DELETE FILES AND TEMPORARY FOLDER
                 exports.deleteTemp(subscriptionactivity.path)
             }
@@ -109,6 +112,7 @@ exports.runCheck = async(subscriptionactivity) => {
             if(process.env.MERGE_METHOD == 'CLOUDMERSIVE'){
                 let options = {
                     subscription: subscription,
+                    subscriptionactivity: subscriptionactivity,
                     file_path: subscriptionactivity.path,
                     output_name: output_name
                 }

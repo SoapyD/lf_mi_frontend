@@ -8,7 +8,7 @@ exports.subscriptions = require("./subscriptions");
 
 
 exports.client_data = require("./client_data");
-exports.usernames = require("./usernames");
+exports.user_data = require("./user_data");
 
 exports.tests = require("./tests");
 

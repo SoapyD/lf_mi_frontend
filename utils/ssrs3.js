@@ -67,6 +67,35 @@ exports.setup = async(subscription_number, report, subscription) => {
             let size = 10
             let start = Date.now();
 
+
+
+            //  #####  ######  #######    #    ####### #######          #     #####  ####### ### #     # ### ####### #     # 
+            // #     # #     # #         # #      #    #               # #   #     #    #     #  #     #  #     #     #   #  
+            // #       #     # #        #   #     #    #              #   #  #          #     #  #     #  #     #      # #   
+            // #       ######  #####   #     #    #    #####   ##### #     # #          #     #  #     #  #     #       #    
+            // #       #   #   #       #######    #    #             ####### #          #     #   #   #   #     #       #    
+            // #     # #    #  #       #     #    #    #             #     # #     #    #     #    # #    #     #       #    
+            //  #####  #     # ####### #     #    #    #######       #     #  #####     #    ###    #    ###    #       #               
+
+            let creation_list = []
+            creation_list.push(
+            {
+                model: "SubscriptionActivity",
+                params: [
+                    {
+                        file_type: "WORD",
+                        file_extension: "docx",                        
+                        path: folder_path,
+                        files_expected: file_data.files_needed,
+                        subscriptionId: subscription.id,
+                    }
+                ]
+            }) 
+    
+            let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	
+
+
+
             //  ██████  ██████  ███    ██ ████████ ███████ ███    ██ ████████ ███████       ███████ ████████ ██████  ██ ███    ██  ██████  
             // ██      ██    ██ ████   ██    ██    ██      ████   ██    ██    ██            ██         ██    ██   ██ ██ ████   ██ ██       
             // ██      ██    ██ ██ ██  ██    ██    █████   ██ ██  ██    ██    ███████ █████ ███████    ██    ██████  ██ ██ ██  ██ ██   ███ 
@@ -109,7 +138,8 @@ exports.setup = async(subscription_number, report, subscription) => {
                     error: null,
                     delay_timer: delay_timer,
                     start: null,
-                    last_updated: null
+                    last_updated: null,
+                    activity_id: subscriptionactivities[0].id,
                 }
                 subsection_activity[outputname] = activity;
 
@@ -172,39 +202,21 @@ exports.setup = async(subscription_number, report, subscription) => {
                             error: null,
                             delay_timer: delay_timer,
                             start: null,
-                            last_updated: null
+                            last_updated: null,
+                            activity_id: subscriptionactivities[0].id,                            
                         }
                         subsection_activity[outputname] = activity;
                     })
                 })
             }
 
-            //  #####  ######  #######    #    ####### #######          #     #####  ####### ### #     # ### ####### #     # 
-            // #     # #     # #         # #      #    #               # #   #     #    #     #  #     #  #     #     #   #  
-            // #       #     # #        #   #     #    #              #   #  #          #     #  #     #  #     #      # #   
-            // #       ######  #####   #     #    #    #####   ##### #     # #          #     #  #     #  #     #       #    
-            // #       #   #   #       #######    #    #             ####### #          #     #   #   #   #     #       #    
-            // #     # #    #  #       #     #    #    #             #     # #     #    #     #    # #    #     #       #    
-            //  #####  #     # ####### #     #    #    #######       #     #  #####     #    ###    #    ###    #       #               
 
-            let creation_list = []
-            creation_list.push(
-            {
-                model: "SubscriptionActivity",
-                params: [
-                    {
-                        file_type: "WORD",
-                        file_extension: "docx",                        
-                        path: folder_path,
-                        files_expected: file_data.files_needed,
-                        subscriptionId: subscription.id,
-                        contents_page: contents_page,
-                        subsection_activity: JSON.stringify(subsection_activity)
-                    }
-                ]
-            }) 
-    
-            let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	            
+
+            subscriptionactivities[0].contents_page = contents_page
+            subscriptionactivities[0].subsection_activity = JSON.stringify(subsection_activity)            
+
+            await subscriptionactivities[0].save()	            
+            
 
             exports.runProcess(subscriptionactivities[0]) 
         }

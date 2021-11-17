@@ -18,8 +18,8 @@ exports.subscriptions.path = "/reports/:reportid/subscriptions"
 exports.client_data = require("./client_data");
 exports.client_data.path = '/client_data'
 
-exports.usernames = require("./usernames");
-exports.usernames.path = '/usernames'
+exports.user_data = require("./user_data");
+exports.user_data.path = '/user_data'
 
 exports.tests = require("./tests");
 exports.tests.path = '/tests'
