@@ -18,7 +18,7 @@
 
     <% if(typeof route_info.form_create_path !== 'undefined') { %>
         <p>
-            <a class="btn btn-primary btn-large" href="/client_data/<%= orgunit.dim_orgunit_pk %>/contracts/new">
+            <a class="btn btn-primary btn-large" href="/client_data/<%= orgunit.dim_orgunit_pk %>/<%= route_info.type %>/new">
                 Add New
             </a>
         </p>

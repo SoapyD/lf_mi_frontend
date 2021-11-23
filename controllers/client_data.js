@@ -52,9 +52,9 @@ exports.getRouteInfo = () => {
             {name: "lf_resolvers", query: "SELECT * FROM [DIMENSION_Ownerteam_LF_Resolver_Types]"}
         ]}        
         },
-        // {type: "measurements", sort_field: "", model: "", id_column: "", form_path: "./forms/measurements",
-        // description: "Edit the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
-        // },        
+        {type: "measurements", sort_field: "", model: "", id_column: "", form_path: "./forms/measurements",
+        description: "View  the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
+        },        
         ]        
 
       return route_info

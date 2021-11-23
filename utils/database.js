@@ -18,6 +18,7 @@ exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proc
         useUTC: true,
         connectTimeout: 60000,
         // "requestTimeout": 300000 
+        decimalNumbers: true,
       }
     },
     // The retry config if Deadlock Happened

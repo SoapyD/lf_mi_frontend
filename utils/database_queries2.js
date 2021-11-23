@@ -63,7 +63,11 @@ exports.searchType = {
             {
                 model: models.Dimension_Orgunit_Contract, 
                 as: "contracts",
-            }            
+            },
+            {
+                model: models.DIMENSION_Measurement_Org_Measurements, 
+                as: "measurements",
+            }             
         ]  
     },
     "PeopleHR_Employee": {

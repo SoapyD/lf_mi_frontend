@@ -18,7 +18,7 @@
 
     <% if(typeof route_info.form_create_path !== 'undefined') { %>
         <p>
-            <a class="btn btn-primary btn-large" href="/user_data/<%= user_data.ID %>/agentlinks/new">
+            <a class="btn btn-primary btn-large" href="/user_data/<%= user_data.ID %>/<%= route_info.type %>/new">
                 Add New
             </a>
         </p>

@@ -1,0 +1,222 @@
+<form action="/client_data/<%= orgunit.dim_orgunit_pk %>/?_method=PUT" method="POST"
+	onsubmit="return confirm('Are you sure you want to save changes for this item?');">
+
+	<div class="row">
+		<h2 class="rounded_borders">Name and Ranking</h2>
+		
+		<div class="col-md-3">
+			<div class="form-group">
+				<p>Name:</p>
+				<input class="form-control" type="text" name="params[dim_orgunit_orgunit]" value="<%= orgunit.dim_orgunit_orgunit %>"  readonly="readonly">
+			</div> 
+		</div>  
+
+		<div class="col-md-1">
+			<div class="form-group">                        
+				<p>Rank:</p>
+				<input class="form-control" type="number" name="params[dim_orgunit_top_org_rank]" value="<%= orgunit.dim_orgunit_top_org_rank %>"  readonly="readonly">
+				</select>                                
+			</div>        
+		</div>  
+
+		<div class="col-md-3">
+			<div class="form-group">
+				<p>Start Date:</p>
+				<input class="form-control" type="datetime" name="params[dim_orgunit_startdate]" value="<%= orgunit.dim_orgunit_startdate %>">
+			</div> 
+		</div>  
+                       
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Number of Users:</p>
+				<input class="form-control" type="number" name="params[dim_orgunit_numberofusers]" value="<%= orgunit.dim_orgunit_numberofusers %>">
+				</select>                                
+			</div>        
+		</div>  
+		
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Number of Devices:</p>
+				<input class="form-control" type="number" name="params[dim_orgunit_numberofdevices]" value="<%= orgunit.dim_orgunit_numberofdevices %>">
+				</select>                                
+			</div>        
+		</div>  		
+	</div>
+
+	<div class="row">
+
+		<h2 class="rounded_borders">Finance</h2>
+
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Business Central Number:</p>
+				<input class="form-control" type="text" name="params[dim_orgunit_businesscentral_number]" value="<%= orgunit.dim_orgunit_businesscentral_number %>">
+				</select>                                
+			</div>        
+		</div>    
+
+	</div>
+
+	<div class="row">
+
+		<h2 class="rounded_borders">Management</h2>
+
+		<div class="col-md-3">
+			<div class="form-group">
+				<p>Service Delivery Manager:</p>
+
+				<select class="form-control" name="params[dim_orgunit_servicedeliverymanager]">
+					<option value=""></option>
+					<% queries.sql.definitions.forEach((query, i) => { %>
+						<% if(query.name === "sdms") { %>
+							<% queries.sql.output[i].recordset.forEach((item, i) => {%>
+								<option value="<%= item.dim_user_cleaned %>"
+								<% if(orgunit.dim_orgunit_servicedeliverymanager === item.dim_user_cleaned )	{ %> SELECTED <% } %>
+								>	
+								<%= item.dim_user_cleaned %></option>
+							<% }) %>
+						<% } %>
+					<% }) %>
+				</select>   
+
+			</div> 
+		</div>  	
+
+		<div class="col-md-3">
+			<div class="form-group">
+				<p>Service Account Manager:</p>
+				<input class="form-control" type="text" name="params[dim_orgunit_accountmanagername]" value="<%= orgunit.dim_orgunit_accountmanagername %>"  readonly="readonly">
+			</div> 
+		</div>  
+
+		<div class="col-md-3">
+			<div class="form-group">                        
+				<p>Supporting Pod:</p>
+
+				<select class="form-control" name="params[dim_orgunit_supporting_pod]">
+					<option value=""></option>
+					<% queries.sql.definitions.forEach((query, i) => { %>
+						<% if(query.name === "pods") { %>
+							<% queries.sql.output[i].recordset.forEach((item, i) => {%>
+								<option value="<%= item.dim_Ringcentral_Teams_teamName %>"
+								<% if(orgunit.dim_orgunit_supporting_pod === item.dim_Ringcentral_Teams_teamName )	{ %> SELECTED <% } %>
+								>	
+								<%= item.dim_Ringcentral_Teams_teamName %></option>
+							<% }) %>
+						<% } %>
+					<% }) %>
+				</select>                                
+			</div>        
+		</div>  
+
+		<div class="col-md-3">
+			<div class="form-group">
+				<p>SMO Customer:</p>
+
+
+				<select class="form-control" name="params[dim_orgunit_smo_client]">
+					<option value="">N</option>
+					<option value="1"
+					<% if(orgunit.dim_orgunit_smo_client === 1) { %>
+						SELECTED
+					<% } %>
+					>Y</option>					
+				</select>
+
+			</div> 
+		</div>  		
+	</div>
+
+	<div class="row">			
+
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Core Hours Start:</p>
+				<input class="form-control" type="number" min="0" max="23" name="params[dim_orgunit_corehours_start]" value="<%= orgunit.dim_orgunit_corehours_start %>">
+				</select>                                
+			</div>        
+		</div>  
+		
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Core Hours End:</p>
+				<input class="form-control" type="number" min="0" max="23" name="params[dim_orgunit_corehours_end]" value="<%= orgunit.dim_orgunit_corehours_end %>">
+				</select>                                
+			</div>        
+		</div>  
+
+	</div>
+
+	<div class="col-md-12">
+		<div class="form-group">
+			<p>Note: Service Account Manager data is stored in HEAT. Any changes that need to be applied to this field need to be applied in HEAT's orgunit table</p>
+		</div>
+	</div>
+
+
+
+
+
+	<div class="row">
+
+		<h2 class="rounded_borders">TEL001 Measurement Data</h2>
+
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Telephony Answer Time:</p>
+				<input class="form-control" type="number" min="0" max="300" name="params[dim_orgunit_telephony_answertime]" value="<%= orgunit.dim_orgunit_telephony_answertime %>">
+				</select>                                
+			</div>        
+		</div>  
+		
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Telephony Target:</p>
+				<input class="form-control" type="number" min="0" max="1" step="0.01" name="params[dim_orgunit_telephony_target]" value="<%= orgunit.dim_orgunit_telephony_target %>">
+				</select>                                
+			</div>        
+		</div>  
+
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Telehony Amber Banding:</p>
+				<input class="form-control" type="number" min="0" max="1" step="0.01" name="params[dim_orgunit_telephony_sla_amber]" value="<%= orgunit.dim_orgunit_telephony_sla_amber %>">
+				</select>                                
+			</div>        
+		</div>  
+
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Session Answer Time:</p>
+				<input class="form-control" type="number" min="0" max="300" name="params[dim_orgunit_session_answertime]" value="<%= orgunit.dim_orgunit_session_answertime %>">
+				</select>                                
+			</div>        
+		</div>  
+		
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Session Target:</p>
+				<input class="form-control" type="number" min="0" max="1" step="0.01" name="params[dim_orgunit_session_target]" value="<%= orgunit.dim_orgunit_session_target %>">
+				</select>                                
+			</div>        
+		</div>  
+
+		<div class="col-md-2">
+			<div class="form-group">                        
+				<p>Session Amber Banding:</p>
+				<input class="form-control" type="number" min="0" max="1" step="0.01" name="params[dim_orgunit_session_sla_amber]" value="<%= orgunit.dim_orgunit_session_sla_amber %>">
+				</select>                                
+			</div>        
+		</div>  
+
+	</div>
+
+	<button class="btn btn-primary right-button" name="action" type="submit">
+		Save
+	</button>	
+
+</form>		

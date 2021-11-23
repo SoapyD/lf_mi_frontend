@@ -9,7 +9,8 @@ exports.getRouteInfo = () => {
     let route_info;
 
     route_info = [
-        {type: "agentlinks", sort_field: "dim_agentlink_system_login", model: "DIMENSION_Agentlink", id_column: "dim_agent_link_pk", form_path: "./forms/agentlinks",
+        {type: "agentlinks", sort_field: "dim_agentlink_system_login", model: "DIMENSION_Agentlink", id_column: "dim_agent_link_pk"
+        , form_path: "./forms/agentlinks", form_create_path: "./forms/new_agentlinks",
         description: "Edit the user logins associated with People HR data.",
         // queries: {sql: [
         //     {name: "users", 

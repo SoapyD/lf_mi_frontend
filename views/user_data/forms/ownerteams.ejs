@@ -1,0 +1,103 @@
+
+	<form action="/client_data/<%= orgunit.dim_orgunit_pk %>/ownerteams/multiple/?_method=PUT" method="POST"
+        onsubmit="return confirm('Are you sure you want to save changes for this item?');">
+		
+		<div class="row">
+			
+			<div class="col-md-12 top-padding">
+				
+				<table id="ownerteam-form" class="center">
+					
+					<colgroup>
+						<col span="1" style="width: 50%;">
+						<col span="1" style="width: 20%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 20%;">
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<th><span class="text">Ownerteam</span></th>
+							<th><span class="text">Type</span></th>
+                            <th><span class="text">LF_Resolver</span></th>
+                            <th><span class="text">Finance_ID</span></th>								
+						</tr>
+					</thead>
+
+					<tbody>	
+						<% orgunit.ownerteams.forEach(function (ownerteam, id){%>
+							
+							<tr>
+								<input type="hidden" name="params[<%= id %>][dim_Ownerteam_pk]" value="<%= ownerteam.dim_Ownerteam_pk %>">
+								
+								<td><%= ownerteam.dim_Ownerteam_Ownerteam %></td>
+
+                                <td class="center-text">	
+                                <select class="form-control" name="[params][<%= id %>][dim_Ownerteam_cleaned]" required>
+                                    <option value=""></option>
+                                    <% queries.sql.definitions.forEach((query, i) => { %>
+                                        <% if(query.name === "lf_resolvers") { %>
+                                            <% queries.sql.output[i].recordset.forEach((item, i) => {%>
+                                                <option value="<%= item.dim_ownerteam_lf_resolver_type %>"
+												<% if(ownerteam.dim_Ownerteam_cleaned == item.dim_ownerteam_lf_resolver_type )	{ %> SELECTED <% } %>
+												>	
+												<%= item.dim_ownerteam_lf_resolver_type %></option>
+                                            <% }) %>
+                                        <% } %>
+                                    <% }) %>
+
+                                </select>
+                                </td>
+
+                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_ownerteam_lf_resolver]" readonly="readonly" value="<%ownerteam.dim_ownerteam_lf_resolver%>"></td>
+                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_ownerteam_finance_id]" readonly="readonly" value="<%ownerteam.dim_ownerteam_finance_id%>"></td>
+							</tr>
+							
+						<% }) %>					
+					</tbody>
+				</table>
+			</div>
+		</div>
+            
+        <button class="btn btn-primary right-button" name="action" type="submit">
+            Save
+        </button>							        
+
+	</form>	
+
+	<script>
+
+		let data = []
+		<% queries.sql.output.forEach((output, i) => { %>
+			data.push(<%- JSON.stringify(output)  %>)
+		<% }) %>
+
+
+		$("form").find('[name*="[dim_Ownerteam_cleaned]"]').change((element) => {
+			let name = element.target.name;
+			let value = element.target.value;
+			update_elements(name, value)
+		})		
+		
+		update_elements = (name, value) => {
+			let select_name = "[dim_Ownerteam_cleaned]"
+			let mid_string = name.substring(0,name.length - select_name.length)
+			let param_string = "[params]"
+			let id = mid_string.replace(/\D/g, "")
+
+			let record = data[0].recordset.find(r => r.dim_ownerteam_lf_resolver_type === value)
+			
+			if(record){
+				$("form").find('[name="[params]['+id+'][dim_ownerteam_lf_resolver]"]').val(record.dim_ownerteam_lf_resolver_lf_resolver)
+				$("form").find('[name="[params]['+id+'][dim_ownerteam_finance_id]"]').val(record.dim_ownerteam_lf_resolver_finance_code)
+			}
+		}
+
+		let elements = $("form").find('[name*="[dim_Ownerteam_cleaned]"]')
+
+		elements.each((index,element) => {
+			// console.log(element.name)
+			update_elements(element.name, element.value)
+		})
+
+	</script>

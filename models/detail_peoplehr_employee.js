@@ -7,7 +7,6 @@ const DETAIL_PeopleHR_Employee = utils.database.sequelize.define('DETAIL_peopleh
     ID: Sequelize.INTEGER,
     EmployeeID: {
        type: Sequelize.STRING,
-       autoIncrement: true,
        allowNull: false,
        primaryKey: true
     },

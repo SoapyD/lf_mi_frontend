@@ -1,0 +1,56 @@
+
+	<form action="/client_data/<%= orgunit.dim_orgunit_pk %>/measurements/multiple/?_method=PUT" method="POST"
+        onsubmit="return confirm('Are you sure you want to save changes for this item?');">
+		
+		<div class="row">
+			
+			<div class="col-md-12 top-padding">
+				
+				<table id="measurement-form" class="center">
+					
+					<colgroup>
+						<col span="1" style="width: 30%;">
+						<col span="1" style="width: 30%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">                        
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<th><span class="text">Measurement</span></th>
+							<th><span class="text">Print_Name</span></th>
+                            <th><span class="text">Target</span></th>
+                            <th><span class="text">Target_String</span></th>	
+                            <th><span class="text">Service_Credit</span></th>
+                            <th><span class="text">Type</span></th>	                            							
+						</tr>
+					</thead>
+
+					<tbody>	
+						<% orgunit.measurements.forEach(function (measurement, id){ %>
+							
+							<tr>
+                                <input type="hidden" name="params[<%= id %>][dim_measurement_org_measurements_pk]" value="<%= measurement.dim_measurement_org_measurements_pk %>">
+                                
+                                <td><%= measurement.dim_measurement_org_measurements_name %></td>
+                                <td><%= measurement.dim_measurement_org_measurements_rename %></td>
+                                <td><%= measurement.dim_measurement_org_measurements_target %></td>
+                                <td><%= measurement.dim_measurement_org_measurements_target_string %></td>
+                                <td><%= measurement.dim_measurement_org_measurements_isservicecredit %></td>
+                                <td><%= measurement.dim_measurement_org_measurements_type %></td>
+                                
+							</tr>
+							
+						<% }) %>					
+					</tbody>
+				</table>
+			</div>
+		</div>
+            
+        <button class="btn btn-primary right-button" name="action" type="submit">
+            Save
+        </button>							        
+
+	</form>	
