@@ -67,6 +67,12 @@ exports.searchType = {
             {
                 model: models.DIMENSION_Measurement_Org_Measurements, 
                 as: "measurements",
+                include: [
+                    {
+                        model: models.DIMENSION_Measurement_Definitions, 
+                        as: "definition",
+                    },           
+                ]                  
             }             
         ]  
     },

@@ -111,6 +111,9 @@ models.Dimension_Ownerteam.belongsTo(models.Dimension_Orgunit, {foreignKey: 'dim
 models.Dimension_Orgunit.hasMany(models.DIMENSION_Measurement_Org_Measurements, {as: 'measurements', foreignKey: 'dim_orgunit_fk'});
 models.DIMENSION_Measurement_Org_Measurements.belongsTo(models.Dimension_Orgunit, {foreignKey: 'dim_orgunit_fk'});
 
+//each measurement has a single definition
+models.DIMENSION_Measurement_Org_Measurements.belongsTo(models.DIMENSION_Measurement_Definitions, {as: 'definition', foreignKey: 'dim_measurement_definitions_fk'});
+
 
 //USER DATA
 
@@ -118,6 +121,7 @@ models.DIMENSION_Measurement_Org_Measurements.belongsTo(models.Dimension_Orgunit
 models.DETAIL_PeopleHR_Employee.hasMany(models.Dimension_Agentlink, {as: 'agentlinks', foreignKey: 'dim_agentlink_peoplehr_employee_id'});
 models.Dimension_Agentlink.belongsTo(models.DETAIL_PeopleHR_Employee, {foreignKey: 'dim_agentlink_peoplehr_employee_id'});
 
+//NEED TO UPDATE IMPORT METHOD FOR PEOPLE HR EMPLOYEE DATA SO THE TABLE IS'T DELETED THEN REBUILT, OTHERWISE THIS WON'T WORK
 
 /**/
 

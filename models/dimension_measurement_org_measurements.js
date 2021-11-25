@@ -18,6 +18,7 @@ const DIMENSION_Measurement_Org_Measurements = utils.database.sequelize.define('
     dim_measurement_org_measurements_target_string: Sequelize.STRING,
     dim_measurement_org_measurements_isservicecredit: Sequelize.INTEGER, 
     dim_measurement_org_measurements_type: Sequelize.STRING,
+    dim_measurement_org_measurements_active: Sequelize.INTEGER,
 }, {
     timestamps: false,    
     freezeTableName: true, //PREVENTS SEQUELIZE ADDING AN 'S' ONTO TABLE NAMES

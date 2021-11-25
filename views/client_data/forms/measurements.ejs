@@ -9,22 +9,26 @@
 				<table id="measurement-form" class="center">
 					
 					<colgroup>
-						<col span="1" style="width: 30%;">
-						<col span="1" style="width: 30%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">                        
+						<col span="1" style="width: 10%;"> 
+						<col span="1" style="width: 10%;">                       
 					</colgroup>
 					
 					<thead>
 						<tr>
 							<th><span class="text">Measurement</span></th>
-							<th><span class="text">Print_Name</span></th>
+							<th><span class="text">Print Name</span></th>
+							<th><span class="text">Type</span></th>
                             <th><span class="text">Target</span></th>
                             <th><span class="text">Target_String</span></th>	
-                            <th><span class="text">Service_Credit</span></th>
-                            <th><span class="text">Type</span></th>	                            							
+                            <th><span class="text">Service Credit</span></th>
+							<th><span class="text">Type</span></th>	
+							<th><span class="text">Active</span></th>	                            							
 						</tr>
 					</thead>
 
@@ -35,22 +39,77 @@
                                 <input type="hidden" name="params[<%= id %>][dim_measurement_org_measurements_pk]" value="<%= measurement.dim_measurement_org_measurements_pk %>">
                                 
                                 <td><%= measurement.dim_measurement_org_measurements_name %></td>
-                                <td><%= measurement.dim_measurement_org_measurements_rename %></td>
-                                <td><%= measurement.dim_measurement_org_measurements_target %></td>
-                                <td><%= measurement.dim_measurement_org_measurements_target_string %></td>
-                                <td><%= measurement.dim_measurement_org_measurements_isservicecredit %></td>
-                                <td><%= measurement.dim_measurement_org_measurements_type %></td>
-                                
+
+								<td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_measurement_org_measurements_rename]" value="<%= measurement.dim_measurement_org_measurements_rename%>"></td>
+
+								<td><%= measurement.definition.dim_measurement_definitions_type %></td>
+
+								<!-- ADD "IF IS MANUAL, THEN MAKE READ ONLY" -->
+								<td class="center-text"><input class="form-control" type="number" name="[params][<%= id %>][dim_measurement_org_measurements_target]" value="<%= measurement.dim_measurement_org_measurements_target%>"
+									<% if(measurement.definition.dim_measurement_definitions_type === 'Manual') { %>
+										readonly="readonly"
+									<% } %>
+								></td>
+								
+								<!-- ADD "IF IS NOT MANUAL, THEN MAKE READ ONLY" -->
+								<td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_measurement_org_measurements_target_string]" value="<%= measurement.dim_measurement_org_measurements_target_string%>"
+									<% if(measurement.definition.dim_measurement_definitions_type !== 'Manual') { %>
+										readonly="readonly"
+									<% } %>								
+								></td>
+								
+								<td class="center-text">
+
+									<select class="form-control" name="[params][<%= id %>][dim_measurement_org_measurements_isservicecredit]">
+										<option value=""></option>
+										<option value="1"
+										<% if(measurement.dim_measurement_org_measurements_isservicecredit === 1) { %>
+											SELECTED
+										<% } %>
+										>Y</option>					
+									</select>								
+								</td>
+
+								<td class="center-text">
+									<select class="form-control" name="[params][<%= id %>][dim_measurement_org_measurements_type]">
+										<option value=""></option>
+										<option value="SLA"
+										<% if(measurement.dim_measurement_org_measurements_type === 'SLA') { %>
+											SELECTED
+										<% } %>
+										>SLA</option>
+										
+										<option value="KPI"
+										<% if(measurement.dim_measurement_org_measurements_type === 'KPI') { %>
+											SELECTED
+										<% } %>
+										>KPI</option>
+										
+										<option value="INFO"
+										<% if(measurement.dim_measurement_org_measurements_type === 'INFO') { %>
+											SELECTED
+										<% } %>
+										>INFO</option>										
+									</select>								
+								</td>
+								
+								<td class="center-text">
+									<select class="form-control" name="[params][<%= id %>][dim_measurement_org_measurements_active]">
+										<option value=""></option>
+										<option value="1">Y</option>
+									</select>								
+								</td>										
+
 							</tr>
 							
 						<% }) %>					
 					</tbody>
 				</table>
 			</div>
-		</div>
-            
-        <button class="btn btn-primary right-button" name="action" type="submit">
-            Save
-        </button>							        
+		</div>						        
+
+		<button class="btn btn-primary right-button" name="action" type="submit">
+			Save
+		</button>
 
 	</form>	

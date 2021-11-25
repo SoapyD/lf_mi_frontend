@@ -43,6 +43,9 @@ exports.getRouteInfo = () => {
             `}            
         ]}
         },
+        {type: "measurements", sort_field: "", model: "DIMENSION_Measurement_Org_Measurements", id_column: "dim_measurement_org_measurements_pk", form_path: "./forms/measurements",
+        description: "View  the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
+        },         
         {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts", form_create_path: "./forms/new_contracts",
         description: "Edit the contract data associated with the orgunit. This data is needed for finance reporting.",
         },        
@@ -51,10 +54,7 @@ exports.getRouteInfo = () => {
         queries: {sql: [
             {name: "lf_resolvers", query: "SELECT * FROM [DIMENSION_Ownerteam_LF_Resolver_Types]"}
         ]}        
-        },
-        {type: "measurements", sort_field: "", model: "", id_column: "", form_path: "./forms/measurements",
-        description: "View  the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
-        },        
+        },       
         ]        
 
       return route_info
