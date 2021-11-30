@@ -37,7 +37,7 @@ exports.runCheck = async(subscriptionactivity) => {
                     let minutes_since_updated = functions.timeDifference(timestamp_now, subsection.last_updated)
                     
                     //IF THE SECTION HASN'T GENERATED IN THE GIVEN TIME, RERUN IT IF THERE'S "TRIES" AVAILABLE
-                    if(minutes_since_updated > 5){
+                    if(minutes_since_updated > 15){
                         if(subsection.tries > 0){
                             subsection.tries--;
                             subscriptionactivity.last_updated = timestamp_now;
