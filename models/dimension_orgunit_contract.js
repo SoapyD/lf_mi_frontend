@@ -18,6 +18,7 @@ const DIMENSION_Orgunit_Contract = utils.database.sequelize.define('DIMENSION_or
     dim_orgunit_contract_itsm: Sequelize.STRING,
     dim_orgunit_contract_start_date: Sequelize.DATE,
     dim_orgunit_contract_renewal_date: Sequelize.DATE,
+    dim_orgunit_contract_max_renewal_date: Sequelize.DATE,
     dim_orgunit_contract_termination_date: Sequelize.DATE,
     dim_orgunit_contract_renewal_initial_term: Sequelize.INTEGER,
     dim_orgunit_contract_renewal_term: Sequelize.STRING,

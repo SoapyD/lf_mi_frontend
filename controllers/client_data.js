@@ -444,17 +444,18 @@ exports.updateMultipleChildren = async(req,res) => {
     let item = req.params.item;
     let params =  req.body.params;
 
-    //NULL ALL BLANK ITEMS
-    params.forEach((param, i) => {
-        for(const key in param){
-            if(params[i][key] === ''){
-                params[i][key] = null
-            }
-        }
-    })
-
-
     try{
+
+        //NULL ALL BLANK ITEMS
+        params.forEach((param, i) => {
+            for(const key in param){
+                if(params[i][key] === ''){
+                    params[i][key] = null
+                }
+            }
+        })
+
+
         let route_info = exports.getRouteInfo()
     
         let type_info;
@@ -474,6 +475,7 @@ exports.updateMultipleChildren = async(req,res) => {
         };
     
     
+        let where_set = false
         params.forEach((param_item) => {
     
             let param = {
@@ -487,6 +489,7 @@ exports.updateMultipleChildren = async(req,res) => {
             for(const key in param_item){
                 if(key === type_info.id_column){
                     param.where_info.where[key] = param_item[key]
+                    where_set = true
                 }
                 else{
                     param.update_info[key] = param_item[key]
@@ -497,11 +500,17 @@ exports.updateMultipleChildren = async(req,res) => {
         })
         update_list.push(data)
     
-        let updated = await utils.queries.updateWhere(update_list)
+        if(where_set === true){
+            let updated = await utils.queries.updateWhere(update_list)
     
-        req.flash("success", "Client "+item+" Data Updated"); 
-        res.redirect("/client_data/"+id+'/'+item+'/edit')
-    }catch(error){
+            req.flash("success", "Client "+item+" Data Updated"); 
+            res.redirect("/client_data/"+id+'/'+item+'/edit')
+    
+        }else{
+            req.flash("error", "Where clause not set correctly")
+            res.redirect("/client_data/"+id+'/'+item+'/edit')            
+        }
+     }catch(error){
         console.log(error)
         req.flash("error", "There was an error while trying to save "+item+" Data");
         res.redirect("/client_data/"+id+'/'+item+'/edit')

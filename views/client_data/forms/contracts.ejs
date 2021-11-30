@@ -4,15 +4,19 @@
 		
 
         <% orgunit.contracts.forEach(function (contract, id){ %>
+
+
+            <input type="hidden" name="params[<%= id %>][dim_orgunit_contract_pk]" value="<%= contract.dim_orgunit_contract_pk %>">
+
             
-            <div class="row">
+            <div class="row"> 
                 <h2 class="filled_rounded_borders">Contract <%= id+1 %> - <%= contract.dim_orgunit_contract_name %> </h2>
                 <h2 class="rounded_borders">Core Data</h2>
 
                 <div class="col-md-2">
                     <div class="form-group">                        
                         <p>Start Date:</p>
-                        <td class="center-text"><input class="form-control" type="date" name="[params][<%= id %>][dim_orgunit_contract_start_date ]" value="<%=contract.dim_orgunit_contract_start_date %>"></td>
+                        <td class="center-text"><input class="form-control" type="date" name="[params][<%= id %>][dim_orgunit_contract_start_date]" value="<%=contract.dim_orgunit_contract_start_date %>"></td>
                         </select>                                
                     </div>        
                 </div>                 
@@ -155,6 +159,15 @@
                         </select>                                
                     </div>        
                 </div>                 
+
+                <div class="col-md-2">
+                    <div class="form-group">                        
+                        <p>Max Renewal Date:</p>
+                        <td class="center-text"><input class="form-control" type="date" name="[params][<%= id %>][dim_orgunit_contract_max_renewal_date]"></td>
+                        </select>                                
+                    </div>        
+                </div>     
+
             </div> 
 
             <div class="row">
