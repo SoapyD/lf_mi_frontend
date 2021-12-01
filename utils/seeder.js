@@ -12,7 +12,8 @@ exports.reset = async() => {
     await models.SubscriptionActivity.drop()    
     await models.Subscription.drop()    
     await models.Frequency.drop()        
-    await models.Report.drop()        
+    await models.Report.drop() 
+    await models.QueuedReport.drop()        
 }
 
 // exports.test = async() => {
@@ -427,7 +428,7 @@ exports.create = async() => {
         {
             order: 10.004,
             name: "Appendix - Trended Volumes for Reference - full period",
-            path: subsection_root+"Appendix - Trended Volumes for Reference - full period_WH02",
+            path: subsection_root+"Appendix - Support Requests - Trended Volumes for Reference - full period_WH02",
             type: 'appendix'
         },            
 

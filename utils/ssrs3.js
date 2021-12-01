@@ -120,13 +120,13 @@ exports.setup = async(subscription_number, report, subscription) => {
                 //ADD THE FRONT COVER TO SUBSECTION ACTIVITIES
                 outputname = "000000000" + subsection_count;
                 outputname = outputname.substr(outputname.length-size);
-                delay_timer = 3000 * ((file_data.files_needed * subscription_number) + subsection_count);
+                delay_timer = Number(process.env.MS_REPORT_DELAY) * ((file_data.files_needed * subscription_number) + subsection_count);
 
                 let activity = {
                     name: outputname,
                     number: subsection_count,
                     running: true,
-                    tries: 10,
+                    tries: Number(process.env.MAX_RERUN_TRIES),
                     path: "/99 - Test Reports/Service Report/_Front Cover",
                     output_path: path.join(folder_path,outputname),
                     parameters:                 
@@ -189,13 +189,13 @@ exports.setup = async(subscription_number, report, subscription) => {
 
                         outputname = "000000000" + subsection_count;
                         outputname = outputname.substr(outputname.length-size);
-                        delay_timer = 3000 * ((file_data.files_needed * subscription_number) + subsection_count);
+                        delay_timer = Number(process.env.MS_REPORT_DELAY) * ((file_data.files_needed * subscription_number) + subsection_count);
 
                         let activity = {
                             name: outputname,
                             number: subsection_count,
                             running: true,
-                            tries: 10,
+                            tries: Number(process.env.MAX_RERUN_TRIES),
                             path: subsection.path,
                             output_path: path.join(folder_path,outputname),
                             parameters: subsection_parameters,
@@ -320,10 +320,11 @@ exports.getSubsectionParameters = (options) => {
 // #    #  #     # #    ##       #       #    #  #     # #     # #       #     # #     # 
 // #     #  #####  #     #       #       #     # #######  #####  #######  #####   #####  
 
-exports.runProcess = (subscriptionactivity) => {
+exports.runProcess = async(subscriptionactivity) => {
 
     let subsections = JSON.parse(subscriptionactivity.subsection_activity)
 
+    let creation_list = []
 
     for(const key in subsections){
         let subsection = subsections[key];
@@ -347,9 +348,19 @@ exports.runProcess = (subscriptionactivity) => {
             file_extension: subscriptionactivity.file_extension
         }
 
-        exports.runDelay(options)
+        // exports.runDelay(options)
+        creation_list.push(
+            {
+                model: "QueuedReport",
+                params: [
+                    {
+                        options: JSON.stringify(options),
+                    }
+                ]
+        })         
     }
 
+    let queuedreports = await databaseQueriesUtil.createData2(creation_list)    
     exports.checkList();
 }
 
@@ -362,24 +373,79 @@ exports.runProcess = (subscriptionactivity) => {
 // ██   ██  ██████  ██   ████       ███████ ███████ ██   ██ ███████ 
 
 
-let report_list = [];
-let report_running = false;
+// let report_list = []; //TURNED INTO A TABLE
+exports.report_running = false;
 
+/*
 //RUN THE REPORT SECTION BUT ONLY AFTER A GIVEN DELAY
 exports.runDelay = async(options) => {
 
+    // report_list.push(options);
+
     // await functionsUtil.delay(options.delay_timer)
     // exports.runReport(options)
-    report_list.push(options);
-}
 
-exports.checkList = () =>{
-    if(report_running === false){
-        if(report_list.length > 0){
-            report_running = true;
-            let options = report_list[0];
-            exports.runReport(options);
-            report_list.shift();
+    //ADD THE SET OF OPTIONS TO THE QUEUED LIST
+    let creation_list = []
+    creation_list.push(
+    {
+        model: "QueuedReport",
+        params: [
+            {
+                options: JSON.stringify(options),
+            }
+        ]
+    }) 
+
+    let queuedreports = await databaseQueriesUtil.createData2(creation_list)	
+
+}
+*/
+
+exports.checkList = async() =>{
+    if(exports.report_running === false){
+
+        //GET REPORT LIST
+        let find_list = [];
+
+        find_list.push(
+        {
+            model: "QueuedReport",
+            search_type: "findAll",
+        })         
+
+        try{
+            let queuedreports = await databaseQueriesUtil.findData(find_list)
+            let report_list = queuedreports[0]        
+
+            if(report_list.length > 0){
+                exports.report_running = true;
+                let first_queued = report_list[0]
+                let options = JSON.parse(first_queued.options);
+                exports.runReport(options);
+                
+                //DELETE THE ELEMENT FROM THE QUEUE
+
+                let destroylist = []
+                destroylist.push({
+                    model: "QueuedReport",
+                    search_type: "findOne",
+                    params: [
+                        {
+                            where: {
+                                id: first_queued.id
+                            }
+                        }
+                    ]
+                })
+
+                deletions = await databaseQueriesUtil.destroyData(destroylist)
+            }
+        }
+        catch(err){
+            console.log(err)
+            req.flash("error", "There was an error trying to get queued reports");
+            res.redirect("/")        
         }
     }
 }
@@ -432,7 +498,7 @@ exports.runReport = async(options) => {
         await fs.writeFileSync(options.output_file+'.'+options.file_extension, report, "base64");
         
         //rerun the check list process
-        report_running = false;
+        exports.report_running = false;
         exports.checkList();
     } catch (err) {
         console.log("ERROR RUNNING REPORT")
@@ -448,7 +514,7 @@ exports.runReport = async(options) => {
         subscriptionactivity.save();
 
         //rerun the check list process
-        report_running = false;
+        exports.report_running = false;
         exports.checkList();        
     }
 }

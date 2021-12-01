@@ -1,7 +1,7 @@
 const emailUtil = require('../utils/email');
 const databaseQueriesUtil = require('../utils/database_queries2');
 const checkOutputsUtil = require('../utils/check_output_files');
-
+const ssrs = require('../utils/ssrs3');
 const fs = require('fs');
 
 exports.checkTimer = async() => {
@@ -33,6 +33,11 @@ exports.checkIncompleteSubActivity = async() => {
     subscriptionactivities[0].forEach( async(subscriptionactivity) => {
         checkOutputsUtil.runCheck(subscriptionactivity)
     })
+
+    //IF THERE AREN'T ANY ACTIVITIES RUNNING, RESET REPORT_RUNNING PARAM
+    if(subscriptionactivities[0].length === 0){
+        ssrs.report_running = false;
+    }
 
 }
 

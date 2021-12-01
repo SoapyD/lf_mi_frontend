@@ -12,6 +12,8 @@ models.Subscription = require("./subscription");
 models.Frequency = require("./frequency");
 models.SubscriptionActivity = require("./subscriptionactivity");
 
+models.QueuedReport = require("./queuedreport");
+
 
 //REPORT MODEL RELATIONSHIPS
 models.Report.hasMany(models.Section, {as: 'sections', foreignKey: "reportId"});

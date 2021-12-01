@@ -37,14 +37,16 @@ exports.runCheck = async(subscriptionactivity) => {
                     let minutes_since_updated = functions.timeDifference(timestamp_now, subsection.last_updated)
                     
                     //IF THE SECTION HASN'T GENERATED IN THE GIVEN TIME, RERUN IT IF THERE'S "TRIES" AVAILABLE
-                    if(minutes_since_updated > 15){
+                    if(minutes_since_updated > Number(process.env.MINS_SINCE_UPDATED)){
+
+                        /*
                         if(subsection.tries > 0){
                             subsection.tries--;
                             subscriptionactivity.last_updated = timestamp_now;
                             subscriptionactivity.reruns++;
                             
                             let options = {
-                                i: 3000 * reran_files, 
+                                i: process.env.MS_REPORT_DELAY * reran_files, 
                                 filepath: subsection.path, 
                                 parameters: subsection.parameters, 
                                 output_path: subscriptionactivity.path, 
@@ -61,6 +63,14 @@ exports.runCheck = async(subscriptionactivity) => {
                             //OUT OF TRIES
                             subscriptionactivity.errors++;
                         }
+                        */
+                        if(!subsection.error){
+                            subsection.error = "generic error"
+                        }
+                        ssrs.report_running = false;
+                        // subscriptionactivity.errors++;
+                        total_errors++;
+                        subsection.running = false;
                     }
                 }
             }
