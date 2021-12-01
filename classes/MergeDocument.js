@@ -50,7 +50,12 @@ const MergeDocument = class {
         if (error) {
             console.log("AN ERROR OCCURED!");
             console.error(error);
+            this.subscriptionactivity.merge_complete = -1;
+            this.subscriptionactivity.save();
             // res.send(error)
+
+            utils.check_output_files.merge_running = false;
+            utils.check_output_files.checkList();
         } else {
 
             this.main_data = data;
@@ -74,7 +79,10 @@ const MergeDocument = class {
                     this.subscriptionactivity.save();
                     
                     //DELETE FILES AND TEMPORARY FOLDER
-                    this.deleteTemp(this.file_path)                   
+                    this.deleteTemp(this.file_path)  
+                    
+                    utils.check_output_files.merge_running = false;
+                    utils.check_output_files.checkList();                    
                 });                
             }
             else{

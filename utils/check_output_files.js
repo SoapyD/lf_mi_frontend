@@ -87,6 +87,9 @@ exports.runCheck = async(subscriptionactivity) => {
 
     if(total_complete_files + total_errors === subscriptionactivity.files_expected){
 
+
+        ssrs.report_running = false;
+
         //GET THE SUBSCRIPTION
         let find_list = []
         find_list.push(
@@ -123,12 +126,31 @@ exports.runCheck = async(subscriptionactivity) => {
             if(process.env.MERGE_METHOD == 'CLOUDMERSIVE'){
                 let options = {
                     subscription: subscription,
-                    subscriptionactivity: subscriptionactivity,
+                    subscriptionactivity_id: subscriptionactivity.id,
                     file_path: subscriptionactivity.path,
                     output_name: output_name
                 }
-                const mergeInstance = new classes.MergeDocument(options)
-                mergeInstance.runMerge()                
+                // const mergeInstance = new classes.MergeDocument(options)
+                // mergeInstance.runMerge() 
+                
+                //ADD PROCESS TO MERGE TABLE
+
+                let creation_list = [];
+                creation_list.push(
+                    {
+                        model: "QueuedMerge",
+                        params: [
+                            {
+                                options: JSON.stringify(options),
+                            }
+                        ]
+                })         
+            
+        
+                let queuedmerges = await databaseQueriesUtil.createData2(creation_list) 
+
+                exports.checkList();
+
             }
         }else{
             //THERE'S BEEN AN ERROR
@@ -146,6 +168,87 @@ exports.runCheck = async(subscriptionactivity) => {
 
 
 }
+
+// exports
+
+
+// let report_list = []; //TURNED INTO A TABLE
+exports.merge_running = false;
+
+
+
+exports.checkList = async() =>{
+    if(exports.merge_running === false){
+
+        exports.merge_running = true;
+
+        //GET REPORT LIST
+        let find_list = [];
+
+        find_list.push(
+        {
+            model: "QueuedMerge",
+            search_type: "findAll",
+        })         
+
+        try{
+            let queuedmerges = await databaseQueriesUtil.findData(find_list)
+            let merge_list = queuedmerges[0]        
+
+            if(merge_list.length > 0){
+                
+                let first_queued = merge_list[0]
+                let options = JSON.parse(first_queued.options);
+
+                let find_list = []
+                find_list.push(
+                {
+                    model: "SubscriptionActivity",
+                    search_type: "findOne",
+                    params: [{
+                        where: {
+                            id: options.subscriptionactivity_id,
+                        }		
+                    }]
+                }) 
+            
+                //GET ALL REPORT DATA
+                let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+
+                options.subscriptionactivity = subscriptionactivities[0];
+
+                const mergeInstance = new classes.MergeDocument(options)
+                mergeInstance.runMerge()                 
+                
+                //DELETE THE ELEMENT FROM THE QUEUE
+
+                let destroylist = []
+                destroylist.push({
+                    model: "QueuedMerge",
+                    search_type: "findOne",
+                    params: [
+                        {
+                            where: {
+                                id: first_queued.id
+                            }
+                        }
+                    ]
+                })
+
+                deletions = await databaseQueriesUtil.destroyData(destroylist)
+            }
+        }
+        catch(err){
+            console.log("ERROR TRYING TO FIND QUEUE DATA")
+            console.log(err)
+            // req.flash("error", "There was an error trying to get queued reports");
+            // res.redirect("/")        
+        }
+    }
+}
+
+
+
 
 
 

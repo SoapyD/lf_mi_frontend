@@ -13,6 +13,7 @@ models.Frequency = require("./frequency");
 models.SubscriptionActivity = require("./subscriptionactivity");
 
 models.QueuedReport = require("./queuedreport");
+models.QueuedMerge = require("./queuedmerge");
 
 
 //REPORT MODEL RELATIONSHIPS

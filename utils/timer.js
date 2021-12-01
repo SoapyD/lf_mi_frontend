@@ -39,6 +39,21 @@ exports.checkIncompleteSubActivity = async() => {
         ssrs.report_running = false;
     }
 
+
+
+    find_list = []
+    find_list.push(
+    {
+        model: "QueuedMerge",
+        search_type: "findAll",
+    }) 
+
+    //RESET MERGE RUNNING IF THERE AREN'T ANY MERGES TO RUN
+    let queuedmerges = await databaseQueriesUtil.findData(find_list)
+    if(queuedmerges[0].length === 0){
+        checkOutputsUtil.merge_running = false;
+    }
+
 }
 
 
