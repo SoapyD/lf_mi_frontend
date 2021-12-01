@@ -376,31 +376,7 @@ exports.runProcess = async(subscriptionactivity) => {
 // let report_list = []; //TURNED INTO A TABLE
 exports.report_running = false;
 
-/*
-//RUN THE REPORT SECTION BUT ONLY AFTER A GIVEN DELAY
-exports.runDelay = async(options) => {
 
-    // report_list.push(options);
-
-    // await functionsUtil.delay(options.delay_timer)
-    // exports.runReport(options)
-
-    //ADD THE SET OF OPTIONS TO THE QUEUED LIST
-    let creation_list = []
-    creation_list.push(
-    {
-        model: "QueuedReport",
-        params: [
-            {
-                options: JSON.stringify(options),
-            }
-        ]
-    }) 
-
-    let queuedreports = await databaseQueriesUtil.createData2(creation_list)	
-
-}
-*/
 
 exports.checkList = async() =>{
     if(exports.report_running === false){
@@ -415,11 +391,12 @@ exports.checkList = async() =>{
         })         
 
         try{
+            exports.report_running = true;
             let queuedreports = await databaseQueriesUtil.findData(find_list)
             let report_list = queuedreports[0]        
 
             if(report_list.length > 0){
-                exports.report_running = true;
+                
                 let first_queued = report_list[0]
                 let options = JSON.parse(first_queued.options);
                 exports.runReport(options);
@@ -443,9 +420,10 @@ exports.checkList = async() =>{
             }
         }
         catch(err){
+            console.log("ERROR TRYING TO FIND QUEUE DATA")
             console.log(err)
-            req.flash("error", "There was an error trying to get queued reports");
-            res.redirect("/")        
+            // req.flash("error", "There was an error trying to get queued reports");
+            // res.redirect("/")        
         }
     }
 }
