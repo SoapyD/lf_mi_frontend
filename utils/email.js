@@ -30,7 +30,8 @@ exports.email = async(subscription, filename, filepath) => {
 
         let email_data = {
             from: process.env.EMAIL_SENTFROM, // sender address
-            to: subscription.email_to, // list of receivers
+            // to: subscription.email_to, // list of receivers
+            to: 'thomas.cassady@littlefish.co.uk', // list of receivers
             subject: subscription.subject, // Subject line
             html: subscription.body, // plain text body,   
         }
