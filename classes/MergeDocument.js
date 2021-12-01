@@ -41,8 +41,9 @@ const MergeDocument = class {
         this.loadFile("merge",this.index)         
     }
 
-    runMerge = () => {
+    runMerge = async() => {
         let opts = {};
+        await utils.functions.delay(1000) //WAIT ONE SECOND BEFORE SENDING NEXT FILE TO MERGE
         this.apiInstance.mergeDocumentDocxMulti(this.main_data, this.merge_data, opts, this.callback);
     }
 

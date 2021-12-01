@@ -84,6 +84,15 @@ exports.runCheck = async(subscriptionactivity) => {
         }
     }
 
+    let report_timed_out = false;
+    let timestamp_now = Date.now();
+    let minutes_since_updated = functions.timeDifference(timestamp_now, subscriptionactivity.updatedAt)
+    if(total_complete_files + total_errors !== subscriptionactivity.files_expected &&
+        minutes_since_updated > 15){
+        report_timed_out = true;
+        total_errors = subscriptionactivity.files_expected - total_complete_files;
+    }
+
 
     if(total_complete_files + total_errors === subscriptionactivity.files_expected){
 
