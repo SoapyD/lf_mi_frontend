@@ -68,6 +68,7 @@ exports.runCheck = async(subscriptionactivity) => {
                             subsection.error = "generic error"
                         }
                         ssrs.report_running = false;
+                        ssrs.checkList();
                         // subscriptionactivity.errors++;
                         total_errors++;
                         subsection.running = false;
