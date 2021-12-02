@@ -271,10 +271,7 @@ exports.checkList = async() =>{
                 //GET ALL REPORT DATA
                 let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
 
-                options.subscriptionactivity = subscriptionactivities[0];
-
-                const mergeInstance = new classes.MergeDocument(options)
-                mergeInstance.runMerge()                 
+                options.subscriptionactivity = subscriptionactivities[0];              
                 
                 //DELETE THE ELEMENT FROM THE QUEUE
 
@@ -292,6 +289,10 @@ exports.checkList = async() =>{
                 })
 
                 deletions = await databaseQueriesUtil.destroyData(destroylist)
+
+                const mergeInstance = new classes.MergeDocument(options)
+                mergeInstance.runMerge()                   
+
             }
         }
         catch(err){
