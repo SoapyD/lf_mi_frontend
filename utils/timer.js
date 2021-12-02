@@ -7,7 +7,16 @@ const fs = require('fs');
 exports.checkTimer = async() => {
 
 
-    exports.checkIncompleteSubActivity ()
+    try{
+
+        exports.checkIncompleteSubActivity ()
+    }    
+    catch(err){
+        console.log("ERROR TRYING TO RUN TIMER")
+        console.log(err)
+        // req.flash("error", "There was an error trying to get queued reports");
+        // res.redirect("/")        
+    }
 
     setTimeout(exports.checkTimer, process.env.TIMER_MS);
 }
