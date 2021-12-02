@@ -3,7 +3,7 @@ const Sequelize = require("sequelize");
 const utils = require('../utils')
 
 
-const QueuedReport = utils.database.sequelize.define('NODE_REPORT_queuedreport', {
+const QueuedSubsection = utils.database.sequelize.define('NODE_REPORT_queuedsubsection', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,
@@ -16,4 +16,4 @@ const QueuedReport = utils.database.sequelize.define('NODE_REPORT_queuedreport',
    timestamps: false,
 });
 
-module.exports = QueuedReport
+module.exports = QueuedSubsection

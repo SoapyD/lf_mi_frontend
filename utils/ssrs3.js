@@ -351,16 +351,17 @@ exports.runProcess = async(subscriptionactivity) => {
         // exports.runDelay(options)
         creation_list.push(
             {
-                model: "QueuedReport",
+                model: "QueuedSubsection",
                 params: [
                     {
                         options: JSON.stringify(options),
+                        subscriptionActivityId: subscriptionactivity.id
                     }
                 ]
         })         
     }
 
-    let queuedreports = await databaseQueriesUtil.createData2(creation_list)    
+    let queuedsubsections = await databaseQueriesUtil.createData2(creation_list)    
     exports.checkList();
 }
 
@@ -386,14 +387,14 @@ exports.checkList = async() =>{
 
         find_list.push(
         {
-            model: "QueuedReport",
+            model: "QueuedSubsection",
             search_type: "findAll",
         })         
 
         try{
             exports.report_running = true;
-            let queuedreports = await databaseQueriesUtil.findData(find_list)
-            let report_list = queuedreports[0]        
+            let queuedsubsections = await databaseQueriesUtil.findData(find_list)
+            let report_list = queuedsubsections[0]        
 
             if(report_list.length > 0){
                 
@@ -405,7 +406,7 @@ exports.checkList = async() =>{
 
                 let destroylist = []
                 destroylist.push({
-                    model: "QueuedReport",
+                    model: "QueuedSubsection",
                     search_type: "findOne",
                     params: [
                         {
@@ -485,7 +486,7 @@ exports.runReport = async(options) => {
         if(err){
             subsection_activity[options.name].error = err.body.toString();
         }else{
-            subsection_activity[options.name].error = "undefined error";            
+            subsection_activity[options.name].error = "undefined error: most likely too many calls to reporting server";            
         }
 
         subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)

@@ -12,7 +12,7 @@ models.Subscription = require("./subscription");
 models.Frequency = require("./frequency");
 models.SubscriptionActivity = require("./subscriptionactivity");
 
-models.QueuedReport = require("./queuedreport");
+models.QueuedSubsection = require("./queuedsubsection");
 models.QueuedMerge = require("./queuedmerge");
 
 
@@ -78,6 +78,10 @@ models.Subscription.belongsTo(models.Frequency, {as: 'frequency', foreignKey: "f
 
 
 models.SubscriptionActivity.belongsTo(models.Subscription, {foreignKey: 'subscriptionId'});
+
+
+models.QueuedSubsection.belongsTo(models.SubscriptionActivity, {foreignKey: 'subscriptionActivityId'});
+models.QueuedMerge.belongsTo(models.SubscriptionActivity, {foreignKey: 'subscriptionActivityId'});
 
 
 

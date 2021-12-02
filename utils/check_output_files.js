@@ -39,39 +39,62 @@ exports.runCheck = async(subscriptionactivity) => {
                     //IF THE SECTION HASN'T GENERATED IN THE GIVEN TIME, RERUN IT IF THERE'S "TRIES" AVAILABLE
                     if(minutes_since_updated > Number(process.env.MINS_SINCE_UPDATED)){
 
-                        /*
+                        
                         if(subsection.tries > 0){
                             subsection.tries--;
                             subscriptionactivity.last_updated = timestamp_now;
                             subscriptionactivity.reruns++;
-                            
+
                             let options = {
-                                i: process.env.MS_REPORT_DELAY * reran_files, 
+                                name: subsection.name,
+                                delay_timer: subsection.delay_timer, 
                                 filepath: subsection.path, 
                                 parameters: subsection.parameters, 
                                 output_path: subscriptionactivity.path, 
                                 output_file: subsection.output_path,
+                                activity_id: subscriptionactivity.id,
                                 file_type: subscriptionactivity.file_type,
                                 file_extension: subscriptionactivity.file_extension
                             }
-                            ssrs.runDelay(options)
+
+                            // exports.runDelay(options)
+                            let creation_list = [];
+                            creation_list.push(
+                                {
+                                    model: "QueuedSubsection",
+                                    params: [
+                                        {
+                                            options: JSON.stringify(options),
+                                            subscriptionActivityId: subscriptionactivity.id
+                                        }
+                                    ]
+                            })
+
+                            let queuedsubsections = await databaseQueriesUtil.createData2(creation_list)  
+
+                            ssrs.report_running = false;
                             ssrs.checkList();
     
                             reran_files++;
                         }
                         else{
                             //OUT OF TRIES
-                            subscriptionactivity.errors++;
+                            if(!subsection.error){
+                                subsection.error = "generic error: report finished but no file to show for it"
+                            }
+                            ssrs.report_running = false;
+                            ssrs.checkList();
+                            total_errors++;
+                            subsection.running = false;
                         }
-                        */
-                        if(!subsection.error){
-                            subsection.error = "generic error"
-                        }
-                        ssrs.report_running = false;
-                        ssrs.checkList();
-                        // subscriptionactivity.errors++;
-                        total_errors++;
-                        subsection.running = false;
+                        /**/
+                        // if(!subsection.error){
+                        //     subsection.error = "generic error: report finished but no file to show for it"
+                        // }
+                        // ssrs.report_running = false;
+                        // ssrs.checkList();
+                        // total_errors++;
+                        // subsection.running = false;
                     }
                 }
             }
@@ -88,10 +111,31 @@ exports.runCheck = async(subscriptionactivity) => {
     let timestamp_now = Date.now();
     let minutes_since_updated = functions.timeDifference(timestamp_now, subscriptionactivity.updatedAt)
     if(total_complete_files + total_errors !== subscriptionactivity.files_expected &&
-        minutes_since_updated > 15 &&
+        minutes_since_updated > Number(process.env.MINS_SINCE_UPDATED) &&
         total_complete_files > 0){
-        report_timed_out = true;
-        total_errors = subscriptionactivity.files_expected - total_complete_files;
+
+        //CHECK TO SEE IF THERE'S ANY PENDING SUBSECTION RUNS
+        let find_list = []
+        find_list.push(
+        {
+            model: "QueuedSubsection",
+            search_type: "findAll",
+            params: [{
+                where: {
+                    subscriptionActivityId: subscriptionactivity.id,
+                }		
+            }]
+        }) 
+    
+        //GET ALL REPORT DATA
+        let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+
+        //DON'T SET TO ERROR IF THERE'S STILL ACTIVITIES LEFT TO RUN
+        if(subscriptionactivities[0].length === 0){
+            report_timed_out = true;
+            total_errors = subscriptionactivity.files_expected - total_complete_files;
+            subscriptionactivity.log = "error: reports still in running status but check process timed out"
+        }
     }
 
 
@@ -152,6 +196,7 @@ exports.runCheck = async(subscriptionactivity) => {
                         params: [
                             {
                                 options: JSON.stringify(options),
+                                subscriptionActivityId: subscriptionactivity.id
                             }
                         ]
                 })         
@@ -217,7 +262,7 @@ exports.checkList = async() =>{
                     search_type: "findOne",
                     params: [{
                         where: {
-                            id: options.subscriptionactivity_id,
+                            id: options.subscriptionactivity_id
                         }		
                     }]
                 }) 
@@ -239,7 +284,7 @@ exports.checkList = async() =>{
                     params: [
                         {
                             where: {
-                                id: first_queued.id
+                                id: first_queued.i
                             }
                         }
                     ]
