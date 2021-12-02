@@ -88,7 +88,8 @@ exports.runCheck = async(subscriptionactivity) => {
     let timestamp_now = Date.now();
     let minutes_since_updated = functions.timeDifference(timestamp_now, subscriptionactivity.updatedAt)
     if(total_complete_files + total_errors !== subscriptionactivity.files_expected &&
-        minutes_since_updated > 15){
+        minutes_since_updated > 15 &&
+        total_complete_files > 0){
         report_timed_out = true;
         total_errors = subscriptionactivity.files_expected - total_complete_files;
     }
