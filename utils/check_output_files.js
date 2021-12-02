@@ -151,7 +151,7 @@ exports.runCheck = async(subscriptionactivity) => {
                     let subsection = subsection_activity[key];
     
                     //IF HAS STARTED AND IS RUNNING
-                    if(subsection.running === true){
+                    if(subsection.running === true && !subsection.start){
     
                         if(subsection.tries > 0){
                             subsection.tries--;
