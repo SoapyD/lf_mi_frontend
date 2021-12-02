@@ -135,6 +135,7 @@ exports.runCheck = async(subscriptionactivity) => {
             report_timed_out = true;
             total_errors = subscriptionactivity.files_expected - total_complete_files;
             subscriptionactivity.log = "error: reports still in running status but check process timed out"
+            ssrs.report_running = false;
         }
     }
 
