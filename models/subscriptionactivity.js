@@ -13,8 +13,11 @@ const SubscriptionActivity = utils.database.sequelize.define('NODE_REPORT_subscr
    ,running: {type:Sequelize.BOOLEAN, defaultValue: 1}   
    ,files_expected: {type:Sequelize.INTEGER, defaultValue: 0}
    ,files_current: {type:Sequelize.INTEGER, defaultValue: 0}
+   ,files_merged: {type:Sequelize.INTEGER, defaultValue: 0}
+
    ,errors: {type:Sequelize.INTEGER, defaultValue: 0}
    ,reruns: {type:Sequelize.INTEGER, defaultValue: 0}
+   ,merge_reruns: {type:Sequelize.INTEGER, defaultValue: 0}
    ,merge_complete: {type:Sequelize.INTEGER, defaultValue: 0}
    ,document_saved: {type:Sequelize.INTEGER, defaultValue: 0} 
    ,email_sent: {type:Sequelize.INTEGER, defaultValue: 0}         
