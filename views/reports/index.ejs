@@ -37,28 +37,51 @@
 		}	
 	</script>	
 	
-	<div class="row text-center" id="camp-grid">
-		
-		<% reports.forEach(function (report){ %>
-			<div class="col-lg-3 col-md-4 col-sm-6">
-				<div class="thumbnail d-flex flex-column">
-					<i class="far fa-file-alt fa-4x left icon-padding"></i>
-					<h5 class="word-wrap text-block-limit" name="report_name<%= report.id %>">
-						<script>pad(<%= report.id %>,2, " - <%= report.name %>")</script>
-					</h5> 
-		
-					<a class="btn btn-primary top-margin-5" href="/reports/<%= report.id %>">Edit</a>
-					<a class="btn btn-primary" href="/reports/<%= report.id %>/subscriptions">Subscriptions</a>
-		
+	<div class="panel panel-primary">
+
+		<div class="panel-heading">
+			<h4 id="datatype_header">Report List
+				<input id="myInput" type="text" placeholder="Search..">
+			</h4>
+		</div>
+
+		<div class="row text-center panel-body" id="camp-grid">
+			
+			<% reports.forEach(function (report){ %>
+				<div class="col-lg-3 col-md-4 col-sm-6 link-wrapper">
+					<div class="thumbnail d-flex flex-column">
+						<i class="far fa-file-alt fa-4x left icon-padding"></i>
+						<h5 class="word-wrap text-block-limit" name="report_name<%= report.id %>">
+							<script>pad(<%= report.id %>,2, " - <%= report.name %>")</script>
+						</h5> 
+			
+						<a class="btn btn-primary top-margin-5" href="/reports/<%= report.id %>">Edit</a>
+						<a class="btn btn-primary" href="/reports/<%= report.id %>/subscriptions">Subscriptions</a>
+			
+					</div>
 				</div>
-			</div>
-		<% }) %>
-		
+			<% }) %>
+			
+		</div>
 	</div>
 	
 	
 </div>
 
+
+
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".panel-body .link-wrapper").filter(function() {
+			// console.log($(this))
+			console.log($(this).text().toLowerCase().indexOf(value))
+        	$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
 
 
 <%- include("../partials/footer") %>

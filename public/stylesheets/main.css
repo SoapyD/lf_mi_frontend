@@ -289,3 +289,10 @@ input {
 	height: 60px;
 	padding: 10px;
 }
+
+
+#myInput {
+    max-width: 200px;
+    float: right;
+    color: black;
+}

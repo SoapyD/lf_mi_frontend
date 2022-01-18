@@ -30,7 +30,7 @@
 <div class="container top-padding">	
 
 	<form action="/reports/<%= report.id %>/subscriptions/?_method=PUT" method="POST">
-		<!-- <div class="row"> -->
+		<div class="row">
 			<button class="btn btn-primary left" name="action" value="enable" type="submit">
 				Enable
 			</button>
@@ -43,70 +43,83 @@
 			<button class="btn btn-primary left left-margin-5" name="action" value="delete" type="submit">
 				Delete
 			</button>							
-		<!-- </div> -->
+		</div>
 		
-		<div class="row">
+		<div class="row top-padding">
 			
-			<div class="col-md-12 top-padding">
-				
-				<table id="sort">
-					
-					<colgroup>
-						<col span="1" style="width: 5%;">
-						<col span="1" style="width: 5%;">
-						<col span="1" style="width: 5%;">
-						<col span="1" style="width: 50%;">
-						<col span="1" style="width: 10%;">
-						<col span="1" style="width: 10%;">
-						<col span="1" style="width: 10%;">						
-						<col span="1" style="width: 5%;">
-					</colgroup>
-					
-					<thead>
-						<tr>
-							<th><span class="text"></span></th>
-							<th class="center-text"><span class="text">Edit</span></th>
-							<th><span class="text">Status</span></th>
-							<th><span class="text">Name</span></th>
-							<th class="center-text"><span class="text">Frequency</span></th>
-							<th class="center-text"><span class="text">Start Date</span></th>	
-							<th class="center-text"><span class="text">Time</span></th>									
-						</tr>
-					</thead>
+			<div class="panel panel-primary">
 
-					<tbody>	
-						<% subscriptions.forEach(function (subscription){ %>
+				<div class="panel-heading">
+					<h4 id="datatype_header">Subscription List
+						<input id="myInput" type="text" placeholder="Search..">
+					</h4>
+				</div>
+
+				<div class="panel-body">
+
+					<div class="col-md-12 top-padding">
+						
+						<table id="sort">
 							
-							<tr>
-								<td>
-									<input type="checkbox" name="subscriptions[]" value="<%= subscription.id %>" class="center-click">
-								</td>
-								
-								<td><a class="btn btn-primary" href="/reports/<%= report.id %>/subscriptions/<%= subscription.id %>/edit">Edit</a></td>
-								
-								<td>
-									<% if(subscription.active === true){ %>
-										Enabled
-									<% } else { %>
-										Disabled
-									<% } %>
-								</td>	
-								<td><%= subscription.name %></td>
+							<colgroup>
+								<col span="1" style="width: 5%;">
+								<col span="1" style="width: 5%;">
+								<col span="1" style="width: 5%;">
+								<col span="1" style="width: 50%;">
+								<col span="1" style="width: 10%;">
+								<col span="1" style="width: 10%;">
+								<col span="1" style="width: 10%;">						
+
+							</colgroup>
+							
+							<thead>
+								<tr>
+									<th><span class="text"></span></th>
+									<th><span class="text">Edit</span></th>
+									<th><span class="text">Status</span></th>
+									<th><span class="text">Name</span></th>
+									<th><span class="text">Frequency</span></th>
+									<th><span class="text">Start_Date</span></th>	
+									<th><span class="text"  style="width: 100%;text-align: center">Time</span></th>									
+								</tr>
+							</thead>
+
+							<tbody>	
+								<% subscriptions.forEach(function (subscription){ %>
 									
-								<td class="center-text">
+									<tr class="link-wrapper">
+										<td>
+											<input type="checkbox" name="subscriptions[]" value="<%= subscription.id %>" class="center-click">
+										</td>
+										
+										<td><a class="btn btn-primary" href="/reports/<%= report.id %>/subscriptions/<%= subscription.id %>/edit">Edit</a></td>
+										
+										<td>
+											<% if(subscription.active === true){ %>
+												Enabled
+											<% } else { %>
+												Disabled
+											<% } %>
+										</td>	
+										<td><%= subscription.name %></td>
+											
+										<td class="center-text">
 
-									<% if(subscription.frequency) { %>
-									<%= subscription.frequency.name %>
-									<% } %>
-								</td>	
-								
-								<td class="center-text"><%= subscription.start_date %></td>	
-								<td class="center-text"><%= subscription.time %></td>												                                		
-							</tr>
-							
-						<% }) %>					
-					</tbody>
-				</table>
+											<% if(subscription.frequency) { %>
+											<%= subscription.frequency.name %>
+											<% } %>
+										</td>	
+										
+										<td class="center-text"><%= subscription.start_date %></td>	
+										<td class="center-text"><%= subscription.time %></td>												                                		
+									</tr>
+									
+								<% }) %>					
+							</tbody>
+						</table>
+					</div>
+
+				</div>			
 			</div>
 		</div>
 			
@@ -115,6 +128,18 @@
 	<a href="/reports">Go Back</a>
 
 </div>
+
+
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".panel-body .link-wrapper").filter(function() {
+        	$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
 
 
 <%- include("../partials/footer") %>
