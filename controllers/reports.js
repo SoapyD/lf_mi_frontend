@@ -217,23 +217,6 @@ exports.updateJoinReport = async(req,res) => {
 		//DELETE THE ITEM
 		let destroylist = []
 
-		// let report_deletions = {
-		// 	model: "Report",
-		// 	search_type: "findOne",
-		// 	params: [
-		// 		{
-		// 			where: {
-		// 				id: id
-		// 			}
-		// 		}
-		// 	]
-		// }
-		//GET FULL REPORT DATA
-		// let reports = await utils.queries.findData(destroylist)
-		//THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
-		// console.log("test")
-		// let deletions = await utils.queries.destroyData(report_destroylist)
-
 		//DELETE ALL OF THE JOINS TOO
 		destroylist = []
 		let section_deletions = {}
@@ -266,7 +249,6 @@ exports.updateJoinReport = async(req,res) => {
 			})
 		}
 		destroylist.push(sectionsubsection_deletions)
-		// destroylist.push(section_deletions)
 		deletions = await utils.queries.destroyData(destroylist)
 
 		destroylist = []
@@ -278,11 +260,9 @@ exports.updateJoinReport = async(req,res) => {
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
         //CREATE THE SECTIONS AND SUBSECTIONS THAT HAVE BEEN PASSED FROM THE BODY
 
-        let sections = req.body.Report
+        let sections = req.body.params.sections
 		let section_order = 1
 
 
@@ -290,7 +270,8 @@ exports.updateJoinReport = async(req,res) => {
 		let created_sectionsubsections_LIST = [];
 
         for(const section_key in sections){ 
-            
+			
+			const section = sections[section_key]
             //CREATE SECTION
 
             let creation_list = []
@@ -300,7 +281,7 @@ exports.updateJoinReport = async(req,res) => {
 
 			//APPEND DATA TO THE SECTION
 			params = {}
-			params = sections[section_key]["params"]
+			params = section
             params["order"] = section_order			
             params["reportId"] = report.id
             create_sections["params"].push(params)
@@ -318,35 +299,35 @@ exports.updateJoinReport = async(req,res) => {
 				create_sections["model"] = "SectionSubSection"
 				create_sections["params"] = []		
 	
-				for(const subsection_key in sections[section_key]){ 
-					let subsection = sections[section_key][subsection_key]
+				for(const subsection_key in section.subsections){ 
+					let subsection = section.subsections[subsection_key]
 		
-					if (subsection_key.includes("Sub Section")){
+					// if (subsection_key.includes("Sub Section")){
 		
-						if(subsection.params.id !== ""){
+						if(subsection.id !== ""){
 	
 					
 							params = {}
 	
 							params["name"] = ''
-							if(subsection["params"]["name"])
+							if(subsection["name"])
 							{
-								params["name"] = subsection["params"]["name"]
+								params["name"] = subsection["name"]
 							}
 							params["show_analysis_box"] = '0'
-							if(subsection["params"]["show_analysis_box"])
+							if(subsection["show_analysis_box"])
 							{
-								params["show_analysis_box"] = subsection["params"]["show_analysis_box"]
+								params["show_analysis_box"] = subsection["show_analysis_box"]
 							}							
 							params["order"] = subsection_order
 							params["sectionId"] = created_section[0].id
-							params["subsectionId"] = Number(subsection["params"]["id"])
+							params["subsectionId"] = Number(subsection["id"])
 	
 							create_sections["params"].push(params)
 							
 							subsection_order++;
 						}
-					}
+					// }
 				}
 				creation_list.push(create_sections)
 

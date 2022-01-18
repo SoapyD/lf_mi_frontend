@@ -144,7 +144,7 @@
             <div class="box">
                 <span>`+text_number+`</span>
 
-                <input class="form-control" type="text" name="Report[`+text_number+`][params][name]" placeholder="name" >
+                <input class="form-control" type="text" name="[params][sections][`+number+`][name]" placeholder="name" >
             </div>
 
             <% if(user.id_name === report.owner || user.role.includes('Admin')) { %> 
@@ -192,7 +192,8 @@
     function add_subsection(parent){
 
 
-        let parent_span = $(parent[0]).find("span")[0].innerText
+        let parent_span = $(parent[0]).find("span")[0].innerText.split(" ")
+        let section_number = parent_span[1];
         let text_number = 'Sub Section '+(parent.children().find('.subsection').length + 1)
         let number = $(".subsection").length + 1        
 
@@ -209,7 +210,7 @@
             <div class="box">
                 <span>`+text_number+`</span>
 
-                <select name="Report[`+parent_span+`][`+text_number+`][params][id]" type="number" class="full-width form-control subsection-options">
+                <select name="[params][sections][`+section_number+`][subsections][`+number+`][id]" type="number" class="full-width form-control subsection-options">
 
                     <option value=""></option>
 
@@ -223,12 +224,12 @@
 
             <div class="box">
                 <span>Alternate Name</span>
-                <input class="form-control subsection-name" type="text" name="Report[`+parent_span+`][`+text_number+`][params][name]" placeholder="name" >
+                <input class="form-control subsection-name" type="text" name="[params][sections][`+section_number+`][subsections][`+number+`][name]" placeholder="name" >
             </div>
 
             <div class="box">
                 <span>Show Analysis Box</span>
-                <select name="Report[`+parent_span+`][`+text_number+`][params][show_analysis_box]" type="number" class="full-width form-control subsection-dropdown" multiple size="1">
+                <select name="[params][sections][`+section_number+`][subsections][`+number+`][show_analysis_box]" type="number" class="full-width form-control subsection-dropdown" multiple size="1">
                     <option value="1">Y</option>
                 </select>
 
@@ -279,23 +280,25 @@
         sections.each(function (i) {
 
             //RELABEL SECTION
-            let section_name = 'Section ' + (i + 1)
+            let section_number = (i + 1)
+            let section_name = 'Section ' + section_number
             $(this).find('span')[0].innerText = section_name
-            $(this).find('input')[0].name = 'Report[' + section_name + '][params][name]'
+            $(this).find('input')[0].name = '[params][sections]['+section_number+'][name]'
 
             let subsections = $(this).children().find('.subsection')
 
-            subsections.each(function (i) {
+            subsections.each(function (n) {
                 
                 //RELABEL SUBSECTION
-                let subsection_name = 'Sub Section ' + (i + 1)
+                let subsection_number = (n + 1)
+                let subsection_name = 'Sub Section ' + subsection_number
 
 
                 $(this).find('span')[0].innerText = subsection_name
 
-                $(this).find('.subsection-name')[0].name = 'Report[' + section_name + ']['+subsection_name+']'+'[params][name]'
-                $(this).find('.subsection-options')[0].name = 'Report[' + section_name + ']['+subsection_name+']'+'[params][id]'
-                $(this).find('.subsection-dropdown')[0].name = 'Report[' + section_name + ']['+subsection_name+']'+'[params][dropdown]'
+                $(this).find('.subsection-name')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[params][name]'
+                $(this).find('.subsection-options')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[params][id]'
+                $(this).find('.subsection-dropdown')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[params][dropdown]'
             })
 
         })
