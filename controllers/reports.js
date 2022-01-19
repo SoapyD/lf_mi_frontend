@@ -2,6 +2,14 @@
 const utils = require("../utils");
 
 
+//  #####  ####### #######          #    #       #       
+// #     # #          #            # #   #       #       
+// #       #          #           #   #  #       #       
+// #  #### #####      #    ##### #     # #       #       
+// #     # #          #          ####### #       #       
+// #     # #          #          #     # #       #       
+//  #####  #######    #          #     # ####### ####### 
+
 exports.getAllReports = async(req,res) => {
 	
     let find_list = []
@@ -24,6 +32,13 @@ exports.getAllReports = async(req,res) => {
 };
 
 
+//  #####  ####### #######        #####  ### #     #  #####  #       ####### 
+// #     # #          #          #     #  #  ##    # #     # #       #       
+// #       #          #          #        #  # #   # #       #       #       
+// #  #### #####      #    #####  #####   #  #  #  # #  #### #       #####   
+// #     # #          #                #  #  #   # # #     # #       #       
+// #     # #          #          #     #  #  #    ## #     # #       #       
+//  #####  #######    #           #####  ### #     #  #####  ####### #######
 
 exports.getReport = async(req, res) => {
 
@@ -73,9 +88,26 @@ exports.getReport = async(req, res) => {
 
 };
 
+//  #####  ####### #######       ####### ####### ######  #     #        #####  ######  #######    #    ####### ####### 
+// #     # #          #          #       #     # #     # ##   ##       #     # #     # #         # #      #    #       
+// #       #          #          #       #     # #     # # # # #       #       #     # #        #   #     #    #       
+// #  #### #####      #    ##### #####   #     # ######  #  #  # ##### #       ######  #####   #     #    #    #####   
+// #     # #          #          #       #     # #   #   #     #       #       #   #   #       #######    #    #       
+// #     # #          #          #       #     # #    #  #     #       #     # #    #  #       #     #    #    #       
+//  #####  #######    #          #       ####### #     # #     #        #####  #     # ####### #     #    #    ####### 
+
 exports.getFormCreateReport = (req,res) => {
 	res.render("reports/new");
 };
+
+
+//  #####  ######  #######    #    ####### ####### 
+// #     # #     # #         # #      #    #       
+// #       #     # #        #   #     #    #       
+// #       ######  #####   #     #    #    #####   
+// #       #   #   #       #######    #    #       
+// #     # #    #  #       #     #    #    #       
+//  #####  #     # ####### #     #    #    ####### 
 
 exports.createReport = async(req,res) => {
 	
@@ -116,6 +148,14 @@ exports.createReport = async(req,res) => {
 };
 
 
+//  #####  ####### #######       ####### ######  ### ####### 
+// #     # #          #          #       #     #  #     #    
+// #       #          #          #       #     #  #     #    
+// #  #### #####      #    ##### #####   #     #  #     #    
+// #     # #          #          #       #     #  #     #    
+// #     # #          #          #       #     #  #     #    
+//  #####  #######    #          ####### ######  ###    # 
+
 exports.getEditReport = async(req,res) => {
 
 	let id = req.params.reportid;
@@ -146,6 +186,14 @@ exports.getEditReport = async(req,res) => {
 	}	
 
 };
+
+// #     # ######  ######     #    ####### ####### 
+// #     # #     # #     #   # #      #    #       
+// #     # #     # #     #  #   #     #    #       
+// #     # ######  #     # #     #    #    #####   
+// #     # #       #     # #######    #    #       
+// #     # #       #     # #     #    #    #       
+//  #####  #       ######  #     #    #    ####### 
 
 exports.updateReport = async(req,res) => {
 	
@@ -186,6 +234,14 @@ exports.updateReport = async(req,res) => {
 		res.redirect("/reports/"+ id)        
 	}	
 };
+
+// #     # ######  ######     #    ####### #######             # ####### ### #     #  #####  
+// #     # #     # #     #   # #      #    #                   # #     #  #  ##    # #     # 
+// #     # #     # #     #  #   #     #    #                   # #     #  #  # #   # #       
+// #     # ######  #     # #     #    #    #####   #####       # #     #  #  #  #  #  #####  
+// #     # #       #     # #######    #    #             #     # #     #  #  #   # #       # 
+// #     # #       #     # #     #    #    #             #     # #     #  #  #    ## #     # 
+//  #####  #       ######  #     #    #    #######        #####  ####### ### #     #  #####  
 
 exports.updateJoinReport = async(req,res) => {
     //GET ALL CURRENT JOINS
@@ -281,7 +337,8 @@ exports.updateJoinReport = async(req,res) => {
 
 			//APPEND DATA TO THE SECTION
 			params = {}
-			params = section
+			params = Object.assign({},section);
+			delete params.subsections; 
             params["order"] = section_order			
             params["reportId"] = report.id
             create_sections["params"].push(params)
@@ -306,22 +363,23 @@ exports.updateJoinReport = async(req,res) => {
 		
 						if(subsection.id !== ""){
 	
-					
 							params = {}
+							params = subsection
 	
-							params["name"] = ''
-							if(subsection["name"])
+							if(!subsection["name"])
 							{
-								params["name"] = subsection["name"]
+								params["name"] = ''
 							}
-							params["show_analysis_box"] = '0'
-							if(subsection["show_analysis_box"])
+
+							if(!subsection["show_analysis_box"])
 							{
-								params["show_analysis_box"] = subsection["show_analysis_box"]
+								params["show_analysis_box"] = '0'
 							}							
+							params["show_analysis_box"] = Number(params["show_analysis_box"])
+
 							params["order"] = subsection_order
 							params["sectionId"] = created_section[0].id
-							params["subsectionId"] = Number(subsection["id"])
+							params["subsectionId"] = Number(subsection["subsectionId"])
 	
 							create_sections["params"].push(params)
 							
@@ -356,6 +414,13 @@ exports.updateJoinReport = async(req,res) => {
     }	
 }
 
+// ####### #     # #     #       ######  ####### ######  ####### ######  ####### 
+// #     # #  #  # ##    #       #     # #       #     # #     # #     #    #    
+// #     # #  #  # # #   #       #     # #       #     # #     # #     #    #    
+// #     # #  #  # #  #  # ##### ######  #####   ######  #     # ######     #    
+// #     # #  #  # #   # #       #   #   #       #       #     # #   #      #    
+// #     # #  #  # #    ##       #    #  #       #       #     # #    #     #    
+// #######  ## ##  #     #       #     # ####### #       ####### #     #    #    
 
 exports.ownReport = async(req,res) => {
 	
@@ -402,7 +467,13 @@ exports.ownReport = async(req,res) => {
 }
 
 
-
+//  #####  ####### ######  #     # 
+// #     # #     # #     #  #   #  
+// #       #     # #     #   # #   
+// #       #     # ######     #    
+// #       #     # #          #    
+// #     # #     # #          #    
+//  #####  ####### #          #   
 
 exports.updateCopyReport = async(req,res) => {
 	
@@ -506,6 +577,14 @@ exports.updateCopyReport = async(req,res) => {
 
 };
 
+
+// ######  ####### #       ####### ####### ####### 
+// #     # #       #       #          #    #       
+// #     # #       #       #          #    #       
+// #     # #####   #       #####      #    #####   
+// #     # #       #       #          #    #       
+// #     # #       #       #          #    #       
+// ######  ####### ####### #######    #    ####### 
 
 exports.deleteReport = async(req,res) => { //, middleware.isCampGroundOwnership
 	

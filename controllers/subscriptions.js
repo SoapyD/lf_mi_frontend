@@ -1,6 +1,14 @@
 const utils = require("../utils");
 
 
+//  #####  ####### #######          #    #       #       
+// #     # #          #            # #   #       #       
+// #       #          #           #   #  #       #       
+// #  #### #####      #    ##### #     # #       #       
+// #     # #          #          ####### #       #       
+// #     # #          #          #     # #       #       
+//  #####  #######    #          #     # ####### ####### 
+
 exports.getSubscriptions = async(req,res) => { //, middleware.isLoggedIn
 
 	let id = req.params.reportid;
@@ -40,6 +48,15 @@ exports.getSubscriptions = async(req,res) => { //, middleware.isLoggedIn
     }
 
 };
+
+
+//  #####  ####### #######       ####### ####### ######  #     #        #####  ######  #######    #    ####### ####### 
+// #     # #          #          #       #     # #     # ##   ##       #     # #     # #         # #      #    #       
+// #       #          #          #       #     # #     # # # # #       #       #     # #        #   #     #    #       
+// #  #### #####      #    ##### #####   #     # ######  #  #  # ##### #       ######  #####   #     #    #    #####   
+// #     # #          #          #       #     # #   #   #     #       #       #   #   #       #######    #    #       
+// #     # #          #          #       #     # #    #  #     #       #     # #    #  #       #     #    #    #       
+//  #####  #######    #          #       ####### #     # #     #        #####  #     # ####### #     #    #    ####### 
 
 exports.getFormCreateSubscription = async(req,res) => {
 
@@ -124,32 +141,18 @@ exports.getFormCreateSubscription = async(req,res) => {
 
 };
 
+
+//  #####  ######  #######    #    ####### ####### 
+// #     # #     # #         # #      #    #       
+// #       #     # #        #   #     #    #       
+// #       ######  #####   #     #    #    #####   
+// #       #   #   #       #######    #    #       
+// #     # #    #  #       #     #    #    #       
+//  #####  #     # ####### #     #    #    ####### 
+
 exports.createSubscription = async(req,res) => { //, middleware.isLoggedIn
 	
 	try{
-
-		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
-		// let parameters = "{"
-
-		// if(req.body.parameters){
-		// 	req.body.parameters.forEach((parameter, index)=> {
-		// 		if (index > 0){
-		// 			parameters += ", "
-		// 		}
-		// 		parameters += parameter
-		// 	})
-		// }
-
-		// if(req.body.input_parameters){
-		// 	req.body.input_parameters.forEach((input_parameter, index)=> {
-		// 		if (index > 0 ){ //|| parameters !== ""
-		// 			parameters += ", "
-		// 		}
-		// 		parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
-		// 	})
-		// }
-
-		// parameters += "}"
 
 
 		let params = req.body.params;
@@ -180,6 +183,14 @@ exports.createSubscription = async(req,res) => { //, middleware.isLoggedIn
 
 };
 
+
+//  #####  ####### #######       ####### ######  ### ####### 
+// #     # #          #          #       #     #  #     #    
+// #       #          #          #       #     #  #     #    
+// #  #### #####      #    ##### #####   #     #  #     #    
+// #     # #          #          #       #     #  #     #    
+// #     # #          #          #       #     #  #     #    
+//  #####  #######    #          ####### ######  ###    #  
 
 exports.getEditSubscription = async(req,res) => {
 
@@ -285,36 +296,20 @@ exports.getEditSubscription = async(req,res) => {
 };
 
 
+// #     # ######  ######     #    ####### ####### 
+// #     # #     # #     #   # #      #    #       
+// #     # #     # #     #  #   #     #    #       
+// #     # ######  #     # #     #    #    #####   
+// #     # #       #     # #######    #    #       
+// #     # #       #     # #     #    #    #       
+//  #####  #       ######  #     #    #    ####### 
+
 exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwnership
 
 	let id = req.params.reportid;
 	let subscription_id = req.params.subscriptionid;
 
 	try{
-
-
-		// COMBINE THE PARAMETERS TOGETHER INTO A SINGLE STRING, WHICH CAN BE CONVERTED BACK TO AN OBJECT WHEN NEEDED	
-		// let parameters = "{"
-
-		// if(req.body.parameters){
-		// 	req.body.parameters.forEach((parameter, index)=> {
-		// 		if (index > 0){
-		// 			parameters += ", "
-		// 		}
-		// 		parameters += parameter
-		// 	})
-		// }
-
-		// if(req.body.input_parameters){
-		// 	req.body.input_parameters.forEach((input_parameter, index)=> {
-		// 		if (index > 0){ //|| parameters !== ""
-		// 			parameters += ", "
-		// 		}
-		// 		parameters += '"'+req.body.input_parameter_names[index] +'" : "'+ input_parameter+'"'
-		// 	})
-		// }
-
-		// parameters += "}"
 
 
 		let find_list = []

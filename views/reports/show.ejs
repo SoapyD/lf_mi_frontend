@@ -210,7 +210,7 @@
             <div class="box">
                 <span>`+text_number+`</span>
 
-                <select name="[params][sections][`+section_number+`][subsections][`+number+`][id]" type="number" class="full-width form-control subsection-options">
+                <select name="[params][sections][`+section_number+`][subsections][`+number+`][subsectionId]" type="number" class="form-control subsection-options">
 
                     <option value=""></option>
 
@@ -229,7 +229,7 @@
 
             <div class="box">
                 <span>Show Analysis Box</span>
-                <select name="[params][sections][`+section_number+`][subsections][`+number+`][show_analysis_box]" type="number" class="full-width form-control subsection-dropdown" multiple size="1">
+                <select name="[params][sections][`+section_number+`][subsections][`+number+`][show_analysis_box]" type="number" class="form-control subsection-dropdown" multiple size="1">
                     <option value="1">Y</option>
                 </select>
 
@@ -296,9 +296,9 @@
 
                 $(this).find('span')[0].innerText = subsection_name
 
-                $(this).find('.subsection-name')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[params][name]'
-                $(this).find('.subsection-options')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[params][id]'
-                $(this).find('.subsection-dropdown')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[params][dropdown]'
+                $(this).find('.subsection-name')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[name]'
+                $(this).find('.subsection-options')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[subsectionId]'
+                $(this).find('.subsection-dropdown')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[show_analysis_box]'
             })
 
         })
@@ -360,6 +360,7 @@
                             {
                                 let element = subsection_elements[i];
                                 if(element.name.includes('show_analysis_box')){
+                                    console.log('<%- subsection.sectionsubsections.show_analysis_box %>')
 
                                     if('<%- subsection.sectionsubsections.show_analysis_box %>'==='true'){
                                         element.options[0].selected = true
