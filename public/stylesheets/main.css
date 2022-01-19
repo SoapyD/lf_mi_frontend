@@ -189,11 +189,11 @@ a:focus, a:hover {
 	width: 100%;
 }
 
-.subsection-name,
+/* .subsection-name,
 .subsection-options,
 .subsection-dropdown{
 	width: 50%;
-}
+} */
 
 .s-padding{
 	padding: 5px;
