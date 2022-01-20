@@ -22,13 +22,30 @@
             <h4>New Item</h4> 
         </div>
 
-        <% type_info.edit_fields.forEach(function (item){ %>
+        <% type_info.edit_fields.forEach(function (item, i){ %>
 
             <div class="box s-padding">
                 <span>
                     <%- item %> :
                 </span>
+
+                <% 
+                let type = type_info.edit_types[i]
+                console.log(type)
+                if(type === "text"){
+                %>
                 <input class="form-control" type="text" name="params[<%- item %>]">
+                <%
+                }
+                %>
+                
+                <% 
+                if(type === "textarea"){
+                %>
+                <textarea class="form-control" style="resize: none; height:200px" name="params[<%- item %>]"></textarea>
+                <%
+                }
+                %>                
 
             </div>
             

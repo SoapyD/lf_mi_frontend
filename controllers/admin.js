@@ -26,11 +26,13 @@ exports.getRouteInfo = () => {
     route_info = {
         parameter: {
             type: "Parameter"
-            ,edit_fields: ['name','print_name','query','group']        
+            ,edit_fields: ['name','print_name','query','group']  
+            ,edit_types: ['text', 'text', 'text', 'text']      
         }
         ,subsection: {
             type: "SubSection"
-            ,edit_fields: ['name', 'order', 'path', 'description', 'period_type']
+            ,edit_fields: ['name', 'order', 'path', 'period_type', 'description']
+            ,edit_types: ['text', 'text', 'text', 'text', 'textarea']
             ,join_from: ["Parameter"]
         }       
         

@@ -307,7 +307,7 @@
 
                     let subsection = $(e.target).closest('.subsection')
                     let description = $(subsection[0]).find('.subsection-description')
-                    description[0].value = "<%= subsection_e.description %>"
+                    description[0].value = `<%= subsection_e.description %>`
                 } 
             <% }) %>
 
@@ -457,7 +457,7 @@
 
                         if (subsection_element.length > 0)
                         {
-                            subsection_element.val('<%- subsection.description %>');
+                            subsection_element.val(`<%- subsection.description %>`);
                         }                        
 
 
@@ -491,21 +491,7 @@
     <% } %>
 
 
-    //WHEN THE SUB SECTION CHANGES, CHANGES THE DESCRIPTION BOX TOO
-    // $(document).ready(function() {
-    //     $('.subsection-options').change((e) => {
-            
-    //         <% subsections.forEach(function (subsection_e){%>
-    //             if(<%= subsection_e.id %> == e.target.value) {
-
-    //                 let subsection = $(e.target).closest('.subsection')
-    //                 let description = $(subsection[0]).find('.subsection-description')
-    //                 description[0].value = "<%= subsection_e.description %>"
-    //             } 
-    //         <% }) %>
-
-    //     });
-    // });
+ 
 
 </script>
 
