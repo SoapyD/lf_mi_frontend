@@ -143,6 +143,11 @@ a:focus, a:hover {
 	margin: 5px 0;
 }
 
+.sortable .sortable-subsections{
+	margin: 5px 0;
+}
+
+
 .left-button {
 	display: inline
 }
@@ -158,6 +163,12 @@ a:focus, a:hover {
 
 .right-button {
 	float: right;
+}
+
+.delete-subsection {
+	margin-right: 0;
+	margin-left:auto;
+	display:block;
 }
 
 .flex-right {
@@ -189,11 +200,13 @@ a:focus, a:hover {
 	width: 100%;
 }
 
-/* .subsection-name,
-.subsection-options,
-.subsection-dropdown{
+/* .report-builder-options{
 	width: 50%;
-} */
+}
+*/
+/* .row.report-builder-options{
+	margin:0%;
+}  */
 
 .s-padding{
 	padding: 5px;
@@ -246,9 +259,13 @@ span {
 	display: flex;
 	align-items: center;
 }
-input {
+/* input {
 	width: 90%;
-}
+} */
+
+/* .subsection-name {
+	width: 90%;
+} */
 
 .box {
 	display: flex;

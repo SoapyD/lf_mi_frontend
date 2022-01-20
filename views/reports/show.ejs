@@ -68,13 +68,10 @@
                 
 			<% //} %>
 
+
 		</div>
 	</div>
 </div>
-
-
-
-
 
 
 
@@ -121,6 +118,8 @@
 
 <script>
 
+
+
     updateSortable = () => {
         $( ".sortable" ).sortable({
             stop: updateIndex,
@@ -148,10 +147,10 @@
             </div>
 
             <% if(user.id_name === report.owner || user.role.includes('Admin')) { %> 
-                <button class="btn btn-primary add-subsection" type="button">
+                <button class="btn btn-primary add-subsection top-margin-5" type="button">
                     Add Subsection
                 </button>	  
-                <button class="btn btn-primary delete-section" type="button">
+                <button class="btn btn-primary delete-section right-button top-margin-5" type="button">
                     Delete Section
                 </button>	                
             <% } %>
@@ -199,6 +198,7 @@
 
 
         let markup = `        
+
         <li class="ui-state-default subsection tr-grab" id="subsection_`+number+`">
             
             <% if(user.id_name === report.owner || user.role.includes('Admin')) { %>   
@@ -206,35 +206,74 @@
                     Delete Subsection
                 </button>	                
             <% } %>            
+        
+            <div class="row top-margin-5">
+            
+                <div class="col-sm-6">
+                    <div class="row"> 
+                    
+                        <div class="col-sm-12">
+                            <div class="form-group">  
+                                <p>`+text_number+`</p>
 
-            <div class="box">
-                <span>`+text_number+`</span>
+                                <select name="[params][sections][`+section_number+`][subsections][`+number+`][subsectionId]" type="number" 
+                                class="full-width form-control subsection-options">
 
-                <select name="[params][sections][`+section_number+`][subsections][`+number+`][subsectionId]" type="number" class="full-width form-control subsection-options">
+                                    <option value=""></option>
 
-                    <option value=""></option>
+                                    <% subsections.forEach(function (subsection_e){ %>
+                                        <option value = <%= subsection_e.id %>                                                         
+                                        >
+                                        <%= subsection_e.name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
 
-                    <% subsections.forEach(function (subsection_e){ %>
-                        <option value = <%= subsection_e.id %>                                                         
-                        >
-                        <%= subsection_e.name %></option>
-                    <% }) %>
-                </select>
+                        <div class="col-sm-12">
+                            <div class="form-group">  
+                                <p>Alternate Name</p>
+                                <input class="form-control subsection-name" type="text" name="[params][sections][`+section_number+`][subsections][`+number+`][name]" placeholder="name" >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">  
+                                <p>Show Analysis Box</p>
+                                <input type="radio"
+                                id="analysis_on_`+number+`"
+                                class="subsection-analysis-radio"
+                                name="[params][sections][`+section_number+`][subsections][`+number+`][show_analysis_box]"
+                                value="1" checked>
+                                <label for="analysis_on_`+number+`">Yes</label>
+
+                                <input type="radio"
+                                id="analysis_off_`+number+`"
+                                class="subsection-analysis-radio"
+                                name="[params][sections][`+section_number+`][subsections][`+number+`][show_analysis_box]"
+                                value="0">
+                                <label for="analysis_off_`+number+`">No</label>                                
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+
+                    <div class="form-group">  
+                        <p>Description</p>
+                        <textarea class="form-control subsection-description" 
+                        style="resize: none; height:200px"
+                        type="text" readonly>
+                        </textarea>
+                    </div>                    
+
+                </div>
             </div>
 
-            <div class="box">
-                <span>Alternate Name</span>
-                <input class="form-control subsection-name" type="text" name="[params][sections][`+section_number+`][subsections][`+number+`][name]" placeholder="name" >
-            </div>
-
-            <div class="box">
-                <span>Show Analysis Box</span>
-                <select name="[params][sections][`+section_number+`][subsections][`+number+`][show_analysis_box]" type="number" class="full-width form-control subsection-dropdown" multiple size="1">
-                    <option value="1">Y</option>
-                </select>
-
-                
-            </div>
 
             <ul class="sortable sortable-paragraphs">
             
@@ -256,7 +295,28 @@
             updateSortable()       
         <% } %>
 
+        //UPDATE RADIO BUTTONS TO ADD VALUE AS FOR SOME REASON IT DOESN'T WORK IF ADDED
+        $("#subsection_"+number+" #analysis_on_"+number).value = 1
+        $("#subsection_"+number+" #analysis_off_"+number).value = 0
+
+
+        $("#subsection_"+number+" .subsection-options").change((e) => {
+            
+            <% subsections.forEach(function (subsection_e){%>
+                if(<%= subsection_e.id %> == e.target.value) {
+
+                    let subsection = $(e.target).closest('.subsection')
+                    let description = $(subsection[0]).find('.subsection-description')
+                    description[0].value = "<%= subsection_e.description %>"
+                } 
+            <% }) %>
+
+        });
+
+
         let return_data = $("#subsection_"+number)
+
+
         return return_data
     }
 
@@ -276,29 +336,71 @@
 
         //LOOP THROUGH EACH SECTION, SUBSECTION AND PARAGRAPH AND RELABEL THEIR NAMES ACCORDINGLY 
         let sections = $(".section");
-
+        
         sections.each(function (i) {
-
+            
             //RELABEL SECTION
             let section_number = (i + 1)
             let section_name = 'Section ' + section_number
             $(this).find('span')[0].innerText = section_name
             $(this).find('input')[0].name = '[params][sections]['+section_number+'][name]'
+            
 
             let subsections = $(this).children().find('.subsection')
 
+            let check_data = [];
             subsections.each(function (n) {
                 
                 //RELABEL SUBSECTION
                 let subsection_number = (n + 1)
                 let subsection_name = 'Sub Section ' + subsection_number
 
+                let radio_data = {
+                    analysis_on_checked: $(this).find('.subsection-analysis-radio')[0].checked,
+                    analysis_off_checked: $(this).find('.subsection-analysis-radio')[1].checked
+                }
+                
+                check_data.push(radio_data)
+            })
 
-                $(this).find('span')[0].innerText = subsection_name
-
+            subsections.each(function (n) {
+                
+                
+                //RELABEL SUBSECTION
+                let subsection_number = (n + 1)
+                let subsection_name = 'Sub Section ' + subsection_number
+                
+                
+                $(this).find('p')[0].innerText = subsection_name
+                
                 $(this).find('.subsection-name')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[name]'
                 $(this).find('.subsection-options')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[subsectionId]'
-                $(this).find('.subsection-dropdown')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[show_analysis_box]'
+                
+                $(this).find('.subsection-analysis-radio')[0].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[show_analysis_box]'                
+                $(this).find('.subsection-analysis-radio')[1].name = '[params][sections]['+section_number+'][subsections]['+subsection_number+']'+'[show_analysis_box]'                                
+            })
+
+            //REAPPLY RADIO DATA
+            subsections.each(function (n) {
+                    
+                //RELABEL SUBSECTION
+                let subsection_number = (n + 1)
+                let subsection_name = 'Sub Section ' + subsection_number
+    
+                let radio_data = check_data[n]
+    
+                if(radio_data.analysis_on_checked === true){
+                    $(this).find('.subsection-analysis-radio')[0].checked = true
+                }
+                else{
+                    $(this).find('.subsection-analysis-radio')[1].checked = true
+                }
+    
+                // {
+                //     analysis_on_checked: $(this).find('.subsection-analysis-radio')[0].checked,
+                //     analysis_off_checked: $(this).find('.subsection-analysis-radio')[1].checked
+                // }
+    
             })
 
         })
@@ -344,34 +446,36 @@
                     <% if(subsection.sectionsubsections) { %>
 
                         //ADD IN THE ALTERNATE NAME TO THE SUBSECTION, IF AVAILABLE FROM THE FUSION
-                        subsection_element = subsection_chunk.find('input')
+                        subsection_element = subsection_chunk.find('.subsection-name')
                         if (subsection_element.length > 0)
                         {
                             subsection_element.val('<%- subsection.sectionsubsections.name %>');
                         }
 
-                        //TOGGLE THE ANALYSIS BOX USAGE
-                        //FIRST PULL OUT ALL SELECTION HTML ELEMENTS
-                        subsection_elements = subsection_chunk.find('select')                    
-                          
+                        //ADD IN THE ALTERNATE NAME TO THE SUBSECTION, IF AVAILABLE FROM THE FUSION
+                        subsection_element = subsection_chunk.find('.subsection-description')
+
+                        if (subsection_element.length > 0)
+                        {
+                            subsection_element.val('<%- subsection.description %>');
+                        }                        
+
+
+                        //UPDATE THE ANALYSIS RADIO BUTTONS TO SHOW WHAT WAS SELECTED
+                        subsection_elements = subsection_chunk.find('.subsection-analysis-radio')             
+
                         if (subsection_elements.length > 0)
                         {
-                            for(let i=0; i<subsection_elements.length; i++)
-                            {
-                                let element = subsection_elements[i];
-                                if(element.name.includes('show_analysis_box')){
-                                    console.log('<%- subsection.sectionsubsections.show_analysis_box %>')
-
-                                    if('<%- subsection.sectionsubsections.show_analysis_box %>'==='true'){
-                                        element.options[0].selected = true
-                                    }
-                                    else{
-                                        element.options[0].selected = false
-                                    }
-
-                                }
+                            if('<%- subsection.sectionsubsections.show_analysis_box %>'==='true'){
+                                subsection_elements[0].checked = true //SELECT "YES"
                             }
+                            else{
+                                subsection_elements[1].checked = true //SELECT "NO"
+                            }
+
                         }  
+
+
 
                     <% } %>
 
@@ -385,6 +489,23 @@
 
         <% }) %>
     <% } %>
+
+
+    //WHEN THE SUB SECTION CHANGES, CHANGES THE DESCRIPTION BOX TOO
+    // $(document).ready(function() {
+    //     $('.subsection-options').change((e) => {
+            
+    //         <% subsections.forEach(function (subsection_e){%>
+    //             if(<%= subsection_e.id %> == e.target.value) {
+
+    //                 let subsection = $(e.target).closest('.subsection')
+    //                 let description = $(subsection[0]).find('.subsection-description')
+    //                 description[0].value = "<%= subsection_e.description %>"
+    //             } 
+    //         <% }) %>
+
+    //     });
+    // });
 
 </script>
 
