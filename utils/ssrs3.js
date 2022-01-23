@@ -127,7 +127,7 @@ exports.setup = async(subscription_number, report, subscription) => {
                     number: subsection_count,
                     running: true,
                     tries: Number(process.env.MAX_RERUN_TRIES),
-                    path: "/99 - Test Reports/Service Report/_Front Cover",
+                    path: "/New Warehouse/04 - Service Report/Page Components/_Front Cover",
                     output_path: path.join(folder_path,outputname),
                     parameters:                 
                     {
