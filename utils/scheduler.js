@@ -3,6 +3,7 @@ const moment = require('moment');
 // const { subscriptions } = require('../controllers');
 const databaseQueriesUtil = require('../utils/database_queries2');
 const ssrsUtil = require('../utils/ssrs3');
+const functionsUtil = require('../utils/functions');
 
 const jobs = [];
 const jobs_List = [];
@@ -56,7 +57,7 @@ exports.updateScheduler = async() => {
 
     let reports = await databaseQueriesUtil.findData(find_list)
 
-    let report_sorted = utils.functions.sortReport(reports[0])
+    let report_sorted = functionsUtil.sortReport(reports[0])
 
     report_sorted.forEach((report) => {
         if(report.subscriptions){
