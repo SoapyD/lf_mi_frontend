@@ -25,7 +25,8 @@ exports.test = async(req, res) => {
 
     // console.log("////////////////////////////////////////////////////////////////////////")
 
-    let report = utils.functions.sortReport(reports[0])
+    // let report = utils.functions.sortReport(reports[0])
+    let report = reports[0]
     
     // report.sections.forEach((section) => {
     //     console.log(section.order, section.name)

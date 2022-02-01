@@ -56,7 +56,9 @@ exports.updateScheduler = async() => {
 
     let reports = await databaseQueriesUtil.findData(find_list)
 
-    reports[0].forEach((report) => {
+    let report_sorted = utils.functions.sortReport(reports[0])
+
+    report_sorted.forEach((report) => {
         if(report.subscriptions){
 
             report.subscriptions.forEach((subscription) => {
