@@ -3,8 +3,41 @@ const DocxMerger = require('../utils/docx-merger/index.js');
 var fs = require('fs');
 var path = require('path');
 const classes = require('../classes');
+const utils = require("../utils");
 
+exports.test = async(req, res) => {
+    let list = []
 
+    //GET THE FULL REPORT DATA
+    list = []
+    list.push(
+    {
+        model: "Report",
+        search_type: "findOne",
+        params: [{
+            where: {
+                id: 1,
+            },
+            include: utils.queries.searchType['Full Report'].include			
+        }]
+    }) 				
+    let reports = await utils.queries.findData(list) 
+
+    // console.log("////////////////////////////////////////////////////////////////////////")
+
+    let report = utils.functions.sortReport(reports[0])
+    
+    // report.sections.forEach((section) => {
+    //     console.log(section.order, section.name)
+
+    //     section.subsections.forEach((subsection) => {
+    //         console.log("    ",subsection.sectionsubsections.order, subsection.name)
+    //     })
+    // })    
+
+    res.render("tests/index", {report:report});   
+
+}
 
 exports.merge = (req, res) => {
 

@@ -1,0 +1,50 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+
+    <header class="jumbotron">
+
+    
+        <div class="container">
+            
+            <h1>
+                Tests
+            </h1>
+    
+            <!-- <p>
+                List of reports
+            </p> -->
+    
+            <p>
+    
+            </p>
+    
+        </div>
+    </header>    
+
+
+    <% report.sections.forEach(function (section){ %>
+
+        <p>
+            <%= section.order %>
+            . 
+            <%= section.name %>
+        </p>
+
+        <% section.subsections.forEach(function (subsection){ %>
+
+            <p>
+                ------------    
+                <%= subsection.sectionsubsections.order %>
+                . 
+                <%= subsection.name %>
+            </p>
+
+        <% }) %>
+       
+
+     <% }) %>
+
+
+
+<%- include("../partials/footer") %>
