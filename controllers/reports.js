@@ -509,7 +509,7 @@ exports.updateCopyReport = async(req,res) => {
 		params = {
 			name: report.name + "_COPY",
 			description: report.description,
-			owner: req.session.passport.user.id
+			owner: req.session.passport.user.id_name
 		}
 		search_criteria["params"].push(params)
 
