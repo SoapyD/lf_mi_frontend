@@ -34,15 +34,111 @@
         </h4>
     </div>
 
-    <% users_data.forEach((user_data) =>  { %>
+    
+    <div class="panel-body">
 
-        <div class="panel-body">
-            <a href="/user_data/<%- user_data.ID %>">
-                <%- user_data.FirstName %> <%- user_data.LastName %>
-            </a>       
+        <h3>Current Employees</h3>
+
+        <table id="measurement-form" class="center">
+            
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 5%;">
+                <col span="1" style="width: 5%;">                                    
+            </colgroup>
+            
+            <thead>
+                <tr>
+                    <th><span class="text">Name</span></th>
+                    <th><span class="text">Reports_To</span></th>
+                    <th><span class="text">Job_Role</span></th>
+                    <th><span class="text">Department</span></th>
+                    <th><span class="text">Started</span></th>	
+                    <th><span class="text">Left</span></th>		                            							
+                </tr>
+            </thead>
+            
+            <tbody>	
+                    <% users_data.forEach((user_data) =>  { %>
+                        <% if (!user_data.FinalDayofEmployment) { %>
+                        <tr class="row_data">
+                            <td>
+                                <a href="/user_data/<%- user_data.ID %>">
+                                    <%- user_data.FirstName %> <%- user_data.LastName %>
+                                </a>                           
+                            </td>
+
+                            <td><%- user_data.ReportsTo %> </td>  
+                            <td><%- user_data.JobRole %> </td> 
+                            <td><%- user_data.Department %> </td>                        
+                            <td><%- user_data.StartDate %> </td> 
+                            <td><%- user_data.FinalDayofEmployment %> </td> 
+
+                            
+                        </tr>
+                        <% } %>
+                    <% }) %>
+
+            </tbody>
+        </table>
+
+
+
+        <h3>Ex Employees</h3>
+
+        <table id="measurement-form" class="center">
+            
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 5%;">
+                <col span="1" style="width: 5%;">                                    
+            </colgroup>
+            
+            <thead>
+                <tr>
+                    <th><span class="text">Name</span></th>
+                    <th><span class="text">Reports_To</span></th>
+                    <th><span class="text">Job_Role</span></th>
+                    <th><span class="text">Department</span></th>
+                    <th><span class="text">Started</span></th>	
+                    <th><span class="text">Left</span></th>		                            							
+                </tr>
+            </thead>
+            
+            <tbody>	
+                    <% users_data.forEach((user_data) =>  { %>
+
+                        <% if (user_data.FinalDayofEmployment) { %>
+                        <tr class="row_data">
+                            <td>
+                                <a href="/user_data/<%- user_data.ID %>">
+                                    <%- user_data.FirstName %> <%- user_data.LastName %>
+                                </a>                           
+                            </td>
+
+                            <td><%- user_data.ReportsTo %> </td>  
+                            <td><%- user_data.JobRole %> </td> 
+                            <td><%- user_data.Department %> </td>                        
+                            <td><%- user_data.StartDate %> </td> 
+                            <td><%- user_data.FinalDayofEmployment %> </td> 
+
+                            
+                        </tr>
+                        <% } %>
+                    <% }) %>
+
+            </tbody>
+        </table>
+
+
         </div>
 
-    <% }) %>
 
     <% if(users_data.length === 0) { %>
         <div class="panel-body">
@@ -64,7 +160,7 @@
     $(document).ready(function(){
       $("#myInput").on("keyup", function() {
         var value = $(this).val().toLowerCase();
-        $(".panel-body").filter(function() {
+        $(".row_data").filter(function() {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });

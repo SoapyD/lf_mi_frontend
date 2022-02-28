@@ -9,8 +9,8 @@ exports.getRouteInfo = () => {
     let route_info;
 
     route_info = [
-        {type: "agentlinks", sort_field: "dim_agentlink_system_login", model: "DIMENSION_Agentlink", id_column: "dim_agent_link_pk"
-        , form_path: "./forms/agentlinks", form_create_path: "./forms/new_agentlinks",
+        {type: "agentlinks", sort_field: "dim_agentlink_system", model: "DIMENSION_Agent_Link_v2", id_column: "dim_agent_link_pk"
+        , form_path: "./forms/agentlinks",
         description: "Edit the user logins associated with People HR data.",
         // queries: {sql: [
         //     {name: "users", 
@@ -88,15 +88,8 @@ exports.getAll = async(req,res) => {
     try{
         let returned_data = await utils.queries.findData(find_list)
         let data = returned_data[0]
-        data.sort((a, b) => {
-            if ( a['LastName'] < b['LastName'] ){
-                return -1;
-            }
-            if ( a['LastName'] > b['LastName'] ){
-                return 1;
-            }
-            return 0;
-        })
+
+        data = utils.functions.sortDynamic(data,'LastName',is_number=false)
 
 
         let view = "user_data/index"
@@ -341,7 +334,7 @@ exports.getEdit = async(req,res) => {
         // let query = type_info.queries[0]
         // queried_data[query.name] = await utils.queries.runDBQueries(type_info.queries)
 
-        res.render(view, {title:type_info.type, route_info:type_info, user_data:user[0], data:user[0][item], queries: queried_data});
+        res.render(view, {title:type_info.type, stylesheet: view, route_info:type_info, user_data:user[0], data:user[0][item], queries: queried_data});
     }
     catch(err){
         console.log(err)

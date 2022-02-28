@@ -1,4 +1,8 @@
 
+	<button class="btn btn-primary add-section right-button" type="button">
+		Manually Add Link
+	</button>
+
 	<form action="/user_data/<%= user_data.ID %>/logins/multiple/?_method=PUT" method="POST"
         onsubmit="return confirm('Are you sure you want to save changes for this item?');">
 		
@@ -6,20 +10,22 @@
 		<div class="row">
 			
 			<div class="col-md-12 top-padding">
-				
+
 				<table id="ownerteam-form" class="center">
 					
 					<colgroup>
 						<col span="1" style="width: 35%;">
-						<col span="1" style="width: 30%;">
-                        <col span="1" style="width: 35%;">
+						<col span="1" style="width: 25%;">
+						<col span="1" style="width: 35%;">
+						<col span="1" style="width: 5%;">
 					</colgroup>
 					
 					<thead>
 						<tr>
 							<th><span class="text">Ringcental ID</span></th>
 							<th><span class="text">System</span></th>
-                            <th><span class="text">Name</span></th>							
+							<th><span class="text">Name</span></th>	
+							<th><span class="text"></span></th>							
 						</tr>
 					</thead>
 
@@ -29,9 +35,19 @@
 							<tr>
 								<input type="hidden" name="params[<%= id %>][dim_User_pk]" value="<%= link.dim_User_pk %>">
 								
-								<td><%= link.dim_agentlink_ringcentral_login %></td>
-                                <td><%= link.dim_agentlink_system %></td>
-								<td><%= link.dim_agentlink_system_login %></td>                                
+
+								
+
+								<td><input class="input-full-width" type="text" id="name" name="name" required value="<%= link.dim_agentlink_ringcentral_login %>"></td>
+                                <td><%= link.dim_agentlink_system %></td>    
+								
+								<td><input class="input-full-width" type="text" id="name" name="name" required value="<%= link.dim_agentlink_system_login %>"></td>
+								<td>
+									<button class="btn btn-primary add-section" type="button">
+										Delete
+									</button>									
+
+								</td>                                
 
 							</tr>
 							
@@ -40,6 +56,41 @@
 				</table>
 			</div>
 		</div>
-						        
+
+		<button class="btn btn-primary right-button" name="action" type="submit">
+			Save
+		</button>			
 
 	</form>	
+
+	<script>
+		// ADD THE "ADD SECTION" FUNCTION TO ANYTHING WITH THE ADD-SECTION CLASS
+		$(".add-section").click(add_row);	
+	
+
+		function add_row(){
+			let parent = $(this).parent();
+
+			// parent.remove()
+			// updateIndex()
+
+			let markup = `        
+
+			<tr>
+				
+				<td>TEST</td>
+				<td>TEST</td>
+				<td>TEST</td>                                
+				<td>
+					<button class="btn btn-primary add-section" type="button">
+						Delete
+					</button>									
+
+				</td>                                
+
+			</tr>
+			`
+
+			parent.find('tbody').append(markup)
+		}		
+	</script>

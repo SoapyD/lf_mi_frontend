@@ -15,7 +15,10 @@ const DETAIL_PeopleHR_Employee = utils.database.sequelize.define('DETAIL_peopleh
 	Location: Sequelize.STRING,
 	ReportsTo: Sequelize.STRING,
 	Department: Sequelize.STRING,
-	JobRole: Sequelize.STRING,
+    JobRole: Sequelize.STRING,
+    
+    StartDate: Sequelize.DATE,
+    FinalDayofEmployment: Sequelize.DATE,
 }, {
     timestamps: false,    
     freezeTableName: true, //PREVENTS SEQUELIZE ADDING AN 'S' ONTO TABLE NAMES
