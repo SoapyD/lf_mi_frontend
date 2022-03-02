@@ -46,6 +46,51 @@
                     </div>        
                 </div>  
 
+                <!-- <div class="col-md-2">
+                    <div class="form-group">    
+                        <p>Variable Billing:</p>
+                        <select class="form-control" name="[params][<%= id %>][dim_orgunit_contract_variable_billing_flag]">
+                            <option value="">N</option>
+                            <option value="1"
+                            <% if(contract.dim_orgunit_contract_variable_billing_flag === 1) { %>
+                                SELECTED
+                            <% } %>
+                            >Y</option>	
+    
+                        </select>								
+                    </div>        
+                </div>  -->
+
+                <div class="col-sm-2">
+                    <div class="form-group">  
+                        <p>Variable Billing:</p>
+                             
+                        
+                        <div class="form-check test">
+                            <input class="form-check-input" type="radio" name="[params][<%= id %>][dim_orgunit_contract_variable_billing_flag]" id="analysis_on_`+<%= id %>+`"" value="1"
+                            <% if(contract.dim_orgunit_contract_variable_billing_flag === 1) { %>
+                                checked
+                            <% } %>                            
+                            >
+                            <label class="form-check-label" for="analysis_on_`+<%= id %>+`">
+                                Yes
+                            </label>
+
+                            <input class="form-check-input" type="radio" name="[params][<%= id %>][dim_orgunit_contract_variable_billing_flag]" id="analysis_off_`+<%= id %>+`" value=""
+                            <% if(!contract.dim_orgunit_contract_variable_billing_flag) { %>
+                                checked
+                            <% } %>                             
+                            >
+                            <label class="form-check-label" for="analysis_off_`+<%= id %>+`">
+                                No
+                            </label>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+
             </div>
 
 
@@ -194,7 +239,7 @@
                         <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_orgunit_contract_renewal_term]" value="<%=contract.dim_orgunit_contract_renewal_term%>"></td>
                         </select>                                
                     </div>        
-                </div>  
+                </div>   
 
             </div>            
 

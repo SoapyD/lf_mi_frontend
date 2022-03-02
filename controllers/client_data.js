@@ -51,6 +51,7 @@ exports.getRouteInfo = () => {
         },         
         {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts", form_create_path: "./forms/new_contracts",
         description: "Edit the contract data associated with the orgunit. This data is needed for finance reporting.",
+        stylesheet: "contracts"
         },        
         {type: "ownerteams", sort_field: "dim_Ownerteam_Ownerteam", model: "Dimension_Ownerteam", id_column: "dim_Ownerteam_pk", form_path: "./forms/ownerteams",
         description: "Edit the resolver type of ownerteams associated with this orgunit. This is needed to help attribute tickets to customer, third party or Littlefish resolver teams.",
@@ -366,7 +367,12 @@ exports.getEdit = async(req,res) => {
         // let query = type_info.queries[0]
         // queried_data[query.name] = await utils.queries.runDBQueries(type_info.queries)
 
-        res.render(view, {title:type_info.type, route_info:type_info, orgunit:orgunit[0], data:orgunit[0][item], queries: queried_data});
+        let context = {title:type_info.type, route_info:type_info, orgunit:orgunit[0], data:orgunit[0][item], queries: queried_data}
+        if(type_info.stylesheet){
+            context.stylesheet = 'client_data/'+type_info.stylesheet;
+        }
+
+        res.render(view, context);
     }
     catch(err){
         console.log(err)
