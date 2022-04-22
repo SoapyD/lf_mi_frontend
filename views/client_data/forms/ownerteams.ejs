@@ -49,8 +49,8 @@
                                 </select>
                                 </td>
 
-                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_ownerteam_lf_resolver]" readonly="readonly" value="<%ownerteam.dim_ownerteam_lf_resolver%>"></td>
-                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_ownerteam_finance_id]" readonly="readonly" value="<%ownerteam.dim_ownerteam_finance_id%>"></td>
+                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_Ownerteam_lf_resolver]" readonly="readonly" value="<%ownerteam.dim_ownerteam_lf_resolver%>"></td>
+                                <td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_Ownerteam_finance_id]" readonly="readonly" value="<%ownerteam.dim_ownerteam_finance_id%>"></td>
 							</tr>
 							
 						<% }) %>					
@@ -88,8 +88,8 @@
 			let record = data[0].recordset.find(r => r.dim_ownerteam_lf_resolver_type === value)
 			
 			if(record){
-				$("form").find('[name="[params]['+id+'][dim_ownerteam_lf_resolver]"]').val(record.dim_ownerteam_lf_resolver_lf_resolver)
-				$("form").find('[name="[params]['+id+'][dim_ownerteam_finance_id]"]').val(record.dim_ownerteam_lf_resolver_finance_code)
+				$("form").find('[name="[params]['+id+'][dim_Ownerteam_lf_resolver]"]').val(record.dim_ownerteam_lf_resolver_lf_resolver)
+				$("form").find('[name="[params]['+id+'][dim_Ownerteam_finance_id]"]').val(record.dim_ownerteam_lf_resolver_finance_code)
 			}
 		}
 
