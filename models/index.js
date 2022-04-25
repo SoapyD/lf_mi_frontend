@@ -75,7 +75,7 @@ models.Parameter.belongsToMany(models.SubSection, {
 
 models.Subscription.belongsTo(models.Report, {foreignKey: 'reportId'});
 models.Subscription.belongsTo(models.Frequency, {as: 'frequency', foreignKey: "frequencyId"});
-
+models.Subscription.hasMany(models.SubscriptionActivity, {as: 'subscriptionactivities', foreignKey: "subscriptionId"});
 
 models.SubscriptionActivity.belongsTo(models.Subscription, {foreignKey: 'subscriptionId'});
 

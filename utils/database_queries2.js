@@ -37,7 +37,13 @@ exports.searchType = {
                     {
                         model: models.Frequency, 
                         as: "frequency"
-                    }
+                    },
+                    {
+                        model: models.SubscriptionActivity, 
+                        as: "subscriptionactivities",
+                        limit: 1,
+                        order: [["createdAt", "DESC"]]
+                    }                    
                 ]
             }, 
         ]        

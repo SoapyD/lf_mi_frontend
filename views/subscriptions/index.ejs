@@ -65,10 +65,12 @@
 								<col span="1" style="width: 5%;">
 								<col span="1" style="width: 5%;">
 								<col span="1" style="width: 5%;">
-								<col span="1" style="width: 50%;">
+								<col span="1" style="width: 15%;">
 								<col span="1" style="width: 10%;">
 								<col span="1" style="width: 10%;">
-								<col span="1" style="width: 10%;">						
+								<col span="1" style="width: 10%;">
+								<col span="1" style="width: 10%;">
+								<col span="1" style="width: 25%;">						
 
 							</colgroup>
 							
@@ -80,7 +82,9 @@
 									<th><span class="text">Name</span></th>
 									<th><span class="text">Frequency</span></th>
 									<th><span class="text">Start_Date</span></th>	
-									<th><span class="text"  style="width: 100%;text-align: center">Time</span></th>									
+									<th><span class="text"  style="width: 100%;text-align: center">Time</span></th>
+									<th><span class="text">Last_Run</span></th>
+									<th><span class="text">Run_Status</span></th>										
 								</tr>
 							</thead>
 
@@ -111,7 +115,30 @@
 										</td>	
 										
 										<td class="center-text"><%= subscription.start_date %></td>	
-										<td class="center-text"><%= subscription.time %></td>												                                		
+										<td class="center-text"><%= subscription.time %></td>
+										
+										<td class="center-text">
+											<% if(subscription.subscriptionactivities.length > 0) { %>
+												<%= subscription.subscriptionactivities[0].createdAt.toGMTString() %>
+											<% } %>	
+										</td>
+										<td class="center-text">
+											<% if(subscription.subscriptionactivities.length > 0) { %>
+												<% let activity = subscription.subscriptionactivities[0];%>
+												
+												<%= activity.files_current %>/<%= activity.files_expected %> subsections ran. <%= activity.errors %> errors
+												<br>
+												<%= activity.files_merged %>/<%= activity.files_expected %> files merged
+												<br>
+
+												<% if(activity.merge_complete === -1) { %>Merge Failed <% } %>
+												<% if(activity.email_sent === 1) { %>Email Sent <% } %>												
+
+											<% } %>												
+										</td>
+
+
+
 									</tr>
 									
 								<% }) %>					
