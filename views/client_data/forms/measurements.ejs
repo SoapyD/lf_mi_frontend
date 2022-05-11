@@ -89,7 +89,20 @@
 										<% if(measurement.dim_measurement_org_measurements_type === 'INFO') { %>
 											SELECTED
 										<% } %>
-										>INFO</option>										
+										>INFO</option>		
+										
+										<option value="Customer and Third Party"
+										<% if(measurement.dim_measurement_org_measurements_type === 'Customer and Third Party') { %>
+											SELECTED
+										<% } %>
+										>Customer and Third Party</option>	
+
+										<option value="All Resolvers"
+										<% if(measurement.dim_measurement_org_measurements_type === 'All Resolvers') { %>
+											SELECTED
+										<% } %>			
+										>All Resolvers</option>										
+
 									</select>								
 								</td>
 								
