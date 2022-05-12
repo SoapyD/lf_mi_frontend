@@ -36,7 +36,7 @@
 
         <div class="panel-body">
             <a href="/client_data/<%= orgunit.dim_orgunit_pk %>/<%- route_info[route_key].type.toLowerCase() %>/edit">
-                <h3><%- route_info[route_key].type %>:</h3>
+                <h3><%- route_info[route_key].type.replace(/^\w/, (c) => c.toUpperCase()); %>:</h3>
                 <p><%- route_info[route_key].description %></p>
             </a>
         </div>

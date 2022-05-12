@@ -7,11 +7,11 @@
     <div class="container">
         
         <h1>
-            Create New <%- route_info.type %>
+            Create New <%- route_info.type.replace(/^\w/, (c) => c.toUpperCase()); %>
         </h1>
 
         <p>
-            Create <%- route_info.type %> for <%= orgunit.dim_orgunit_orgunit %>
+            Create <%- route_info.type.replace(/^\w/, (c) => c.toUpperCase()); %> for <%= orgunit.dim_orgunit_orgunit %>
         </p>
 
     </div>

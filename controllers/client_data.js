@@ -43,10 +43,21 @@ exports.getRouteInfo = () => {
             `}            
         ]}
         },
-        {type: "measurements", sort_field: "", model: "DIMENSION_Measurement_Org_Measurements", id_column: "dim_measurement_org_measurements_pk", form_path: "./forms/measurements",
+        {type: "measurements", sort_field: "", model: "DIMENSION_Measurement_Org_Measurements", id_column: "dim_measurement_org_measurements_pk", form_path: "./forms/measurements", form_create_path: "./forms/new_measurements",
         description: "View  the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
         queries: {sql: [
-            {name: "measurement_definitions", query: "SELECT * FROM [DIMENSION_Measurement_Definitions]"}
+            {name: "measurement_definitions", 
+            query: 
+            `
+            SELECT 
+            dim_measurement_definitions_pk
+            ,dim_measurement_definitions_name
+            ,t.dim_measurement_type_cleaned
+            FROM 
+            [DIMENSION_Measurement_Definitions] i
+            LEFT JOIN DIMENSION_Measurement_Type t ON (t.dim_measurement_type_pk = i.dim_measurement_definitions_measurement_type_fk)
+            ORDER BY t.dim_measurement_type_cleaned, dim_measurement_definitions_name ASC          
+            `}
         ]} 
         },         
         {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts", form_create_path: "./forms/new_contracts",
@@ -310,28 +321,38 @@ exports.getEdit = async(req,res) => {
     let item = req.params.item;
     let route_info = exports.getRouteInfo();
 
-    let find_list = []
-    find_list.push(
-    {
-        model: "Dimension_Orgunit",
-        search_type: "findOne",
-        params: [{
-            where: {
-                dim_orgunit_pk: id,
-            },
-            include: utils.queries.searchType['OrgUnit'].include			
-        }]
-    }) 
-
     try{
+
+        let find_list = []
+        find_list.push(
+        {
+            model: "Dimension_Orgunit",
+            search_type: "findOne",
+            params: [{
+                where: {
+                    dim_orgunit_pk: id
+                },
+                include: utils.queries.searchType['OrgUnit'].include			
+            }]
+        }) 
+    
+        // if(type_info.filters){
+        //     type_info.filters.forEach((filter)=> {
+        //         let key = Object.keys(filter)[0];
+        //         find_list[0].params[0].where[key] = filter[key];
+        //     })
+        // }           
+
         let orgunit = await utils.queries.findData(find_list)
         let view = "client_data/edit"
+
         let type_info;
         route_info.forEach((route) => {
             if(route.type === item){
                 type_info = route;
             }
-        })
+        })     
+
 
         //IF THERE'S ORGUNIT SUB DATA, FIND IT AND SORT IT IF A SORT FIELD KEY IS PROVIDED
         let data = orgunit[0][item];

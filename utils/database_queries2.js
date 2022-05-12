@@ -73,6 +73,7 @@ exports.searchType = {
             {
                 model: models.DIMENSION_Measurement_Org_Measurements, 
                 as: "measurements",
+
                 include: [
                     {
                         model: models.DIMENSION_Measurement_Definitions, 
@@ -91,6 +92,15 @@ exports.searchType = {
         ]  
     }
 }
+
+
+//USE THE BELOW IF YOU WANT TO FILTER ANY INCLUDES, NEED TO SAY "REQUIRED = FALSE" TO MAKE IT A LEFT OUTER JOIN
+// where: {
+//     dim_measurement_org_measurements_active: 1
+// },
+// required: false,
+
+
 
 //  #####  ######  #######    #    ####### #######       ######  #######  #####  ####### ######  ######  
 // #     # #     # #         # #      #    #             #     # #       #     # #     # #     # #     # 

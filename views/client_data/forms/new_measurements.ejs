@@ -1,0 +1,182 @@
+<form action="/client_data/<%= orgunit.dim_orgunit_pk %>/measurements" method="POST"
+    onsubmit="return confirm('Are you sure you want to create this item?');">
+    
+    <input type="hidden" name="params[dim_orgunit_fk]" value="<%= orgunit.dim_orgunit_pk %>">
+    <input type="hidden" name="params[dim_measurement_org_measurements_orgunit]" value="<%= orgunit.dim_orgunit_orgunit %>">    
+    <input type="hidden" name="params[dim_measurement_org_measurements_active]" value=1>  
+    <input type="hidden" name="params[dim_measurement_definitions_fk]" value=0>    
+        
+    <div class="row">
+
+        <h2 class="rounded_borders">Select Measurement</h2>
+
+        <div class="col-md-6">
+            <div class="form-group">                        
+                <p>Measurement:</p>
+                <td class="center-text">
+
+                    <select class="form-control" name="[params][dim_measurement_org_measurements_name]" required>
+                        <option value=""></option>
+                        <% queries.sql.definitions.forEach((query, i) => { %>
+                            <% if(query.name === "measurement_definitions") { %>
+                                <% queries.sql.output[i].recordset.forEach((item, i) => {%>
+                                    <option value="<%= item.dim_measurement_definitions_name %>"
+                                    >
+                                    <%= item.dim_measurement_definitions_name %></option>
+                                <% }) %>
+                            <% } %>
+                        <% }) %>
+
+                    </select>                    
+
+                </td>
+
+            </div>        
+        </div>       
+
+        <div class="col-md-6">
+            <div class="form-group">                        
+                <p>Rename:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_measurement_org_measurements_rename]"></td>                             
+            </div>        
+        </div>     
+
+        <div class="col-md-12" id='manual-message'>
+            <div class="form-group">                        
+                <p>Please Note: This Measurement isn't automatically calculated and must be input via the SSRS manual input report</p>
+            </div>        
+        </div>               
+
+        <div class="col-md-12" id="target-notes">
+            <div class="form-group">                        
+                <p></p>                            
+            </div>        
+        </div>   
+
+    </div>
+
+    <div class="row">
+
+        <h2 class="rounded_borders">Set Core Data</h2>
+
+        <div class="col-md-3" id="auto-target">
+            <div class="form-group">                        
+                <p>Target:</p>
+                <td class="center-text"><input class="form-control" type="number" name="[params][dim_measurement_org_measurements_target]" step=".01"></td>                               
+            </div>        
+        </div>           
+
+        <div class="col-md-3" id="manual-target">
+            <div class="form-group">                        
+                <p>Target String:</p>
+                <td class="center-text"><input class="form-control" type="text" name="[params][dim_measurement_org_measurements_target_string]"></td>                             
+            </div>        
+        </div>        
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="form-group">                        
+                <p>Is Service Credit:</p>
+                <select class="form-control" name="[params][dim_measurement_org_measurements_isservicecredit]">
+                    <option value="">N</option>
+                    <option value="1" >Y</option>	
+                </select>	                               
+            </div>        
+        </div>           
+
+        <div class="col-md-3">
+            <div class="form-group">                        
+                <p>Measurement Type:</p>            
+                <td class="center-text">
+                    <select class="form-control" name="[params][dim_measurement_org_measurements_type]" required>
+                        <option value=""></option>
+                        <option value="SLA">SLA</option>
+                        <option value="KPI">KPI</option>
+                        <option value="INFO">INFO</option>		
+                        <option value="Customer and Third Party">Customer and Third Party</option>	
+                        <option value="All Resolvers">All Resolvers</option>										
+                    </select>								
+                </td>     
+            </div>                        
+        </div>  
+
+    </div>        
+
+
+
+    <button class="btn btn-primary right-button" name="action" type="submit">
+        Save
+    </button>							        
+
+</form>	
+
+
+
+
+<script>
+
+    $("form").find('#auto-target').hide()
+    $("form").find('#manual-target').hide()
+    $("form").find('#manual-message').hide()
+    $("form").find('#target-notes').hide()
+
+    let data = []
+    <% queries.sql.output.forEach((output, i) => { %>
+        data.push(<%- JSON.stringify(output)  %>)
+    <% }) %>
+
+    $("form").find('[name*="[dim_measurement_org_measurements_name]"]').change((element) => {
+        let name = element.target.name;
+        let value = element.target.value;
+        // console.log(name, value)
+        update_elements(name, value)
+    })		
+    
+    update_elements = (name, value) => {
+        // let select_name = "[dim_Ownerteam_cleaned]"
+        // let mid_string = name.substring(0,name.length - select_name.length)
+        // let param_string = "[params]"
+        // let id = mid_string.replace(/\D/g, "")
+
+        let record = data[0].recordset.find(r => r.dim_measurement_definitions_name === value)
+        // console.log(record)
+        
+        if(record){
+            $("form").find('[name*="[dim_measurement_definitions_fk]"]').val(record.dim_measurement_definitions_pk)
+
+            $("form").find('#target-notes').show()
+
+            if(record.dim_measurement_type_cleaned === 'Manual'){
+                //HIDE THE AUTO-TARGET FIELD
+                $("form").find('#auto-target').hide()
+                $("form").find('#auto-target').prop('required',false);
+                //UNHIDE THE MANUAL-TARGET FIELD
+                $("form").find('#manual-target').show()
+                $("form").find('#manual-target').prop('required',true);
+                $("form").find('#manual-message').show()       
+                
+                $("form").find('#target-notes').text('Manual Measurement Targets can be any string value (e.g. "1", "100%", "no failures" etc). The pass or fail is this measurement is set in SSRS, independent from what\'s entered here')
+            }else{
+                //HIDE THE MANUAL-TARGET FIELD
+                $("form").find('#manual-target').hide()
+                $("form").find('#manual-target').prop('required',false);
+                $("form").find('#manual-message').hide()
+                //UNHIDE THE AUTO-TARGET FIELD
+                $("form").find('#auto-target').show()
+                $("form").find('#auto-target').prop('required',true);                  
+                
+                $("form").find('#target-notes').text('Measurement Targets must either be a whole number (e.g. 1, 10, 100 etc) or as a decimal value if it\s a percentage (e.g. 0.5 = 50%)')                
+            }
+        }
+    }
+
+    // let elements = $("form").find('[name*="[dim_Ownerteam_cleaned]"]')
+
+    // elements.each((index,element) => {
+    //     update_elements(element.name, element.value)
+    // })
+
+</script>

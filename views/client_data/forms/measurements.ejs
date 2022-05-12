@@ -2,6 +2,8 @@
 	<form action="/client_data/<%= orgunit.dim_orgunit_pk %>/measurements/multiple/?_method=PUT" method="POST"
         onsubmit="return confirm('Are you sure you want to save changes for this item?');">
 		
+		<h2 class="rounded_borders">Active Measurements</h2>
+
 		<div class="row">
 			
 			<div class="col-md-12 top-padding">
@@ -33,7 +35,7 @@
 					</thead>
 
 					<tbody>	
-						<% orgunit.measurements.forEach(function (measurement, id){ %>
+						<% orgunit.measurements.forEach(function (measurement, id){  if(measurement.dim_measurement_org_measurements_active === 1) { %>
 							
 							<tr>
                                 <input type="hidden" name="params[<%= id %>][dim_measurement_org_measurements_pk]" value="<%= measurement.dim_measurement_org_measurements_pk %>">
@@ -120,12 +122,146 @@
 
 							</tr>
 							
-						<% }) %>					
+						<% } }) %>					
 					</tbody>
 				</table>
 			</div>
 		</div>						        
 
+
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+			Show Inactive Measurements
+		  </button>		
+
+		<div class="row collapse" id="collapseExample">
+			<h2 class="rounded_borders">Inactive Measurements</h2>
+	
+			<div class="row">
+				
+				<div class="col-md-12 top-padding">
+					
+					<table id="measurement-form" class="center">
+						
+						<colgroup>
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 10%;">
+							<col span="1" style="width: 10%;">
+							<col span="1" style="width: 10%;">
+							<col span="1" style="width: 10%;">
+							<col span="1" style="width: 10%;"> 
+							<col span="1" style="width: 10%;">                       
+						</colgroup>
+						
+						<thead>
+							<tr>
+								<th><span class="text">Measurement</span></th>
+								<th><span class="text">Print Name</span></th>
+								<th><span class="text">Type</span></th>
+								<th><span class="text">Target</span></th>
+								<th><span class="text">Target_String</span></th>	
+								<th><span class="text">Service Credit</span></th>
+								<th><span class="text">Type</span></th>	
+								<th><span class="text">Active</span></th>	                            							
+							</tr>
+						</thead>
+	
+						<tbody>	
+							<% orgunit.measurements.forEach(function (measurement, id){  if(measurement.dim_measurement_org_measurements_active != 1) { %>
+								
+								<tr>
+									<input type="hidden" name="params[<%= id %>][dim_measurement_org_measurements_pk]" value="<%= measurement.dim_measurement_org_measurements_pk %>">
+									
+									<td><%= measurement.dim_measurement_org_measurements_name %></td>
+	
+									<td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_measurement_org_measurements_rename]" value="<%= measurement.dim_measurement_org_measurements_rename%>"></td>
+	
+									<td><%= measurement.definition.dim_measurement_definitions_type %></td>
+	
+									<!-- ADD "IF IS MANUAL, THEN MAKE READ ONLY" -->
+									<td class="center-text"><input class="form-control" type="number" name="[params][<%= id %>][dim_measurement_org_measurements_target]" value="<%= measurement.dim_measurement_org_measurements_target%>"
+										<% if(measurement.definition.dim_measurement_definitions_type === 'Manual') { %>
+											readonly="readonly"
+										<% } %>
+									></td>
+									
+									<!-- ADD "IF IS NOT MANUAL, THEN MAKE READ ONLY" -->
+									<td class="center-text"><input class="form-control" type="text" name="[params][<%= id %>][dim_measurement_org_measurements_target_string]" value="<%= measurement.dim_measurement_org_measurements_target_string%>"
+										<% if(measurement.definition.dim_measurement_definitions_type !== 'Manual') { %>
+											readonly="readonly"
+										<% } %>								
+									></td>
+									
+									<td class="center-text">
+	
+										<select class="form-control" name="[params][<%= id %>][dim_measurement_org_measurements_isservicecredit]">
+											<option value=""></option>
+											<option value="1"
+											<% if(measurement.dim_measurement_org_measurements_isservicecredit === 1) { %>
+												SELECTED
+											<% } %>
+											>Y</option>					
+										</select>								
+									</td>
+	
+									<td class="center-text">
+										<select class="form-control" name="[params][<%= id %>][dim_measurement_org_measurements_type]">
+											<option value=""></option>
+											<option value="SLA"
+											<% if(measurement.dim_measurement_org_measurements_type === 'SLA') { %>
+												SELECTED
+											<% } %>
+											>SLA</option>
+											
+											<option value="KPI"
+											<% if(measurement.dim_measurement_org_measurements_type === 'KPI') { %>
+												SELECTED
+											<% } %>
+											>KPI</option>
+											
+											<option value="INFO"
+											<% if(measurement.dim_measurement_org_measurements_type === 'INFO') { %>
+												SELECTED
+											<% } %>
+											>INFO</option>		
+											
+											<option value="Customer and Third Party"
+											<% if(measurement.dim_measurement_org_measurements_type === 'Customer and Third Party') { %>
+												SELECTED
+											<% } %>
+											>Customer and Third Party</option>	
+	
+											<option value="All Resolvers"
+											<% if(measurement.dim_measurement_org_measurements_type === 'All Resolvers') { %>
+												SELECTED
+											<% } %>			
+											>All Resolvers</option>										
+	
+										</select>								
+									</td>
+									
+									<td class="center-text">
+										<select class="form-control" name="[params][<%= id %>][dim_measurement_org_measurements_active]">
+											<option value="">N</option>
+											<option value="1"
+											<% if(measurement.dim_measurement_org_measurements_active === 1) { %>
+												SELECTED
+											<% } %>
+											>Y</option>	
+	
+										</select>								
+									</td>										
+	
+								</tr>
+								
+							<% } }) %>					
+						</tbody>
+					</table>
+				</div>
+			</div>				
+		</div>
+		
+		
 		<button class="btn btn-primary right-button" name="action" type="submit">
 			Save
 		</button>
