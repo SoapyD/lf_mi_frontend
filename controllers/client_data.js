@@ -8,6 +8,8 @@ exports.getRouteInfo = () => {
 
     let route_info;
 
+    //form_create_path: "./forms/new_measurements",
+
     route_info = [
         {type: "orgunit", sort_field: "dim_orgunit_orgunt", model: "Dimension_Orgunit", id_column: "dim_orgunit_pk", form_path: "./forms/orgunit",
         description: "Edit the core meta-data associated with the orgunit.",
@@ -43,7 +45,7 @@ exports.getRouteInfo = () => {
             `}            
         ]}
         },
-        {type: "measurements", sort_field: "", model: "DIMENSION_Measurement_Org_Measurements", id_column: "dim_measurement_org_measurements_pk", form_path: "./forms/measurements", form_create_path: "./forms/new_measurements",
+        {type: "measurements", sort_field: "", model: "DIMENSION_Measurement_Org_Measurements", id_column: "dim_measurement_org_measurements_pk", form_path: "./forms/measurements", 
         description: "View  the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
         queries: {sql: [
             {name: "measurement_definitions", 
