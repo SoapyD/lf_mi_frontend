@@ -68,8 +68,8 @@ exports.create = async() => {
     let creation_list = [];
 
 
-    let subsection_root = '/New Warehouse/04 - Service Report/'
-    let template_root = '/New Warehouse/04 - Service Report/Page Components/'    
+    let subsection_root = '/03 - New Warehouse//04 - Service Report/'
+    let template_root = '/03 - New Warehouse//04 - Service Report/Page Components/'    
 
     creation_list = []
     creation_list.push(
