@@ -45,7 +45,7 @@ exports.getRouteInfo = () => {
             `}            
         ]}
         },
-        {type: "measurements", sort_field: "", model: "DIMENSION_Measurement_Org_Measurements", id_column: "dim_measurement_org_measurements_pk", form_path: "./forms/measurements", 
+        {type: "measurements", sort_field: "", model: "DIMENSION_Measurement_Org_Measurements", id_column: "dim_measurement_org_measurements_pk", form_path: "./forms/measurements", form_create_path: "./forms/new_measurements", 
         description: "View  the measurements like SLAs and KPIs associated with the orgunit. These measurements will appear within Service Reports, the SLA dashboard as well as other areas of the business.",
         queries: {sql: [
             {name: "measurement_definitions", 
@@ -60,7 +60,13 @@ exports.getRouteInfo = () => {
             LEFT JOIN DIMENSION_Measurement_Type t ON (t.dim_measurement_type_pk = i.dim_measurement_definitions_measurement_type_fk)
             ORDER BY t.dim_measurement_type_cleaned, dim_measurement_definitions_name ASC          
             `}
-        ]} 
+        ]},
+        post_queries:{sql: [
+            {
+                name: "refresh fact tables",
+                query: "UPDATE fact_table_processlist SET REFRESH = 'Y' WHERE stored_procedure IN ('fb_measurements','fb_measurements_snapshot')"
+            }   
+        ]},
         },         
         {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts", form_create_path: "./forms/new_contracts",
         description: "Edit the contract data associated with the orgunit. This data is needed for finance reporting.",
@@ -296,6 +302,15 @@ exports.create = async(req,res) => {
     
         let data = await utils.queries.createData2(creation_list)	
     
+
+        //CHECK TO SEE IF THERE'S ANY POST SCRIPTS THAT NEED TO BE RUN
+        if(type_info.post_queries){
+            if(type_info.post_queries.sql){
+
+                let output = await utils.queries.runDBQueries(type_info.post_queries.sql);
+            }
+        }
+
         res.redirect("/client_data/"+id+'/'+type_info.type+'/edit')	
     }
     catch(err){
@@ -535,6 +550,15 @@ exports.updateMultipleChildren = async(req,res) => {
         if(where_set === true){
             let updated = await utils.queries.updateWhere(update_list)
     
+
+            //CHECK TO SEE IF THERE'S ANY POST SCRIPTS THAT NEED TO BE RUN
+            if(type_info.post_queries){
+                if(type_info.post_queries.sql){
+
+                    let output = await utils.queries.runDBQueries(type_info.post_queries.sql);
+                }
+            }
+
             req.flash("success", "Client "+item+" Data Updated"); 
             res.redirect("/client_data/"+id+'/'+item+'/edit')
     
