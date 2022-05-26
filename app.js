@@ -11,7 +11,6 @@ const utils = require("./utils");
 const middleware = require('./middleware');
 middleware.setup.setupApp(app)
 
-
 app.listen(process.env.PORT||80, process.env.IP, function(){	
     console.log("Server has started!")
     
