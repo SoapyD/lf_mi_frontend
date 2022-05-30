@@ -47,7 +47,7 @@
 								<td><%= measurement.definition.dim_measurement_definitions_type %></td>
 
 								<!-- ADD "IF IS MANUAL, THEN MAKE READ ONLY" -->
-								<td class="center-text"><input class="form-control" type="number" name="[params][<%= id %>][dim_measurement_org_measurements_target]" value="<%= measurement.dim_measurement_org_measurements_target%>"
+								<td class="center-text"><input class="form-control" type="number" name="[params][<%= id %>][dim_measurement_org_measurements_target]" value="<%= measurement.dim_measurement_org_measurements_target%>" step=".01"
 									<% if(measurement.definition.dim_measurement_definitions_type === 'Manual') { %>
 										readonly="readonly"
 									<% } %>
