@@ -35,7 +35,7 @@ exports.setupApp = async(app) => {
     // passport.use(new LocalStrategy(models.User.authenticate()));
     // passport.serializeUser(models.User.serializeUser());
     // passport.deserializeUser(models.User.deserializeUser());
-    strategies.local.setup();
+    strategies.saml.setup();
 
     //setup the local variables
     app.use(function(req, res, next){

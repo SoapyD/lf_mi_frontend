@@ -7,7 +7,7 @@ catch(error){
 }
 
 try{
-    exports.local = require("./saml");
+    exports.saml = require("./saml");
 }
 catch(error){
     
