@@ -1,9 +1,8 @@
 const Sequelize = require("sequelize");
+// const utils = require('../utils')
 
-const utils = require('../utils')
 
-
-const QueuedSubsection = utils.database.sequelize.define('NODE_REPORT_queuedsubsection', {
+const QueuedSubsection = databaseHandler.sequelize.define('NODE_REPORT_queuedsubsection', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

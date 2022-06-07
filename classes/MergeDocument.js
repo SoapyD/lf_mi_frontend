@@ -56,15 +56,12 @@ const MergeDocument = class {
 
         //ERROR OUT IF THE MERGE DIDN'T OCCUR
         if (error) {
-            // console.log("AN ERROR OCCURED!");
-            // console.error(error);
 
             //fail over if we hit the retry limit
             if(this.retries >= 3){
                 this.subscriptionactivity.merge_reruns = this.total_reruns;
                 this.subscriptionactivity.merge_complete = -1;
                 this.subscriptionactivity.save();
-                // res.send(error)
     
                 utils.check_output_files.merge_running = false;
                 utils.check_output_files.checkList();

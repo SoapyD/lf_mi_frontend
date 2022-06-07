@@ -131,7 +131,7 @@ exports.getAll = async(req,res) => {
     }
 
     try{
-        let orgunits = await utils.queries.findData(find_list)
+        let orgunits = await databaseHandler.findData(find_list)
         let data = orgunits[0]
         data.sort((a, b) => {
             if ( a['dim_orgunit_orgunit'] < b['dim_orgunit_orgunit'] ){
@@ -178,12 +178,12 @@ exports.getSingle = async(req,res) => {
             where: {
                 dim_orgunit_pk: id,
             },
-            include: utils.queries.searchType['OrgUnit'].include			
+            include: databaseHandler.searchType['OrgUnit'].include			
         }]
     }) 
 
     try{
-        let orgunit = await utils.queries.findData(find_list)
+        let orgunit = await databaseHandler.findData(find_list)
         let data = orgunit[0];
 
 
@@ -222,12 +222,12 @@ exports.getFormCreate = async(req,res) => {
             where: {
                 dim_orgunit_pk: id,
             },
-            include: utils.queries.searchType['OrgUnit'].include			
+            include: databaseHandler.searchType['OrgUnit'].include			
         }]
     }) 
 
     try{
-        let orgunit = await utils.queries.findData(find_list)
+        let orgunit = await databaseHandler.findData(find_list)
 
         let view = "client_data/new"
         let type_info;
@@ -242,7 +242,7 @@ exports.getFormCreate = async(req,res) => {
         if(type_info.queries){
             if(type_info.queries.sql){
 
-                let output = await utils.queries.runDBQueries(type_info.queries.sql);
+                let output = await databaseHandler.runDBQueries(type_info.queries.sql);
 
                 queried_data["sql"] = {
                     definitions: type_info.queries.sql,
@@ -300,14 +300,14 @@ exports.create = async(req,res) => {
             ]
         }) 
     
-        let data = await utils.queries.createData2(creation_list)	
+        let data = await databaseHandler.createData2(creation_list)	
     
 
         //CHECK TO SEE IF THERE'S ANY POST SCRIPTS THAT NEED TO BE RUN
         if(type_info.post_queries){
             if(type_info.post_queries.sql){
 
-                let output = await utils.queries.runDBQueries(type_info.post_queries.sql);
+                let output = await databaseHandler.runDBQueries(type_info.post_queries.sql);
             }
         }
 
@@ -349,7 +349,7 @@ exports.getEdit = async(req,res) => {
                 where: {
                     dim_orgunit_pk: id
                 },
-                include: utils.queries.searchType['OrgUnit'].include			
+                include: databaseHandler.searchType['OrgUnit'].include			
             }]
         }) 
     
@@ -360,7 +360,7 @@ exports.getEdit = async(req,res) => {
         //     })
         // }           
 
-        let orgunit = await utils.queries.findData(find_list)
+        let orgunit = await databaseHandler.findData(find_list)
         let view = "client_data/edit"
 
         let type_info;
@@ -393,7 +393,7 @@ exports.getEdit = async(req,res) => {
         if(type_info.queries){
             if(type_info.queries.sql){
 
-                let output = await utils.queries.runDBQueries(type_info.queries.sql);
+                let output = await databaseHandler.runDBQueries(type_info.queries.sql);
 
                 queried_data["sql"] = {
                     definitions: type_info.queries.sql,
@@ -403,7 +403,7 @@ exports.getEdit = async(req,res) => {
         }
 
         // let query = type_info.queries[0]
-        // queried_data[query.name] = await utils.queries.runDBQueries(type_info.queries)
+        // queried_data[query.name] = await databaseHandler.runDBQueries(type_info.queries)
 
         let context = {title:type_info.type, route_info:type_info, orgunit:orgunit[0], data:orgunit[0][item], queries: queried_data}
         if(type_info.stylesheet){
@@ -456,7 +456,7 @@ exports.updateParent = async(req,res) => {
         })
 
         //GET THE EDITABLE ITEM, INCLUDING ANY JOINS
-        let orgunits = await utils.queries.findData(findlist)
+        let orgunits = await databaseHandler.findData(findlist)
 
 
         let updatelist = []
@@ -467,7 +467,7 @@ exports.updateParent = async(req,res) => {
         })    
 
         //UPDATE THE RECORD
-        let data = await utils.queries.updateData(orgunits[0], updatelist)
+        let data = await databaseHandler.updateData(orgunits[0], updatelist)
         req.flash("success", "Client Data Updated"); 
         res.redirect("/client_data/"+id+'/orgunit/edit')   
     }	
@@ -548,14 +548,14 @@ exports.updateMultipleChildren = async(req,res) => {
         update_list.push(data)
     
         if(where_set === true){
-            let updated = await utils.queries.updateWhere(update_list)
+            let updated = await databaseHandler.updateWhere(update_list)
     
 
             //CHECK TO SEE IF THERE'S ANY POST SCRIPTS THAT NEED TO BE RUN
             if(type_info.post_queries){
                 if(type_info.post_queries.sql){
 
-                    let output = await utils.queries.runDBQueries(type_info.post_queries.sql);
+                    let output = await databaseHandler.runDBQueries(type_info.post_queries.sql);
                 }
             }
 

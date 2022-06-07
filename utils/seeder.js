@@ -1,6 +1,5 @@
 const models = require("../models");
-const database = require('../utils/database')
-const databaseQueriesUtil = require('../utils/database_queries2');
+
 
 
 exports.reset = async() => {
@@ -39,7 +38,7 @@ exports.reset = async() => {
 //         ]
 //     },    
 //     )
-//     databaseQueriesUtil.createData2(creation_list)
+//     databaseHandler.createData2(creation_list)
 //     console.log("TEST COMPLETE")
 
 //     models["SubSection"].create(
@@ -503,7 +502,7 @@ exports.create = async() => {
     },    
     )
 
-    let subsections = await databaseQueriesUtil.createData2(creation_list)
+    let subsections = await databaseHandler.createData2(creation_list)
 
 
 
@@ -989,7 +988,7 @@ exports.create = async() => {
         ]
     }) 
 
-    let parameters = await databaseQueriesUtil.createData2(creation_list)
+    let parameters = await databaseHandler.createData2(creation_list)
 
 
     // creation_list = []
@@ -1011,7 +1010,7 @@ exports.create = async() => {
 
     // })
 
-    // let subsectionparameters = await databaseQueriesUtil.createData2(creation_list)
+    // let subsectionparameters = await databaseHandler.createData2(creation_list)
 
 
 
@@ -1035,7 +1034,7 @@ exports.create = async() => {
     },    
     )
 
-    let reports = await databaseQueriesUtil.createData2(creation_list)
+    let reports = await databaseHandler.createData2(creation_list)
 
     //SERVICE REPORT
     creation_list = []
@@ -1130,7 +1129,7 @@ exports.create = async() => {
         ]
     })
     
-    let sections = await databaseQueriesUtil.createData2(creation_list)
+    let sections = await databaseHandler.createData2(creation_list)
 
     // //FUSION REPORT
     // creation_list = []
@@ -1188,7 +1187,7 @@ exports.create = async() => {
     //     ]
     // })
     
-    // sections = await databaseQueriesUtil.createData2(creation_list)
+    // sections = await databaseHandler.createData2(creation_list)
 
 
 
@@ -1215,7 +1214,7 @@ exports.create = async() => {
     // },    
     // )
 
-    // let sectionsubsections = await databaseQueriesUtil.createData2(creation_list)
+    // let sectionsubsections = await databaseHandler.createData2(creation_list)
 
 
 
@@ -1239,7 +1238,7 @@ exports.create = async() => {
     },    
     )
 
-    let frequencies = await databaseQueriesUtil.createData2(creation_list)
+    let frequencies = await databaseHandler.createData2(creation_list)
 
 
 
@@ -1279,7 +1278,7 @@ exports.create = async() => {
     },    
     )
 
-    let subscriptions = await databaseQueriesUtil.createData2(creation_list)
+    let subscriptions = await databaseHandler.createData2(creation_list)
 
 
     console.log("seeding complete")

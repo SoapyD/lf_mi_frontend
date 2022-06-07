@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
-const utils = require('../utils')
+// const utils = require('../utils')
 
 
 
-const DIMENSION_Measurement_Definitions = utils.database.sequelize.define('DIMENSION_Measurement_Definitions', {
+const DIMENSION_Measurement_Definitions = databaseHandler.sequelize.define('DIMENSION_Measurement_Definitions', {
     dim_measurement_definitions_pk: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

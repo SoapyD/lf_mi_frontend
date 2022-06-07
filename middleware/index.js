@@ -29,5 +29,5 @@
 exports.admin_access = [require("./access").isLoggedIn, require("./access").isAdmin]
 exports.user_access = [require("./access").isLoggedIn]
 
-// exports.access = []
+
 exports.setup = require("./setup")

@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const moment = require('moment');
 // const { subscriptions } = require('../controllers');
-const databaseQueriesUtil = require('../utils/database_queries2');
+
 const ssrsUtil = require('../utils/ssrs3');
 const functionsUtil = require('../utils/functions');
 
@@ -51,11 +51,11 @@ exports.updateScheduler = async() => {
         model: "Report",
         search_type: "findAll",
         params: [{
-            include: databaseQueriesUtil.searchType['Full Report'].include			
+            include: databaseHandler.searchType['Full Report'].include			
         }]        
     }) 
  
-    let reports = await databaseQueriesUtil.findData(find_list)
+    let reports = await databaseHandler.findData(find_list)
 
     
 

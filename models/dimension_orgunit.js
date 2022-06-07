@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
-const utils = require('../utils')
+// const utils = require('../utils')
 
 
 
-const DIMENSION_Orgunit = utils.database.sequelize.define('DIMENSION_orgunit', {
+const DIMENSION_Orgunit = databaseHandler.sequelize.define('DIMENSION_orgunit', {
     dim_orgunit_pk: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

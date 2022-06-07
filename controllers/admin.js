@@ -69,7 +69,7 @@ exports.getItems = async(req,res) => {
             search_type: "findAll"
         }) 
 
-        let data = await utils.queries.findData(find_list)
+        let data = await databaseHandler.findData(find_list)
 
         if(data[0]){
             data[0] = data[0].sort(utils.functions.compareOrder)
@@ -104,7 +104,7 @@ exports.getFormCreateItem = async(req,res) => { //middleware.isLoggedIn,
     try{
         if (type_info.join_from)
         {
-            let data = await utils.queries.findData(find_list)
+            let data = await databaseHandler.findData(find_list)
             res.render("admin/new", {type_info: type_info, join_data:data});
         }
         else{
@@ -139,7 +139,7 @@ exports.createItem = async(req,res) => {
     }) 
 
     try{
-        let data = await utils.queries.createData2(creation_list)
+        let data = await databaseHandler.createData2(creation_list)
        
         //IF RECORD EXISTS
         //DOESN'T WORK BECAUSE THE CREATION PROCESS CHECKS IF THE FIELDS PASSED MATCH, NOT JUST THE NAME
@@ -173,7 +173,7 @@ exports.createItem = async(req,res) => {
     
                     }
                 }        
-                let join_data = await utils.queries.createData2(join_creation_list)
+                let join_data = await databaseHandler.createData2(join_creation_list)
                 res.redirect("/admin/"+type);
                 //IF THERE ARE ANY JOINS, TURN THEM INTO SEARCH TERMS
             }
@@ -226,7 +226,7 @@ exports.getEditItems = async(req,res) => {
     
         if(type_info.join_from){
             type_info.join_from.forEach((join_type) => {
-                search_criteria['params'][0]["include"] = utils.queries.searchType["SubSection"].include
+                search_criteria['params'][0]["include"] = databaseHandler.searchType["SubSection"].include
             })
         
             
@@ -234,7 +234,7 @@ exports.getEditItems = async(req,res) => {
         findlist.push(search_criteria) 
     
         //GET THE EDITABLE ITEM, INCLUDING ANY JOINS
-        let data = await utils.queries.findData(findlist)
+        let data = await databaseHandler.findData(findlist)
     
     
         //GET ALL JOINABLE DATA
@@ -248,7 +248,7 @@ exports.getEditItems = async(req,res) => {
                 search_type: "findAll"
             }) 
     
-            let join_data = await utils.queries.findData(findlist)
+            let join_data = await databaseHandler.findData(findlist)
     
             res.render("admin/edit", {type_info: type_info, data: data[0], join_data: join_data})
         }
@@ -290,7 +290,7 @@ exports.updateItem = async(req,res) => { //, middleware.isCampGroundOwnership
 
     try {
         //FIND THE RECORD WE'RE UPDATING
-        let data = await utils.queries.findData(findlist)
+        let data = await databaseHandler.findData(findlist)
 
         let updatelist = []
         updatelist.push({
@@ -300,7 +300,7 @@ exports.updateItem = async(req,res) => { //, middleware.isCampGroundOwnership
         })    
 
         //UPDATE THE RECORD
-        data = await utils.queries.updateData(data[0], updatelist)
+        data = await databaseHandler.updateData(data[0], updatelist)
 
 
         //LOOP THROUGH AND SAVE THE JOINS IN THE BODY
@@ -333,7 +333,7 @@ exports.updateItem = async(req,res) => { //, middleware.isCampGroundOwnership
                     join_creation_list.push(rules) 
                 }
             }        
-            created_join_data = await utils.queries.createData2(join_creation_list)
+            created_join_data = await databaseHandler.createData2(join_creation_list)
         }
 
 
@@ -354,7 +354,7 @@ exports.updateItem = async(req,res) => { //, middleware.isCampGroundOwnership
             findlist.push(rules) 
     
 
-            let join_data = await utils.queries.findData(findlist)
+            let join_data = await databaseHandler.findData(findlist)
         
             if(join_data){
 
@@ -382,7 +382,7 @@ exports.updateItem = async(req,res) => { //, middleware.isCampGroundOwnership
                     }
                 })
                 
-                utils.queries.destroyData(destroylist)
+                databaseHandler.destroyData(destroylist)
             }
          
 
@@ -430,7 +430,7 @@ exports.deleteItem = async(req,res) => { //, middleware.isCampGroundOwnership
 
     try {
         //FIND THE RECORD WE'RE UPDATING
-        let data = await utils.queries.findData(findlist)
+        let data = await databaseHandler.findData(findlist)
 
         //DELETE THE ITEM
         let destroylist = []
@@ -445,7 +445,7 @@ exports.deleteItem = async(req,res) => { //, middleware.isCampGroundOwnership
             ]
         })
         //THIS DELETION WILL ALSO DELETE ANY JOINED TABLE ROWS USING THIS ITEM
-        let deletions = await utils.queries.destroyData(destroylist)
+        let deletions = await databaseHandler.destroyData(destroylist)
 
         res.redirect("/admin/" + type)
 

@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
-const utils = require('../utils')
+// const utils = require('../utils')
 
 
 
-const DIMENSION_Ownerteam = utils.database.sequelize.define('DIMENSION_ownerteam', {
+const DIMENSION_Ownerteam = databaseHandler.sequelize.define('DIMENSION_ownerteam', {
     dim_Ownerteam_pk: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

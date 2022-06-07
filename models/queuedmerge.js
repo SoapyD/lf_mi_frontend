@@ -1,9 +1,8 @@
 const Sequelize = require("sequelize");
+// const utils = require('../utils')
 
-const utils = require('../utils')
 
-
-const QueuedMerge = utils.database.sequelize.define('NODE_REPORT_queuedmerge', {
+const QueuedMerge = databaseHandler.sequelize.define('NODE_REPORT_queuedmerge', {
    id: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

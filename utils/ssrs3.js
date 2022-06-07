@@ -1,8 +1,8 @@
 // const emailUtil = require('../util/email');
 // const mergeDocumentUtil = require('../utils/merge_document');
 // const checkOutputsUtil = require('../utils/check_output_files');
-const databaseQueriesUtil = require('../utils/database_queries2');
-const functionsUtil = require('../utils/functions');
+
+// const functionsUtil = require('../utils/functions');
 
 var fs = require('fs');
 var path = require('path');
@@ -92,7 +92,7 @@ exports.setup = async(subscription_number, report, subscription) => {
                 ]
             }) 
     
-            let subscriptionactivities = await databaseQueriesUtil.createData2(creation_list)	
+            let subscriptionactivities = await databaseHandler.createData2(creation_list)	
 
 
 
@@ -361,7 +361,7 @@ exports.runProcess = async(subscriptionactivity) => {
         })         
     }
 
-    let queuedsubsections = await databaseQueriesUtil.createData2(creation_list)    
+    let queuedsubsections = await databaseHandler.createData2(creation_list)    
     exports.checkList();
 }
 
@@ -393,7 +393,7 @@ exports.checkList = async() =>{
 
         try{
             exports.report_running = true;
-            let queuedsubsections = await databaseQueriesUtil.findData(find_list)
+            let queuedsubsections = await databaseHandler.findData(find_list)
             let report_list = queuedsubsections[0]        
 
             if(report_list.length > 0){
@@ -417,7 +417,7 @@ exports.checkList = async() =>{
                     ]
                 })
 
-                deletions = await databaseQueriesUtil.destroyData(destroylist)
+                deletions = await databaseHandler.destroyData(destroylist)
             }
         }
         catch(err){
@@ -445,7 +445,7 @@ exports.runReport = async(options) => {
         }]
     }) 
     //GET THE SUBSECTION DATA
-    let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+    let subscriptionactivities = await databaseHandler.findData(find_list)
     let subscriptionactivity = subscriptionactivities[0];
     let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
 

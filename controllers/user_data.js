@@ -86,7 +86,7 @@ exports.getAll = async(req,res) => {
     }
 
     try{
-        let returned_data = await utils.queries.findData(find_list)
+        let returned_data = await databaseHandler.findData(find_list)
         let data = returned_data[0]
 
         data = utils.functions.sortDynamic(data,'LastName',is_number=false)
@@ -126,12 +126,12 @@ exports.getSingle = async(req,res) => {
             where: {
                 ID: id,
             },
-            include: utils.queries.searchType['PeopleHR_Employee'].include			
+            include: databaseHandler.searchType['PeopleHR_Employee'].include			
         }]
     }) 
 
     try{
-        let user = await utils.queries.findData(find_list)
+        let user = await databaseHandler.findData(find_list)
         let data = user[0];
 
 
@@ -170,12 +170,12 @@ exports.getFormCreate = async(req,res) => {
             where: {
                 dim_orgunit_pk: id,
             },
-            include: utils.queries.searchType['OrgUnit'].include			
+            include: databaseHandler.searchType['OrgUnit'].include			
         }]
     }) 
 
     try{
-        let orgunit = await utils.queries.findData(find_list)
+        let orgunit = await databaseHandler.findData(find_list)
 
         let view = "user_data/new"
         let type_info;
@@ -190,7 +190,7 @@ exports.getFormCreate = async(req,res) => {
         if(type_info.queries){
             if(type_info.queries.sql){
 
-                let output = await utils.queries.runDBQueries(type_info.queries.sql);
+                let output = await databaseHandler.runDBQueries(type_info.queries.sql);
 
                 queried_data["sql"] = {
                     definitions: type_info.queries.sql,
@@ -248,7 +248,7 @@ exports.create = async(req,res) => {
             ]
         }) 
     
-        let data = await utils.queries.createData2(creation_list)	
+        let data = await databaseHandler.createData2(creation_list)	
     
         res.redirect("/user_data/"+id+'/'+type_info.type+'/edit')	
     }
@@ -286,12 +286,12 @@ exports.getEdit = async(req,res) => {
             where: {
                 ID: id,
             },
-            include: utils.queries.searchType['PeopleHR_Employee'].include			
+            include: databaseHandler.searchType['PeopleHR_Employee'].include			
         }]
     }) 
 
     try{
-        let user = await utils.queries.findData(find_list)
+        let user = await databaseHandler.findData(find_list)
         let view = "user_data/edit"
         let type_info;
         route_info.forEach((route) => {
@@ -322,7 +322,7 @@ exports.getEdit = async(req,res) => {
         if(type_info.queries){
             if(type_info.queries.sql){
 
-                let output = await utils.queries.runDBQueries(type_info.queries.sql);
+                let output = await databaseHandler.runDBQueries(type_info.queries.sql);
 
                 queried_data["sql"] = {
                     definitions: type_info.queries.sql,
@@ -332,7 +332,7 @@ exports.getEdit = async(req,res) => {
         }
 
         // let query = type_info.queries[0]
-        // queried_data[query.name] = await utils.queries.runDBQueries(type_info.queries)
+        // queried_data[query.name] = await databaseHandler.runDBQueries(type_info.queries)
 
         res.render(view, {title:type_info.type, stylesheet: view, route_info:type_info, user_data:user[0], data:user[0][item], queries: queried_data});
     }
@@ -380,7 +380,7 @@ exports.updateParent = async(req,res) => {
         })
 
         //GET THE EDITABLE ITEM, INCLUDING ANY JOINS
-        let orgunits = await utils.queries.findData(findlist)
+        let orgunits = await databaseHandler.findData(findlist)
 
 
         let updatelist = []
@@ -391,7 +391,7 @@ exports.updateParent = async(req,res) => {
         })    
 
         //UPDATE THE RECORD
-        let data = await utils.queries.updateData(orgunits[0], updatelist)
+        let data = await databaseHandler.updateData(orgunits[0], updatelist)
         req.flash("success", "User Data Updated"); 
         res.redirect("/user_data/"+id+'/orgunit/edit')   
     }	
@@ -468,7 +468,7 @@ exports.updateMultipleChildren = async(req,res) => {
         })
         update_list.push(data)
     
-        let updated = await utils.queries.updateWhere(update_list)
+        let updated = await databaseHandler.updateWhere(update_list)
     
         req.flash("success", "User "+item+" Data Updated"); 
         res.redirect("/user_data/"+id+'/'+item+'/edit')

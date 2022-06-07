@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
-const utils = require('../utils')
+// const utils = require('../utils')
 
 
 
-const DIMENSION_Agentlink = utils.database.sequelize.define('DIMENSION_agent_link_v2', {
+const DIMENSION_Agentlink = databaseHandler.sequelize.define('DIMENSION_agent_link_v2', {
     dim_agent_link_pk: {
        type: Sequelize.INTEGER,
        autoIncrement: true,

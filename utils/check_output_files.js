@@ -1,13 +1,12 @@
-const emailUtil = require('../utils/email');
-const databaseQueriesUtil = require('../utils/database_queries2');
-const mergeDocumentUtil = require('../utils/merge_document');
+// const emailUtil = require('../utils/email');
+// const mergeDocumentUtil = require('../utils/merge_document');
+// const path = require('path');
 const functions = require('../utils/functions');
 const ssrs = require('../utils/ssrs3');
 
 const classes = require('../classes');
 
 const fs = require('fs');
-const path = require('path');
 
 
 
@@ -76,10 +75,7 @@ exports.runCheck = async(subscriptionactivity) => {
                                         ]
                                 })
     
-                                let queuedsubsections = await databaseQueriesUtil.createData2(creation_list)  
-    
-                                // ssrs.report_running = false;
-                                // ssrs.checkList();
+                                let queuedsubsections = await databaseHandler.createData2(creation_list)  
         
                                 reran_files++;
                             }
@@ -88,19 +84,9 @@ exports.runCheck = async(subscriptionactivity) => {
                                 if(!subsection.error){
                                     subsection.error = "generic error: report finished but no file to show for it"
                                 }
-                                // ssrs.report_running = false;
-                                // ssrs.checkList();
                                 total_errors++;
                                 subsection.running = false;
                             }
-                            /**/
-                            // if(!subsection.error){
-                            //     subsection.error = "generic error: report finished but no file to show for it"
-                            // }
-                            // ssrs.report_running = false;
-                            // ssrs.checkList();
-                            // total_errors++;
-                            // subsection.running = false;
                         }
                     }
                 }
@@ -140,7 +126,7 @@ exports.runCheck = async(subscriptionactivity) => {
             }) 
         
             //GET ALL REPORT DATA
-            let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+            let subscriptionactivities = await databaseHandler.findData(find_list)
     
             //DON'T SET TO ERROR IF THERE'S STILL ACTIVITIES LEFT TO RUN
             if(subscriptionactivities[0].length === 0){
@@ -183,7 +169,7 @@ exports.runCheck = async(subscriptionactivity) => {
                                     ]
                             })
     
-                            let queuedsubsections = await databaseQueriesUtil.createData2(creation_list)  
+                            let queuedsubsections = await databaseHandler.createData2(creation_list)  
     
                             files_check++;
                         }
@@ -227,24 +213,12 @@ exports.runCheck = async(subscriptionactivity) => {
             }) 
     
             //GET ALL REPORT DATA
-            let subscriptions = await databaseQueriesUtil.findData(find_list)
+            let subscriptions = await databaseHandler.findData(find_list)
             let subscription = subscriptions[0]
     
             if(total_errors === 0){
                 //MERGE REPORT AND SEND
                 let output_name = subscription.report_name+"_"+subscription.report_sub_name
-                
-                //MERGE DOCUMENT
-                if(process.env.MERGE_METHOD == 'DOCX-MERGER'){
-                    await mergeDocumentUtil.mergeDocument(output_name, subscriptionactivity.path)
-                    subscriptionactivity.merge_complete = 1
-                    subscriptionactivity.document_saved = 1
-                    //SAVE DOCUMENT TO STORAGE
-                    await emailUtil.email(subscription, output_name+".docx",path.join(subscriptionactivity.path,output_name+'.'+subscriptionactivity.file_extension))
-                    subscriptionactivity.email_sent = 1
-                    //DELETE FILES AND TEMPORARY FOLDER
-                    exports.deleteTemp(subscriptionactivity.path)
-                }
         
                 if(process.env.MERGE_METHOD == 'CLOUDMERSIVE'){
                     let options = {
@@ -253,8 +227,6 @@ exports.runCheck = async(subscriptionactivity) => {
                         file_path: subscriptionactivity.path,
                         output_name: output_name
                     }
-                    // const mergeInstance = new classes.MergeDocument(options)
-                    // mergeInstance.runMerge() 
                     
                     //ADD PROCESS TO MERGE TABLE
     
@@ -271,7 +243,7 @@ exports.runCheck = async(subscriptionactivity) => {
                     })         
                 
             
-                    let queuedmerges = await databaseQueriesUtil.createData2(creation_list) 
+                    let queuedmerges = await databaseHandler.createData2(creation_list) 
     
                     exports.checkList();
     
@@ -322,7 +294,7 @@ exports.checkList = async() =>{
         })         
 
         try{
-            let queuedmerges = await databaseQueriesUtil.findData(find_list)
+            let queuedmerges = await databaseHandler.findData(find_list)
             let merge_list = queuedmerges[0]        
 
             if(merge_list.length > 0){
@@ -343,7 +315,7 @@ exports.checkList = async() =>{
                 }) 
             
                 //GET ALL REPORT DATA
-                let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+                let subscriptionactivities = await databaseHandler.findData(find_list)
 
                 options.subscriptionactivity = subscriptionactivities[0];              
                 
@@ -362,7 +334,7 @@ exports.checkList = async() =>{
                     ]
                 })
 
-                deletions = await databaseQueriesUtil.destroyData(destroylist)
+                deletions = await databaseHandler.destroyData(destroylist)
 
                 const mergeInstance = new classes.MergeDocument(options)
                 mergeInstance.runMerge()                   
