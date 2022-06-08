@@ -65,7 +65,32 @@ exports.getRouteInfo = () => {
             {
                 name: "refresh fact tables",
                 query: "UPDATE fact_table_processlist SET REFRESH = 'Y' WHERE stored_procedure IN ('fb_measurements','fb_measurements_snapshot')"
-            }   
+            },
+            {
+                name: "update orgunit and measurement FKs",
+                query: 
+                `
+                --UPDATE DIMENSION_Measurement_Org_Measurements TO ADD IN FK FOR ORGUNIT TABLE
+                UPDATE DIMENSION_Measurement_Org_Measurements
+                SET
+                dim_orgunit_fk  = org.dim_orgunit_pk
+                FROM 
+                DIMENSION_Measurement_Org_Measurements o
+                JOIN DIMENSION_orgunit org ON (org.dim_orgunit_cleaned = o.dim_measurement_org_measurements_orgunit)
+                where
+                dim_orgunit_fk IS NULL
+                
+                --UPDATE DIMENSION_Measurement_Org_Measurements TO ADD IN FK FOR DEFINITIONS TABLE
+                UPDATE DIMENSION_Measurement_Org_Measurements
+                SET
+                dim_measurement_definitions_fk  = def.dim_measurement_definitions_pk
+                FROM 
+                DIMENSION_Measurement_Org_Measurements o
+                JOIN DIMENSION_Measurement_Definitions def ON (def.dim_measurement_definitions_name = o.dim_measurement_org_measurements_name)
+                where
+                dim_measurement_definitions_fk IS NULL                
+                `
+            }      
         ]},
         },         
         {type: "contracts", sort_field: "dim_orgunit_contract_name", model: "Dimension_Orgunit_Contract", id_column: "dim_orgunit_contract_pk", form_path: "./forms/contracts", form_create_path: "./forms/new_contracts",
@@ -311,6 +336,7 @@ exports.create = async(req,res) => {
             }
         }
 
+        req.flash("success", 'Record Successfully Created!');
         res.redirect("/client_data/"+id+'/'+type_info.type+'/edit')	
     }
     catch(err){
