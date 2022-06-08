@@ -1,8 +1,3 @@
-const classes = require('../classes');
-global.databaseHandler = new classes.sequelize_db_handler();
-databaseHandler.loadModels()
-global.errorHandler = new classes.server_error_handler();
-
 const express = require("express");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -14,9 +9,6 @@ const routes = require("../routes");
 const utils = require("../utils");
 
 const strategies = require('./strategies')
-
-
-
 
 exports.setupApp = async(app) => {
     //setup sessions
@@ -82,15 +74,18 @@ exports.setupApp = async(app) => {
     //CONNECT TO DATABASE
     // utils.database.connect();
 
-    // utils.database.sequelize
-    // .sync()
-    // .then(result => {
-    //   if(process.env._PROCESS_TYPE === 'Dev'){
-    //   }
-    // })
-    // .catch(err => {
-    //   console.log(err)
-    // })
+    utils.database.sequelize
+    .sync()
+    .then(result => {
+      // utils.seeder.create()
+      if(process.env._PROCESS_TYPE === 'Dev'){
+        // utils.seeder.create()
+        // seeds.test()
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
 
     //RESET AND UPDATE THE SCHEDULER

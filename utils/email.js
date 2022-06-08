@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-// const Subscription = require("../models/subscription");
+const Subscription = require("../models/subscription");
 
 exports.email = async(subscription, filename, filepath) => {
 

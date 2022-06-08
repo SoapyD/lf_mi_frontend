@@ -1,11 +1,13 @@
 const Sequelize = require("sequelize");
 const moment = require("moment");
 
-// const utils = require('../utils')
-// const Report = require("./report");
-// const Frequency = require("./frequency");
+const utils = require('../utils')
 
-const Subscription = databaseHandler.sequelize.define('NODE_REPORT_subscription', {
+
+const Report = require("./report");
+const Frequency = require("./frequency");
+
+const Subscription = utils.database.sequelize.define('NODE_REPORT_subscription', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
