@@ -23,12 +23,12 @@ exports.getSubscriptions = async(req,res) => { //, middleware.isLoggedIn
 				where: {
 					id: id,
 				},
-				include: databaseHandler.searchType['Full Report'].include			
+				include: utils.queries.searchType['Full Report'].include			
 			}]
 		}) 
 
 		//GET ALL REPORT DATA
-		let reports = await databaseHandler.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
 		let subscriptions = []
 		if (reports[0].subscriptions)
 		{
@@ -72,12 +72,12 @@ exports.getFormCreateSubscription = async(req,res) => {
 				where: {
 					id: id,
 				},
-				include: databaseHandler.searchType['Full Report'].include			
+				include: utils.queries.searchType['Full Report'].include			
 			}]
 		}) 
 
 		//GET ALL REPORT DATA
-		let reports = await databaseHandler.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
 		let report = reports[0]
 
 		let parameter_ids = []
@@ -112,13 +112,13 @@ exports.getFormCreateSubscription = async(req,res) => {
 		}) 
 
 		//GET ALL REPORT DATA
-		let parameters = await databaseHandler.findData(find_list)
+		let parameters = await utils.queries.findData(find_list)
 
 		if(parameters[0]){
 			parameters[0] = parameters[0].sort(utils.functions.compareOrder)
 		}
 
-		let parameter_values = await databaseHandler.runDBQueries(parameters[0])
+		let parameter_values = await utils.queries.runDBQueries(parameters[0])
 
 		find_list = []
 		find_list.push(
@@ -127,7 +127,7 @@ exports.getFormCreateSubscription = async(req,res) => {
 			search_type: "findAll"
 		}) 
 
-		let frequencies = await databaseHandler.findData(find_list)		
+		let frequencies = await utils.queries.findData(find_list)		
 
 		// res.render("subscriptions/index", {report:reports[0], subscriptions:subscriptions});
 		res.render("subscriptions/new", {report:report, frequencies:frequencies[0], 
@@ -168,7 +168,7 @@ exports.createSubscription = async(req,res) => { //, middleware.isLoggedIn
 			]
 		}) 
 
-		let subscriptions = await databaseHandler.createData(creation_list,"create")
+		let subscriptions = await utils.queries.createData(creation_list,"create")
 		
 		utils.scheduler.updateScheduler();
 
@@ -207,12 +207,12 @@ exports.getEditSubscription = async(req,res) => {
 				where: {
 					id: id,
 				},
-				include: databaseHandler.searchType['Full Report'].include				
+				include: utils.queries.searchType['Full Report'].include				
 			}]
 		}) 
 
 		//GET REPORT DATA
-		let reports = await databaseHandler.findData(find_list)
+		let reports = await utils.queries.findData(find_list)
 		
 
 		find_list = []
@@ -227,7 +227,7 @@ exports.getEditSubscription = async(req,res) => {
 			}]
 		})		
 		//GET SUBSCRIPTION DATA
-		let subscriptions = await databaseHandler.findData(find_list)		
+		let subscriptions = await utils.queries.findData(find_list)		
 
 		let report = reports[0]
 
@@ -262,13 +262,13 @@ exports.getEditSubscription = async(req,res) => {
 		}) 
 
 		//GET ALL REPORT DATA
-		let parameters = await databaseHandler.findData(find_list)
+		let parameters = await utils.queries.findData(find_list)
 
 		if(parameters[0]){
 			parameters[0] = parameters[0].sort(utils.functions.compareOrder)
 		}
 
-		let parameter_values = await databaseHandler.runDBQueries(parameters[0])
+		let parameter_values = await utils.queries.runDBQueries(parameters[0])
 
 
 		find_list = []
@@ -278,7 +278,7 @@ exports.getEditSubscription = async(req,res) => {
 			search_type: "findAll"
 		}) 
 
-		let frequencies = await databaseHandler.findData(find_list)		
+		let frequencies = await utils.queries.findData(find_list)		
 		let parameter_obj = JSON.parse(subscriptions[0].parameters);
 		
 		res.render("subscriptions/edit", 
@@ -324,7 +324,7 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 			}]
 		})		
 		//GET SUBSCRIPTION DATA
-		let subscriptions = await databaseHandler.findData(find_list)		
+		let subscriptions = await utils.queries.findData(find_list)		
 
 
 		let params = req.body.params;
@@ -340,7 +340,7 @@ exports.updateSubscription = async(req,res) => { //, middleware.isCampGroundOwne
 			]
 		}) 
 
-		let subscriptions_updated = await databaseHandler.updateData(subscriptions[0], update_list)
+		let subscriptions_updated = await utils.queries.updateData(subscriptions[0], update_list)
 
 
 		utils.scheduler.updateScheduler();
@@ -386,10 +386,10 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 				}]
 			})		
 			//GET SUBSCRIPTION DATA
-			let subscriptions = await databaseHandler.findData(find_list)		
+			let subscriptions = await utils.queries.findData(find_list)		
 
 
-			// databaseHandler.getSubscriptions(req.params.reportid, subscriptions)
+			// utils.queries.getSubscriptions(req.params.reportid, subscriptions)
 			// .then((subscriptions) => {
 			if(subscriptions[0]) {
 				// let subscription_ids = []
@@ -405,10 +405,10 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 						where: {
 							id: id,
 						},
-						include: databaseHandler.searchType['Full Report'].include			
+						include: utils.queries.searchType['Full Report'].include			
 					}]
 				}) 				
-				let reports = await databaseHandler.findData(list)
+				let reports = await utils.queries.findData(list)
 
 				let report = utils.functions.sortReport(reports[0])
 				// let delay_i = 0
@@ -434,7 +434,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 							})    
 					
 							//UPDATE THE RECORD
-							await databaseHandler.updateData(subscription, list)
+							await utils.queries.updateData(subscription, list)
 
 						break;
 						case "disable":
@@ -447,7 +447,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 							})    
 					
 							//UPDATE THE RECORD
-							let updates = await databaseHandler.updateData(subscription, list)
+							let updates = await utils.queries.updateData(subscription, list)
 
 						break;
 						case "delete":
@@ -465,7 +465,7 @@ exports.updateSubscriptions = async(req,res) => { //, middleware.isCampGroundOwn
 							})
 					
 							//DESTROY THE RECORD
-							await databaseHandler.destroyData(list)
+							await utils.queries.destroyData(list)
 
 						break;									
 						default:

@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
-// const utils = require('../utils')
+const utils = require('../utils')
 
 
 
-const DETAIL_PeopleHR_Employee = databaseHandler.sequelize.define('DETAIL_peoplehr_employee', {
+const DETAIL_PeopleHR_Employee = utils.database.sequelize.define('DETAIL_peoplehr_employee', {
     ID: Sequelize.INTEGER,
     EmployeeID: {
        type: Sequelize.STRING,
