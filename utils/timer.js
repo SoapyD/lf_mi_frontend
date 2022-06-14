@@ -24,43 +24,94 @@ exports.checkTimer = async() => {
 
 exports.checkIncompleteSubActivity = async() => {
 
-    let find_list = []
-    find_list.push(
-    {
-        model: "SubscriptionActivity",
-        search_type: "findAll",
-        params: [{
-            where: {
-                running: 1,
-            }		
-        }]
-    }) 
+    try{
+        let find_list = []
+        find_list.push(
+        {
+            model: "SubscriptionActivity",
+            search_type: "findAll",
+            params: [{
+                where: {
+                    running: 1,
+                }		
+            }]
+        }) 
+    
+        //GET ALL REPORT DATA
+        let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+    
+        //IF THERE AREN'T ANY ACTIVITIES RUNNING, RESET REPORT_RUNNING PARAM
+        if(subscriptionactivities){
+            if(subscriptionactivities[0].length > 0){
 
-    //GET ALL REPORT DATA
-    let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+                let activities_running = false;
+                //CHECK ACTIVITY THEN CHECK TO SEE IF THERE'S ANY ACTIVIITIES THAT'VE BEEN STARTED
+                subscriptionactivities[0].forEach( async(subscriptionactivity) => {
+                    checkOutputsUtil.runCheck(subscriptionactivity)
 
-    subscriptionactivities[0].forEach( async(subscriptionactivity) => {
-        checkOutputsUtil.runCheck(subscriptionactivity)
-    })
+                    let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
 
-    //IF THERE AREN'T ANY ACTIVITIES RUNNING, RESET REPORT_RUNNING PARAM
-    if(subscriptionactivities[0].length === 0){
-        ssrs.report_running = false;
-    }
+                    for(const key in subsection_activity){
+                        let subsection = subsection_activity[key];
+                
+                        //IF HAS STARTED AND IS RUNNING
+                        if(subsection.running === true && subsection.start){
+                            activities_running = true;
+                        }
+                    }
+                    if(activities_running === false){
+                        ssrs.report_running = false;
+                        ssrs.checkList(); 
+                    }
+                })        
+            }else{
+                ssrs.report_running = false;
+                ssrs.checkList(); 
+            }
+        }else{
+            ssrs.report_running = false;
+            ssrs.checkList(); 
+        }
+    
+        //check if any subsections are running
+        find_list = []
+        find_list.push(
+        {
+            model: "QueuedSubsection",
+            search_type: "findAll"
+        }) 
+    
+        //GET ALL REPORT DATA
+        let queuedsubsections = await databaseQueriesUtil.findData(find_list)
 
-
-
-    find_list = []
-    find_list.push(
-    {
-        model: "QueuedMerge",
-        search_type: "findAll",
-    }) 
-
-    //RESET MERGE RUNNING IF THERE AREN'T ANY MERGES TO RUN
-    let queuedmerges = await databaseQueriesUtil.findData(find_list)
-    if(queuedmerges[0].length === 0){
-        checkOutputsUtil.merge_running = false;
+        if(queuedsubsections){
+            if(queuedsubsections[0].length === 0){
+                ssrs.report_running = false;
+                ssrs.checkList();       
+            }
+        }else{
+            ssrs.report_running = false;
+            ssrs.checkList();
+        }
+    
+    
+        find_list = []
+        find_list.push(
+        {
+            model: "QueuedMerge",
+            search_type: "findAll",
+        }) 
+    
+        //RESET MERGE RUNNING IF THERE AREN'T ANY MERGES TO RUN
+        let queuedmerges = await databaseQueriesUtil.findData(find_list)
+        if(queuedmerges){
+            if(queuedmerges[0].length === 0){
+                checkOutputsUtil.merge_running = false;
+            }
+        }
+    }catch(e){
+        console.log("Issues running timer")
+        console.log(e)
     }
 
 }

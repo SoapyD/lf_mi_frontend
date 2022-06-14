@@ -63,8 +63,17 @@
             <div class="form-group">                        
                 <p>Target:</p>
                 <td class="center-text"><input class="form-control" type="number" name="[params][dim_measurement_org_measurements_target]" step=".01"></td>                               
-            </div>        
+            </div>
         </div>           
+
+        <div class="col-md-2" id="auto-decimals">
+            <div class="form-group">                        
+                <p>Decimal Places:</p>
+                <td class="center-text"><input class="form-control" type="number" name="[params][dim_measurement_org_measurements_decimals]" step="1" min="0" max="2" value="0"></td>                               
+            </div>
+        </div> 
+
+    
 
         <div class="col-md-3" id="manual-target">
             <div class="form-group">                        
@@ -119,6 +128,7 @@
 <script>
 
     $("form").find('#auto-target').hide()
+    $("form").find('#auto-decimals').hide()
     $("form").find('#manual-target').hide()
     $("form").find('#manual-message').hide()
     $("form").find('#target-notes').hide()
@@ -153,6 +163,10 @@
                 //HIDE THE AUTO-TARGET FIELD
                 $("form").find('#auto-target').hide()
                 $("form").find('#auto-target').prop('required',false);
+
+                $("form").find('#auto-decimals').hide()
+                $("form").find('#auto-decimals').prop('required',false);
+
                 //UNHIDE THE MANUAL-TARGET FIELD
                 $("form").find('#manual-target').show()
                 $("form").find('#manual-target').prop('required',true);
@@ -168,6 +182,9 @@
                 $("form").find('#auto-target').show()
                 $("form").find('#auto-target').prop('required',true);                  
                 
+                $("form").find('#auto-decimals').show()
+                $("form").find('#auto-decimals').prop('required',true);
+
                 $("form").find('#target-notes').text('Measurement Targets must either be a whole number (e.g. 1, 10, 100 etc) or as a decimal value if it\s a percentage (e.g. 0.5 = 50%)')                
             }
         }

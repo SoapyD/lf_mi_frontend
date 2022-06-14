@@ -394,30 +394,32 @@ exports.checkList = async() =>{
         try{
             exports.report_running = true;
             let queuedsubsections = await databaseQueriesUtil.findData(find_list)
-            let report_list = queuedsubsections[0]        
-
-            if(report_list.length > 0){
-                
-                let first_queued = report_list[0]
-                let options = JSON.parse(first_queued.options);
-                exports.runReport(options);
-                
-                //DELETE THE ELEMENT FROM THE QUEUE
-
-                let destroylist = []
-                destroylist.push({
-                    model: "QueuedSubsection",
-                    search_type: "findOne",
-                    params: [
-                        {
-                            where: {
-                                id: first_queued.id
+            if(queuedsubsections){
+                let report_list = queuedsubsections[0]        
+    
+                if(report_list.length > 0){
+                    
+                    let first_queued = report_list[0]
+                    let options = JSON.parse(first_queued.options);
+                    exports.runReport(options);
+                    
+                    //DELETE THE ELEMENT FROM THE QUEUE
+    
+                    let destroylist = []
+                    destroylist.push({
+                        model: "QueuedSubsection",
+                        search_type: "findOne",
+                        params: [
+                            {
+                                where: {
+                                    id: first_queued.id
+                                }
                             }
-                        }
-                    ]
-                })
-
-                deletions = await databaseQueriesUtil.destroyData(destroylist)
+                        ]
+                    })
+    
+                    deletions = await databaseQueriesUtil.destroyData(destroylist)
+                }
             }
         }
         catch(err){
@@ -432,69 +434,80 @@ exports.checkList = async() =>{
 
 exports.runReport = async(options) => {
     
-    //set the subsection activity
-    let find_list = []
-    find_list.push(
-    {
-        model: "SubscriptionActivity",
-        search_type: "findOne",
-        params: [{
-            where: {
-                id: options.activity_id,
-            }		
-        }]
-    }) 
-    //GET THE SUBSECTION DATA
-    let subscriptionactivities = await databaseQueriesUtil.findData(find_list)
-    let subscriptionactivity = subscriptionactivities[0];
-    let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
+    let subscriptionactivities = undefined;
+    let subsection_activity = undefined;
+    let subscriptionactivity = undefined;
+    try{
+        //set the subsection activity
+        let find_list = []
+        find_list.push(
+        {
+            model: "SubscriptionActivity",
+            search_type: "findOne",
+            params: [{
+                where: {
+                    id: options.activity_id,
+                }		
+            }]
+        }) 
+        //GET THE SUBSECTION DATA
+        subscriptionactivities = await databaseQueriesUtil.findData(find_list)
+        subscriptionactivity = subscriptionactivities[0];
+        subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
+    }catch(e){
+        console.log("RunReport Sub Activity Errored")
+        console.log(e)
+    }
 
 
-    const reportPath = options.filepath;
-    try {
+    if(subsection_activity){
 
-        //UPDATE THE ACTIVITY TO SHOW THE TASK HAS STARTED
-        if(!subsection_activity[options.name].start){
-            let start = Date.now();
-            subsection_activity[options.name].start = start;
-            subsection_activity[options.name].last_updated = start;
-            subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)        
-            subscriptionactivity.save();        
+        const reportPath = options.filepath;
+        try {
+    
+            //UPDATE THE ACTIVITY TO SHOW THE TASK HAS STARTED
+            if(!subsection_activity[options.name].start){
+                let start = Date.now();
+                subsection_activity[options.name].start = start;
+                subsection_activity[options.name].last_updated = start;
+                subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)        
+                subscriptionactivity.save();        
+            }
+    
+            var auth = {
+                userName: username,
+                password: password,
+                workstation: null, // optional
+                domain: null // optional
+              };
+            // This part errors on the server
+            // console.log("output file:",options.output_file, " ||| running report... ",reportPath)
+            let report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, options.file_type, options.parameters, auth)        
+    
+            
+            // Writing to local file / or send the reponse to API 
+            await fs.writeFileSync(options.output_file+'.'+options.file_extension, report, "base64");
+            
+            //rerun the check list process
+            exports.report_running = false;
+            exports.checkList();
+        } catch (err) {
+            console.log("ERROR RUNNING REPORT")
+    
+            //SAVE THE ERROR
+            if(err.body){
+                subsection_activity[options.name].error = err.body.toString();
+            }else{
+                subsection_activity[options.name].error = "undefined error: most likely too many calls to reporting server";            
+            }
+    
+            subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)
+            subscriptionactivity.save();
+    
+            //rerun the check list process
+            exports.report_running = false;
+            exports.checkList();        
         }
-
-        var auth = {
-            userName: username,
-            password: password,
-            workstation: null, // optional
-            domain: null // optional
-          };
-        // This part errors on the server
-        // console.log("output file:",options.output_file, " ||| running report... ",reportPath)
-        let report = await exports.ssrs.reportExecution.getReportByUrl(reportPath, options.file_type, options.parameters, auth)        
-
-        
-        // Writing to local file / or send the reponse to API 
-        await fs.writeFileSync(options.output_file+'.'+options.file_extension, report, "base64");
-        
-        //rerun the check list process
-        exports.report_running = false;
-        exports.checkList();
-    } catch (err) {
-        console.log("ERROR RUNNING REPORT")
-
-        //SAVE THE ERROR
-        if(err){
-            subsection_activity[options.name].error = err.body.toString();
-        }else{
-            subsection_activity[options.name].error = "undefined error: most likely too many calls to reporting server";            
-        }
-
-        subscriptionactivity.subsection_activity = JSON.stringify(subsection_activity)
-        subscriptionactivity.save();
-
-        //rerun the check list process
-        exports.report_running = false;
-        exports.checkList();        
     }
 }
 

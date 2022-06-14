@@ -17,7 +17,7 @@ exports.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proc
         encrypt: true,
         useUTC: true,
         connectTimeout: 60000,
-        // "requestTimeout": 300000 
+        requestTimeout: 300000, 
         decimalNumbers: true,
       }
     },

@@ -217,23 +217,28 @@ exports.findData = async(find_list) => {
 
     let promises = [];
 
-    find_list.forEach((list) => {
-
-        if (list.params)
-        {
-            list.params.forEach((item) => {
-                promises.push(models[list.model][list.search_type](item))
-            })
-        }
-        else{
-            promises.push(models[list.model][list.search_type]())
-        }
-    })
-
-    return Promise.all(promises)
-    .catch((err) => {
-        console.log(err)
-    })    
+    try{
+        find_list.forEach((list) => {
+    
+            if (list.params)
+            {
+                list.params.forEach((item) => {
+                    promises.push(models[list.model][list.search_type](item))
+                })
+            }
+            else{
+                promises.push(models[list.model][list.search_type]())
+            }
+        })
+    
+        return Promise.all(promises)
+        .catch((err) => {
+            console.log(err)
+        })    
+    }catch(e){
+        console.log("Error Trying to Find Data")
+        return []
+    }
 }
 
 
@@ -247,22 +252,26 @@ exports.findData = async(find_list) => {
 
 exports.runDBQueries = async(query_array) => {
 
-    let promises = [];
+    try{
+        let promises = [];
 
-    query_array.forEach((item) => {
-        if(item.query && item.query !== ""){
-            promises.push(databaseUtil.runQuery(item.query))    
-        }
-        else{
-            promises.push([])
-        }
-    })
+        query_array.forEach((item) => {
+            if(item.query && item.query !== ""){
+                promises.push(databaseUtil.runQuery(item.query))    
+            }
+            else{
+                promises.push([])
+            }
+        })
 
-    return Promise.all(promises)
-    .catch((err) => {
-        console.log(err)
-    })      
-
+        return Promise.all(promises)
+        .catch((err) => {
+            console.log(err)
+        })      
+    }catch(e){
+        console.log("Error Trying to Find Data")
+        return []
+    }
 }
 
 
@@ -275,43 +284,53 @@ exports.runDBQueries = async(query_array) => {
 //  #####  #       ######  #     #    #    #######       ######  #     #    #    #     # 
 
 exports.updateData = async(item, update_list) => {
+    try{
+        let promises = [];
 
-    let promises = [];
+        update_list.forEach((list) => {
 
-    update_list.forEach((list) => {
+            list.params.forEach((param_item) => {
+                for(const key in param_item){
+                    item[key] = param_item[key]
+                }
+            })
+            promises.push(item.save())
+        })  
+        
+        return Promise.all(promises)
+        .catch((err) => {
+            console.log(err)
+        })      
 
-        list.params.forEach((param_item) => {
-            for(const key in param_item){
-                item[key] = param_item[key]
-            }
-        })
-        promises.push(item.save())
-    })  
-    
-    return Promise.all(promises)
-    .catch((err) => {
-        console.log(err)
-    })      
+    }catch(e){
+        console.log("Error Trying to Find Data")
+        return []
+    }    
 }
 
 
 exports.updateWhere = async(list) => {
 
-    let promises = [];
+    try{
+        let promises = [];
 
-    list.forEach((item) => {
+        list.forEach((item) => {
 
-        item.params.forEach((param) => {
-            promises.push(models[item.model].update(param.update_info,param.where_info))
+            item.params.forEach((param) => {
+                promises.push(models[item.model].update(param.update_info,param.where_info))
 
-        })
+            })
+            
+        })  
         
-    })  
-    
-    return Promise.all(promises)
-    .catch((err) => {
-        console.log(err)
-    })      
+        return Promise.all(promises)
+        .catch((err) => {
+            console.log(err)
+        })      
+    }catch(e){
+        console.log("Error Trying to Find Data")
+        return []
+    }        
 }
 
 
@@ -326,17 +345,22 @@ exports.updateWhere = async(list) => {
 
 exports.destroyData = async(destroy_list) => {
 
-    let promises = [];
+    try{
+        let promises = [];
 
-    destroy_list.forEach((list) => {
+        destroy_list.forEach((list) => {
 
-        list.params.forEach((item) => {
-            promises.push(models[list.model].destroy(item))
-        })
-    })  
+            list.params.forEach((item) => {
+                promises.push(models[list.model].destroy(item))
+            })
+        })  
 
-    return Promise.all(promises)
-    .catch((err) => {
-        console.log(err)
-    })      
+        return Promise.all(promises)
+        .catch((err) => {
+            console.log(err)
+        })     
+    }catch(e){
+        console.log("Error Trying to Find Data")
+        return []
+    } 
 }

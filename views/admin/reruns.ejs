@@ -1,0 +1,56 @@
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+<header class="jumbotron">
+    <div class="container">
+        
+        <h1>
+            Bulk Rerun Reports
+        </h1>
+
+    </div>
+</header>
+
+
+
+<form action="/admin/rerunactivities" method="POST"
+	onsubmit="return confirm('Are you sure you want to save changes for this item?');">
+
+	<div class="row">
+		<h2 class="rounded_borders">Rerun Info</h2>
+		
+		<div class="col-md-3">
+			<div class="form-group">
+				<p>Last Run (Number of Days Ago):</p>
+				<input class="form-control" type="text" name="params[days]" value="0" min="0" max="31">
+            </div> 
+            
+			<div class="form-group">
+				<p>Failed to Run:</p>
+                <select class="form-control" name="params[failed_to_run]">
+                    <option value="">N</option>
+                    <option value="1">Y</option>	
+
+                </select>	
+			</div> 
+
+		</div>  
+
+		
+	</div>
+
+
+	<button class="btn btn-primary right-button" name="action" type="submit">
+		Save
+	</button>	
+
+</form>		
+
+
+
+
+</div>
+
+<%- include("../partials/footer") %>

@@ -7,6 +7,9 @@ router.get("/", middleware.admin_access, controllers.admin.getAllOptions);
 
 router.get("/subscriptionjobs", middleware.admin_access, controllers.admin.getSubscriptionJobs);
 
+router.get("/rerunsform", middleware.admin_access, controllers.admin.rerunActivitiesForm);
+router.post("/rerunactivities", middleware.admin_access, controllers.admin.rerunActivities);
+
 router.get("/:item", middleware.admin_access, controllers.admin.getItems);
 
 router.get("/:item/new", middleware.admin_access, controllers.admin.getFormCreateItem);

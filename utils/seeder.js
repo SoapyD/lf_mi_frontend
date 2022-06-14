@@ -1,5 +1,5 @@
 const models = require("../models");
-const database = require('../utils/database')
+// const database = require('../utils/database')
 const databaseQueriesUtil = require('../utils/database_queries2');
 
 
@@ -63,7 +63,7 @@ exports.create = async() => {
 
     await exports.reset()
 
-    await database.sequelize.sync()
+    // await database.sequelize.sync()
 
     let creation_list = [];
 

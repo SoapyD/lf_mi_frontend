@@ -1,5 +1,7 @@
 
 const utils = require("../utils");
+const moment = require("moment");
+const { Op } = require('sequelize')
 
 
 exports.getSubscriptionJobs = (req,res) => {
@@ -16,6 +18,118 @@ exports.getSubscriptionJobs = (req,res) => {
 
 }
 
+exports.rerunActivitiesForm = async(req,res) => {
+
+    try{
+
+        res.render("admin/reruns")	
+
+    }catch(error){
+        req.flash("error", "Cannot load reruns page");
+        res.redirect("/")      
+    }
+}
+
+const rerun = (subscriptions) => {
+
+    if(subscriptions[0]) {
+        subscriptions[0].forEach( async(subscription, i) => {
+
+            //GET THE FULL REPORT DATA
+            list = []
+            list.push(
+            {
+                model: "Report",
+                search_type: "findOne",
+                params: [{
+                    where: {
+                        id: subscription.reportId,
+                    },
+                    include: utils.queries.searchType['Full Report'].include			
+                }]
+            }) 				
+            let reports = await utils.queries.findData(list)
+
+            let report = utils.functions.sortReport(reports[0])     
+            
+            //RUN THE REPORT SUBSCRIPTIONS
+            utils.ssrs.setup(i, report, subscription);                    
+        })
+    }
+
+}
+
+
+exports.rerunActivities = async(req,res) => {
+
+    // const exec = require('child_process').exec;  
+    try{
+        let params = req.body.params
+    
+        let find_list = []
+        find_list.push({
+            model: "SubscriptionActivity",
+            search_type: "findAll",
+            params: [{
+                where: {
+                    // merge_complete: {[Op.not]: '1'},
+                    createdAt: {
+                        [Op.gte]: moment().startOf('day').subtract(params.days, 'days').toDate()
+                    }
+                }
+            }]        
+        })
+    
+        if(params.failed_to_run){
+            find_list[0].params[0].where.merge_complete =  {[Op.not]: '1'}
+        }
+    
+    
+        let subscription_activities = await utils.queries.findData(find_list)
+    
+        if(subscription_activities[0].length !== 0){
+    
+            //GET A UNIQUE LIST OF SUBSCRIPTIONS
+            let subscription_ids = [];
+            subscription_activities[0].forEach((activity) => {
+                if(!subscription_ids.includes(activity.subscriptionId)){
+                    subscription_ids.push(activity.subscriptionId)
+                }
+            })
+
+            //GET THE SUBSCRIPTIONS
+			find_list = []
+			find_list.push(
+			{
+				model: "Subscription",
+				search_type: "findAll",
+				params: [{
+					where: {
+						id: subscription_ids,
+					}			
+				}]
+			})		
+			//GET SUBSCRIPTION DATA
+            let subscriptions = await utils.queries.findData(find_list)	
+
+            rerun(subscriptions)
+            
+
+            //THIS CAUSES THE FUNCTION TO QUIT EARLY
+            req.flash("success", 'ReRunning '+subscriptions.length+' Subscriptions');
+            res.redirect("/admin/rerunsform") 
+        }
+        else{
+            req.flash("error", "No subscriptions to run within given period");
+            res.redirect("/admin/rerunsform")          
+        }
+    }catch(error){
+        req.flash("error", "Cannot rerun subscription activities");
+        res.redirect("/")      
+    }
+
+
+}
 
 
 

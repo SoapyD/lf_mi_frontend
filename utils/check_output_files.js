@@ -113,10 +113,10 @@ exports.runCheck = async(subscriptionactivity) => {
             }
         }
 
-        if(files_check > 0){
-            ssrs.report_running = false;
-            ssrs.checkList();
-        }
+        // if(files_check > 0){
+        //     ssrs.report_running = false;
+        //     ssrs.checkList();
+        // }
 
     
         let report_timed_out = false;
