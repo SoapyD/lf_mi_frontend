@@ -47,21 +47,24 @@ exports.checkIncompleteSubActivity = async() => {
                 let activities_running = false;
                 //CHECK ACTIVITY THEN CHECK TO SEE IF THERE'S ANY ACTIVIITIES THAT'VE BEEN STARTED
                 subscriptionactivities[0].forEach( async(subscriptionactivity) => {
-                    checkOutputsUtil.runCheck(subscriptionactivity)
 
-                    let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
-
-                    for(const key in subsection_activity){
-                        let subsection = subsection_activity[key];
-                
-                        //IF HAS STARTED AND IS RUNNING
-                        if(subsection.running === true && subsection.start){
-                            activities_running = true;
+                    if(subscriptionactivity.subsection_activity){
+                        checkOutputsUtil.runCheck(subscriptionactivity)
+    
+                        let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
+    
+                        for(const key in subsection_activity){
+                            let subsection = subsection_activity[key];
+                    
+                            //IF HAS STARTED AND IS RUNNING
+                            if(subsection.running === true && subsection.start){
+                                activities_running = true;
+                            }
                         }
-                    }
-                    if(activities_running === false){
-                        ssrs.report_running = false;
-                        ssrs.checkList(); 
+                        if(activities_running === false){
+                            ssrs.report_running = false;
+                            ssrs.checkList(); 
+                        }
                     }
                 })        
             }else{
