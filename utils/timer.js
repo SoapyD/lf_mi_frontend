@@ -48,7 +48,8 @@ exports.checkIncompleteSubActivity = async() => {
                 //CHECK ACTIVITY THEN CHECK TO SEE IF THERE'S ANY ACTIVIITIES THAT'VE BEEN STARTED
                 subscriptionactivities[0].forEach( async(subscriptionactivity) => {
 
-                    if(subscriptionactivity.subsection_activity){
+                    if(subscriptionactivity.subsection_activity !== ''){
+
                         checkOutputsUtil.runCheck(subscriptionactivity)
     
                         let subsection_activity = JSON.parse(subscriptionactivity.subsection_activity)
